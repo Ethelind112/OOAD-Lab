@@ -1,3 +1,4 @@
+import controller.UserController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,11 +16,14 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+	
+//	belom tau bener ato ga cara pakenya
+	UserController uController = new UserController();
 
 //	register components
 	Scene regisScene;
 	VBox regisVB, regisContainer;
-	Label regisTitle, regisPM, regisEM, regisRM, regisUM, haveAcc;
+	Label regisTitle, regisEM, haveAcc;
 	GridPane regisFill;
 	Button regisBtn, toLogin;
 	TextField emailFieldR, usernameFieldR;
@@ -63,10 +67,7 @@ public class Main extends Application {
 		
 		bottomAuthR = new HBox();
 		haveAcc = new Label("Already have account?");
-		regisPM = new Label();
 		regisEM = new Label();
-		regisRM = new Label();
-		regisUM = new Label();
 		toLogin = new Button("Login");
 		
 	}
@@ -105,23 +106,23 @@ public class Main extends Application {
 	public void initRegisComponent() {
 		regisFill.add(emailLblR, 0, 0);
 		regisFill.add(emailFieldR, 1, 0);
-		regisFill.add(regisEM, 1, 1);
+//		regisFill.add(regisEM, 1, 1);
 		
 		regisFill.add(usernameLbl, 0, 2);
 		regisFill.add(usernameFieldR, 1, 2);
-		regisFill.add(regisUM, 1, 3);
+//		regisFill.add(regisUM, 1, 3);
 		
 		regisFill.add(passLblR, 0, 4);
 		regisFill.add(passFieldR, 1, 4);
-		regisFill.add(regisPM, 1, 5);
+//		regisFill.add(regisPM, 1, 5);
 		
 		regisFill.add(roleLbl, 0, 6);
 		regisFill.add(roleCB, 1, 6);
-		regisFill.add(regisRM, 1, 7);
+//		regisFill.add(regisRM, 1, 7);
 		
 		bottomAuthR.getChildren().addAll(haveAcc, toLogin);
 		
-		regisContainer.getChildren().addAll(regisTitle, regisFill, regisBtn, bottomAuthR);
+		regisContainer.getChildren().addAll(regisTitle, regisFill, regisEM, regisBtn, bottomAuthR);
 		regisVB.getChildren().add(regisContainer);
 	}
 	
@@ -129,15 +130,15 @@ public class Main extends Application {
 	public void initLoginComponent() {
 		loginFill.add(emailLbl, 0, 0);
 		loginFill.add(emailField, 1, 0);
-		loginFill.add(loginEM, 1, 1);
+//		loginFill.add(loginEM, 1, 1);
 		
 		loginFill.add(passLbl, 0, 2);
 		loginFill.add(passField, 1, 2);
-		loginFill.add(loginPM, 1, 3);
+//		loginFill.add(loginPM, 1, 3);
 		
 		bottomAuthL.getChildren().addAll(noAcc, toRegis);
 		
-		loginContainer.getChildren().addAll(loginTitle, loginFill, loginBtn, bottomAuthL);
+		loginContainer.getChildren().addAll(loginTitle, loginFill, loginEM, loginBtn, bottomAuthL);
 		loginVb.getChildren().add(loginContainer);
 		
 	}
@@ -187,9 +188,6 @@ public class Main extends Application {
 		
 		
 		regisEM.setStyle("-fx-text-fill: red;");
-		regisPM.setStyle("-fx-text-fill: red;");
-		regisRM.setStyle("-fx-text-fill: red;");
-		regisUM.setStyle("-fx-text-fill: red;");
 		
 		regisContainer.setMargin(regisBtn, new Insets(20, 0, 0, 0));
 		regisContainer.setMargin(bottomAuthR, new Insets(10, 0, 50, 0));
@@ -247,141 +245,42 @@ public class Main extends Application {
 		initLoginComponent();
 		loginStyling();
 	}
-
-//	Mengecek inputan email user saat registrasi
-	public boolean checkEmail(String email) {
-		//bila email kosong, keluarkan error message
-		if(email.isEmpty()) {
-			regisEM.setText("Please fill in this filled");
-			return false;
-		}
-		
-		//get data from database and check uniqueness
-		
-		//bila email terisi dengan benar hilangkan error message
-		regisEM.setText("");
-		return true;
-	}
-	
-//	Mengecek inputan nama user saat registrasi
-	public boolean checkuName(String uName) {
-		//bila email kosong, keluarkan error message
-		if(uName.isEmpty()) {
-			regisUM.setText("Please fill in this filled");
-			return false;
-		}
-		
-		//get data from database and check uniqueness
-		
-		//bila email terisi dengan benar hilangkan error message
-		regisUM.setText("");
-		return true;
-	}
-	
-//	Mengecek inputan password user saat registrasi
-	public boolean checkPass(String pass) {
-		//bila password kosong atau panjang kurang dari 5, keluarkan error message
-		if(pass.isEmpty()) {
-			regisPM.setText("Please fill in this filled");
-			return false;
-		}else if(pass.length() < 5) {
-			regisPM.setText("Password must at least 5 characters long");
-			return false;
-		}
-		
-		//bila password terisi dengan benar hilangkan error message	
-		regisPM.setText("");
-		return true;
-	}
-	 
-//	Mengecek pilihan role user saat registrasi
-	public boolean checkRole() {
-		//bila role tidak dipilih, keluarkan error message
-		if(roleCB == null || roleCB.getValue() == null) {
-			regisRM.setText("Please choose role");
-			return false;
-		}
-		
-		//bila role terisi dengan benar hilangkan error message	
-		regisRM.setText("");
-		return true;
-	}
 	
 //	proses registrasi user
-	public boolean processRegis() {
+	public void processRegis() {
+		
 //		mengambil data dari inputan
 		String email = emailFieldR.getText();
 		String uName = usernameFieldR.getText();
 		String pass = passFieldR.getText();
-		String role = null;
+		String role = "";
 		
-//		melakukan pengecekan semua inputan
-		boolean checkE = checkEmail(email);
-		boolean checkU = checkuName(uName);
-		boolean checkP = checkPass(pass);
-		boolean checkR = true;
-		
-//		bila role dipilih, masukan inputan kedalam variable
-		if(checkRole()) {
+		if(roleCB != null) {
 			role = roleCB.getValue();
 		}
 		
-//		bila semua inputan benar, maka memasukan semua data ke dalam database
-		if(checkE && checkP && checkR && checkU) {
-//			memasukan data ke dalam database
-			
-			return true;
+//		proses registrasi ke controller
+		String message = uController.register(email, uName, pass, role);
+
+		if(message == "success") {
+//			redirect ke home page ato page lain
 		}
 		
-		return false;
-	}
-	
-//	Mengecek inputan email user saat login
-	public boolean checkEmailLogin(String email) {
-		//bila email kosong, keluarkan error message
-		if(email.isEmpty()) {
-			loginEM.setText("Please fill in this filled");
-			return false;
-		}
-		
-		//Check matching ada email atau tidak
-		
-		//bila email terisi dengan benar hilangkan error message
-		loginEM.setText("");
-		return true;
-	}
-	
-//	Mengecek inputan password user saat login
-	public boolean checkPasswordLogin(String pass) {
-		//bila password kosong, keluarkan error message
-		if(pass.isEmpty()) {
-			loginPM.setText("Please fill in this filled");
-			return false;
-		}
-		
-		//bila password terisi dengan benar hilangkan error message
-		loginPM.setText("");
-		return true;
+		regisEM.setText(message);
 	}
 	
 //	proses login user
-	public boolean processLogin() {
+	public void processLogin() {
 		String email = emailField.getText();
 		String pass = passField.getText();
 		
-		boolean checkE = checkEmailLogin(email);
-		boolean checkP = checkPasswordLogin(pass);
-		
-//		Bila ada data yang tidak terisi dengan benar, maka return
-		if(!checkE || !checkP) {
-			return false;
+		String message = uController.login(email, pass);
+
+		if(message == "success") {
+//			redirect ke home page ato page lain
 		}
 		
-//		bila semua data terisi dengan benar, lakukan checking matching antara password dan email
-		
-//		bila checking database benar return true
-		
-		return false;
+		loginEM.setText(message);
 	}
 	
 	public static void main(String[] args) {
@@ -398,14 +297,7 @@ public class Main extends Application {
 		
 		
 		regisBtn.setOnAction(e -> {
-//			mendapatkan boolean apakah proses registrasi berhasil atau gagal
-			boolean check = processRegis();
-			
-//			bila berhasil maka redirect ke page selanjutnya
-			if(check) {
-//				go to homepage
-				
-			}
+			processRegis();
 			
 		});
 		
@@ -415,15 +307,8 @@ public class Main extends Application {
 		});
 		
 		
-			
 		loginBtn.setOnAction(e -> {
-//			mendapatkan boolean apakah proses login berhasil atau gagal
-			boolean check = processLogin();
-			
-//			bila berhasil maka redirect ke page selanjutnya
-			if(check) {
-//				go to home page
-			}
+			processLogin();
 		});
 		
 		toLogin.setOnAction(e -> {
