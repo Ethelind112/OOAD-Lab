@@ -11,7 +11,7 @@ public class Connect {
 
 	String userName = "root";
 	String password = "";
-	String DATABASE = "";
+	String DATABASE = "stellarfest";
 	String HOST = "localhost:3306";
 	String CONNECTION = String.format("jdbc:mysql://%s/%s", HOST, DATABASE);
 

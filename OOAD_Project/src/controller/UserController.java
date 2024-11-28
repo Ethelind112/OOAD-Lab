@@ -1,5 +1,7 @@
 package controller;
 
+import model.User;
+
 public class UserController {
 
 	public UserController() {
@@ -13,6 +15,11 @@ public class UserController {
 		}
 		
 		//cek keunikan dari database
+		User user = new User().getUserByEmail(email);
+		
+		if(user != null) {
+			return "Email Is Already Registered";
+		}
 		
 		return "";
 	}
@@ -25,6 +32,11 @@ public class UserController {
 		}
 		
 		//check keunikan dari database
+		User user = new User().getUserByUsername(uName);
+		
+		if(user != null) {
+			return "Username Is Already Used";
+		}
 		
 		return "";
 	}
@@ -70,6 +82,9 @@ public class UserController {
 		
 //		Masukin data ke database
 		
+		User user = new User();
+		user.register(email, name, password, role);
+		
 		return "success";
 	}
 	
@@ -81,9 +96,13 @@ public class UserController {
 		}
 		
 		//Check ada email ato gak di database
+		User user = new User().getUserByEmail(email);
 		
+		if(email != null) {
+			return "";
+		}
 		
-		return "";
+		return "Email Not Found";
 	}
 	
 	public String checkPasswordLogin(String pass) {
@@ -92,7 +111,6 @@ public class UserController {
 			return "Please Fill All The Field";
 		}
 		
-		//bila password terisi dengan benar hilangkan error message
 		return "";
 	}
 	
@@ -106,6 +124,12 @@ public class UserController {
 		}
 		
 //		check ke database email sama password sama gak
+		User user = new User().getUserByEmail(email);
+		
+		if(!user.getUser_password().equals(password)) {
+			return "Password and Email Don't Match";
+		}
+		
 		
 		return "success";
 	}
