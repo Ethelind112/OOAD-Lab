@@ -36,7 +36,7 @@ public class Main extends Application {
 //	login components
 	Scene loginScene;
 	VBox loginVb, loginContainer;
-	Label loginTitle, loginPM, loginEM, noAcc;
+	Label loginTitle, loginEM, noAcc;
 	GridPane loginFill;
 	Button loginBtn, toRegis;
 	Label emailLbl, passLbl;
@@ -90,7 +90,6 @@ public class Main extends Application {
 		bottomAuthL = new HBox();
 		noAcc = new Label("No account yet?");
 		
-		loginPM = new Label(); //dibiarkan kosong dan diisi saat ada error message
 		loginEM = new Label(); //dibiarkan kosong dan diisi saat ada error message
 		toRegis = new Button("Register");
 		
@@ -228,7 +227,6 @@ public class Main extends Application {
 		toRegis.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		
 		loginEM.setStyle("-fx-text-fill: red;");
-		loginPM.setStyle("-fx-text-fill: red;");
 		
 		loginContainer.setMargin(loginBtn, new Insets(20, 0, 0, 0));
 		loginContainer.setMargin(bottomAuthL, new Insets(10, 0, 50, 0));
@@ -247,7 +245,7 @@ public class Main extends Application {
 	}
 	
 //	proses registrasi user
-	public void processRegis() {
+	public boolean processRegis() {
 		
 //		mengambil data dari inputan
 		String email = emailFieldR.getText();
@@ -263,24 +261,26 @@ public class Main extends Application {
 		String message = uController.register(email, uName, pass, role);
 
 		if(message == "success") {
-//			redirect ke home page ato page lain
+			return true;
 		}
 		
 		regisEM.setText(message);
+		return false;
 	}
 	
 //	proses login user
-	public void processLogin() {
+	public boolean processLogin() {
 		String email = emailField.getText();
 		String pass = passField.getText();
 		
 		String message = uController.login(email, pass);
 
 		if(message == "success") {
-//			redirect ke home page ato page lain
+			return true;
 		}
 		
 		loginEM.setText(message);
+		return false;
 	}
 	
 	public static void main(String[] args) {
@@ -297,7 +297,11 @@ public class Main extends Application {
 		
 		
 		regisBtn.setOnAction(e -> {
-			processRegis();
+			boolean check = processRegis();
+			
+			if(check) {
+//				redirect ke page lain
+			}
 			
 		});
 		
@@ -308,7 +312,11 @@ public class Main extends Application {
 		
 		
 		loginBtn.setOnAction(e -> {
-			processLogin();
+			boolean check = processLogin();
+			
+			if(check) {
+//				redirect ke page lain
+			}
 		});
 		
 		toLogin.setOnAction(e -> {
