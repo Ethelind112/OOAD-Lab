@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
+import model.User;
 import util.Connect;
 
 public class User {
@@ -117,5 +118,5 @@ public class User {
 	public void setUser_role(String user_role) {
 		this.user_role = user_role;
 	}
-	
+
 }

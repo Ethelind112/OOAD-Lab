@@ -4,11 +4,23 @@ import model.User;
 
 public class UserController {
 
+	User user;
+	
 	public UserController() {
-		
+		this.user = new User();
 	}
 	
-//	Mengecek inputan email user saat registrasi
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+
+	//	Mengecek inputan email user saat registrasi
 	public String checkEmail(String email) {
 		if(email.isEmpty()) {
 			return "Please Fill All The Field";
@@ -56,7 +68,7 @@ public class UserController {
 //	Mengecek pilihan role user saat registrasi
 	public String checkRole(String role) {
 		//bila role tidak dipilih, keluarkan error message
-		if(role == "") {
+		if(role == "" || role == null) {
 			return "Please Fill All The Field";
 		}
 		
@@ -98,7 +110,7 @@ public class UserController {
 		//Check ada email ato gak di database
 		User user = new User().getUserByEmail(email);
 		
-		if(email != null) {
+		if(user != null) {
 			return "";
 		}
 		
@@ -130,8 +142,8 @@ public class UserController {
 			return "Password and Email Don't Match";
 		}
 		
-		
+		this.user = user;
 		return "success";
 	}
-	
+
 }
