@@ -7,13 +7,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import model.Invitation;
 import util.Connect;
 
 public class Main extends Application {
@@ -53,6 +57,14 @@ public class Main extends Application {
 	Label emailLblUP, usernameLblUP, passLblUP, newPassLblUP;
 	TextField emailFieldUP, usernameFieldUP;
 	PasswordField passFieldUP, newPassFieldUP;
+	
+//	guest: accept invitation components
+	Scene invitationScene;
+	VBox invitationVb, invitationContainer;
+	Label invitationTitle, invitationDescription;
+	TableView<Invitation> invitationTable;
+	Button acceptBtn;
+	
 	
 //	Function untuk deklarasi setiap element pada halaman register
 	public void initRegister() {
@@ -131,11 +143,23 @@ public class Main extends Application {
 		
 	}
 	
+	public void initInvitation() {
+		invitationVb = new VBox();
+		invitationContainer = new VBox();
+		invitationScene = new Scene(invitationVb, 1000, 700);
+		invitationTitle = new Label("Invitation");
+		invitationDescription = new Label("This is your invitation, select the from invitation from the table bellow before clicking on the accept button.");
+		acceptBtn = new Button("Accept");
+		invitationTable = new TableView<>();
+		
+	}
+	
 //	Function khusus untuk membuat komponen semua page
 	public void init() {
 		initRegister();
 		initLogin();
 		initUpdateProfile();
+		initInvitation();
 	}
 	
 //	Membentuk struktur register page yang terdiri dari komponen-komponennya
@@ -203,10 +227,20 @@ public class Main extends Application {
 		uPVb.getChildren().add(uPContainer);
 	}
 	
+	public void initInvitationComponent() {
+		TableColumn<Invitation,String> idColumn = new TableColumn<>("Id");
+		idColumn.setCellValueFactory(new PropertyValueFactory<Invitation, String>("invitation_id"));
+		
+		invitationTable.getColumns().addAll(idColumn);
+		
+		invitationContainer.getChildren().addAll(invitationTitle, invitationDescription, acceptBtn,invitationTable);
+		invitationVb.getChildren().add(invitationContainer);
+	}
+	
 //	Menambah styling untuk page register 
 	public void registStyling() {
 		regisVB.setAlignment(Pos.CENTER);
-		regisVB.setStyle("-fx-background-color: #3D4735;");
+		regisVB.setStyle("-fx-background-color: #133E87;");
 		
 		regisContainer.setAlignment(Pos.CENTER); //menengahkan posisi container
 		regisContainer.setMaxWidth(500);
@@ -239,11 +273,11 @@ public class Main extends Application {
 		
 		regisBtn.setPadding(new Insets(10, 0, 10, 0));
 		regisBtn.setMinWidth(100);
-		regisBtn.setStyle("-fx-text-fill: white; -fx-background-color: #A37F66;");
+		regisBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
 		regisBtn.setFont(Font.font(15));
 		
 		bottomAuthR.setAlignment(Pos.CENTER); //menengahkan bottomAuthR
-		toLogin.setStyle("-fx-background-color: transparent; -fx-text-fill: #5F6F52;");
+		toLogin.setStyle("-fx-background-color: transparent; -fx-text-fill: #133E87;");
 		toLogin.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		
 		
@@ -338,6 +372,24 @@ public class Main extends Application {
 		uPContainer.setMargin(uPBtn, new Insets(30, 0, 50, 0));
 	}
 	
+	public void invitationStyling(){
+		invitationVb.setAlignment(Pos.TOP_CENTER); //menengahkan posisi container
+		invitationVb.setStyle("-fx-background-color: white;");
+	
+		invitationContainer.setMaxWidth(900);
+		
+		invitationTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+		invitationContainer.setMargin(invitationTitle, new Insets(50,0,10,0));
+		invitationContainer.setAlignment(Pos.TOP_CENTER);
+		
+		acceptBtn.setPadding(new Insets(10, 0, 10, 0));
+		acceptBtn.setMinWidth(100);
+		acceptBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
+		acceptBtn.setFont(Font.font(15));
+		
+		invitationContainer.setMargin(acceptBtn, new Insets(20, 0, 30, 0));
+	}
+	
 //	Membentuk register page secara keseluruhan, termasuk struktur dan design
 	public void register() {
 		initRegisComponent();
@@ -353,6 +405,11 @@ public class Main extends Application {
 	public void updateProfile() {
 		initUpdateProfileComponent();
 		updateProfileStyling();
+	}
+	
+	public void invitation() {
+		initInvitationComponent();
+		invitationStyling();
 	}
 	
 //	proses registrasi user
@@ -404,6 +461,7 @@ public class Main extends Application {
 		register();
 		login();
 		updateProfile();
+		invitation();
 		primaryStage.setScene(regisScene);
 		primaryStage.show();
 		
