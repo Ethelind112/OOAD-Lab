@@ -44,6 +44,16 @@ public class Main extends Application {
 	TextField emailField, usernameField;
 	HBox bottomAuthL;
 	
+//	update profile components
+	Scene updateProfileScene;
+	VBox uPVb, uPContainer;
+	Label uPTitle, uPEM;
+	GridPane uPFill;
+	Button uPBtn;
+	Label emailLblUP, usernameLblUP, passLblUP, newPassLblUP;
+	TextField emailFieldUP, usernameFieldUP;
+	PasswordField passFieldUP, newPassFieldUP;
+	
 //	Function untuk deklarasi setiap element pada halaman register
 	public void initRegister() {
 		regisVB = new VBox();
@@ -96,10 +106,36 @@ public class Main extends Application {
 		
 	}
 	
+//	Function untuk deklarasi setiap element pada halaman update profile
+	public void initUpdateProfile() {
+		uPVb = new VBox();
+		uPContainer = new VBox();
+		updateProfileScene = new Scene(uPVb, 1000, 700);
+		uPTitle = new Label("Update Profile");
+		uPEM = new Label();
+		uPFill = new GridPane();
+		
+		
+//		changePass = new Button("Change Password");
+		emailLblUP = new Label("Email");
+		passLblUP = new Label("Password");
+		usernameLblUP = new Label("Username");
+		
+		newPassLblUP = new Label("New Password");
+		
+		usernameFieldUP = new TextField();
+		emailFieldUP = new TextField();
+		passFieldUP = new PasswordField();
+		newPassFieldUP = new PasswordField();
+		uPBtn = new Button("Update");
+		
+	}
+	
 //	Function khusus untuk membuat komponen semua page
 	public void init() {
 		initRegister();
 		initLogin();
+		initUpdateProfile();
 	}
 	
 //	Membentuk struktur register page yang terdiri dari komponen-komponennya
@@ -143,10 +179,34 @@ public class Main extends Application {
 		
 	}
 	
+	public void initUpdateProfileComponent() {
+		uPFill.add(emailLblUP, 0, 0);
+//		uPFill.add(emailLblUPD, 1, 0);
+//		uPFill.add(changeEmail, 0, 1);
+		uPFill.add(emailFieldUP, 1, 0);
+		
+		uPFill.add(usernameLblUP, 0, 1);
+//		uPFill.add(usernameLblUPD, 1, 1);
+//		uPFill.add(changeUsername, 0, 3);
+		uPFill.add(usernameFieldUP, 1, 1);
+		
+		uPFill.add(passLblUP, 0, 2);
+//		uPFill.add(passLblUPD, 1, 4);
+//		uPFill.add(changePassword, 0, 5);
+		uPFill.add(passFieldUP, 1, 2);
+//		uPFill.add(changePass, 1, 3);
+		
+		uPFill.add(newPassLblUP, 0, 3);
+		uPFill.add(newPassFieldUP, 1, 3);
+		
+		uPContainer.getChildren().addAll(uPTitle, uPFill, uPEM, uPBtn);
+		uPVb.getChildren().add(uPContainer);
+	}
+	
 //	Menambah styling untuk page register 
 	public void registStyling() {
 		regisVB.setAlignment(Pos.CENTER);
-		regisVB.setStyle("-fx-background-color: #133E87;");
+		regisVB.setStyle("-fx-background-color: #3D4735;");
 		
 		regisContainer.setAlignment(Pos.CENTER); //menengahkan posisi container
 		regisContainer.setMaxWidth(500);
@@ -179,11 +239,11 @@ public class Main extends Application {
 		
 		regisBtn.setPadding(new Insets(10, 0, 10, 0));
 		regisBtn.setMinWidth(100);
-		regisBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
+		regisBtn.setStyle("-fx-text-fill: white; -fx-background-color: #A37F66;");
 		regisBtn.setFont(Font.font(15));
 		
 		bottomAuthR.setAlignment(Pos.CENTER); //menengahkan bottomAuthR
-		toLogin.setStyle("-fx-background-color: transparent; -fx-text-fill: #133E87;");
+		toLogin.setStyle("-fx-background-color: transparent; -fx-text-fill: #5F6F52;");
 		toLogin.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		
 		
@@ -233,6 +293,51 @@ public class Main extends Application {
 		loginContainer.setMargin(bottomAuthL, new Insets(10, 0, 50, 0));
 	}
 	
+	public void updateProfileStyling() {
+		uPVb.setAlignment(Pos.CENTER); //menengahkan posisi container
+		uPVb.setStyle("-fx-background-color: #133E87;");
+		
+		uPContainer.setAlignment(Pos.CENTER);
+		uPContainer.setMaxWidth(500);
+		uPContainer.setStyle("-fx-background-color: white;");
+		
+		uPTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+		uPContainer.setMargin(uPTitle, new Insets(50,0,30,0));
+		
+		emailLblUP.setFont(Font.font(15));
+		emailFieldUP.setMinWidth(300);
+		emailFieldUP.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
+		
+		usernameLblUP.setFont(Font.font(15));
+		usernameFieldUP.setMinWidth(300);
+		usernameFieldUP.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
+		
+		passLblUP.setFont(Font.font(15));
+		passFieldUP.setMinWidth(300);
+		passFieldUP.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
+		
+		newPassLblUP.setFont(Font.font(15));
+		newPassFieldUP.setMinWidth(300);
+		newPassFieldUP.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
+		
+		uPFill.setAlignment(Pos.CENTER);//menengahkan loginFill
+		uPFill.setVgap(10);
+		uPFill.setHgap(30);
+		uPFill.setPadding(new Insets(10));
+		
+//		changePass.setStyle("-fx-background-color: transparent; -fx-text-fill: #133E87;");
+//		changePass.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+		
+		uPBtn.setPadding(new Insets(10, 0, 10, 0));
+		uPBtn.setMinWidth(100);
+		uPBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
+		uPBtn.setFont(Font.font(15));
+		
+		uPEM.setStyle("-fx-text-fill: red;");
+		
+		uPContainer.setMargin(uPBtn, new Insets(30, 0, 50, 0));
+	}
+	
 //	Membentuk register page secara keseluruhan, termasuk struktur dan design
 	public void register() {
 		initRegisComponent();
@@ -243,6 +348,11 @@ public class Main extends Application {
 	public void login() {
 		initLoginComponent();
 		loginStyling();
+	}
+	
+	public void updateProfile() {
+		initUpdateProfileComponent();
+		updateProfileStyling();
 	}
 	
 //	proses registrasi user
@@ -293,6 +403,7 @@ public class Main extends Application {
 		init();
 		register();
 		login();
+		updateProfile();
 		primaryStage.setScene(regisScene);
 		primaryStage.show();
 		
@@ -324,6 +435,7 @@ public class Main extends Application {
 			primaryStage.setScene(loginScene);
 			primaryStage.show();
 		});
+		
 
 	}
 
