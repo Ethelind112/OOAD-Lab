@@ -17,7 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class RegisterView implements EventHandler<ActionEvent> {
+public class ViewRegister implements EventHandler<ActionEvent> {
 
 	Scene regisScene;
 	VBox regisVB, regisContainer;
@@ -134,37 +134,12 @@ public class RegisterView implements EventHandler<ActionEvent> {
 		registStyling();
 	}
 	
-	public boolean processRegis() {
-		
-//		mengambil data dari inputan
-		String email = emailFieldR.getText();
-		String uName = usernameFieldR.getText();
-		String pass = passFieldR.getText();
-		String role = "";
-		
-		if(roleCB != null) {
-			role = roleCB.getValue();
-		}
-		
-		UserController uController = new UserController();
-		
-//		proses registrasi ke controller
-		String message = uController.register(email, uName, pass, role);
-
-		if(message == "success") {
-			return true;
-		}
-		
-		regisEM.setText(message);
-		return false;
-	}
-	
 	public void setEventHandler() {
 		regisBtn.setOnAction(this);
 		toLogin.setOnAction(this);
 	}
 	
-	public RegisterView() {
+	public ViewRegister() {
 		initRegister();
 		register();
 		setEventHandler();
@@ -175,11 +150,37 @@ public class RegisterView implements EventHandler<ActionEvent> {
 	@Override
 	public void handle(ActionEvent event) {
 		regisBtn.setOnAction(e -> {
-			processRegis();
+
+//			mengambil data dari inputan
+			String email = emailFieldR.getText();
+			String uName = usernameFieldR.getText();
+			String pass = passFieldR.getText();
+			String role = "";
+			
+			if(roleCB != null) {
+				role = roleCB.getValue();
+			}
+			
+			UserController uController = new UserController();
+			
+//			proses registrasi ke controller
+			String message = uController.register(email, uName, pass, role);
+
+			if(message == "success") {
+				if(role.equalsIgnoreCase("Admin")) {
+					
+				}else if(role.equalsIgnoreCase("Guest")) {
+					
+				}else {
+					
+				}
+			}
+			
+			regisEM.setText(message);
 		});
 		
 		toLogin.setOnAction(e -> {
-			LoginView view = new LoginView();
+			ViewLogin view = new ViewLogin();
 			Main.redirect(view.loginScene);
 		});
 		

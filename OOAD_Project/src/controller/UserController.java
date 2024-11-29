@@ -4,10 +4,9 @@ import model.User;
 
 public class UserController {
 
-	User user;
+	private static User user = new User();
 	
 	public UserController() {
-		this.user = new User();
 	}
 	
 	public User getUser() {
@@ -75,7 +74,7 @@ public class UserController {
 		return "";
 	}
 	
-	public String register(String email, String name, String password, String role) {
+	public String checkRegisterInput(String email, String name, String password) {
 		if(checkEmail(email) != "") {
 			return checkEmail(email);
 		}
@@ -88,16 +87,27 @@ public class UserController {
 			return checkuName(name);
 		}
 		
+		return "";
+	}
+	
+	public String register(String email, String name, String password, String role) {
+		String message = checkRegisterInput(email, name, password);
+		
 		if(checkRole(role) != "") {
 			return checkRole(role);
 		}
 		
 //		Masukin data ke database
 		
-		User user = new User();
-		user.register(email, name, password, role);
-		
-		return "success";
+		if(message == "") {
+			User user = new User();
+			user.register(email, name, password, role);
+			
+			this.user = user;
+			
+			return "success";
+		}
+		return message;
 	}
 	
 	
@@ -144,6 +154,60 @@ public class UserController {
 		
 		this.user = user;
 		return "success";
+	}
+	
+	public String changeProfile(String email, String name, String oldPassword, String newPassword) {
+		User currUser = new User().getUserByEmail(this.user.getUser_email()); 
+		
+		String newEmail = email;
+		String newName = name;
+		String newPass = oldPassword;
+		
+		if(email != "") {
+			if(email.equals(user.getUser_email())) {
+				return "The email you inputted is the same as you old email";
+			}
+			
+			User temp = new User().getUserByEmail(email);
+			
+			if(temp == null) {
+				newEmail = email;
+			}else {
+				return "The email you entered already registered";
+			}
+		}
+		
+		if(name != "") {
+			if(name.equals(user.getUser_name())) {
+				return "The email you inputted is the same as you old email";
+			}
+			
+			User temp = new User().getUserByUsername(name);
+			
+			if(temp == null) {
+				newName = name;
+			}else {
+				return "The username you entered already used";
+			}
+		}
+		
+		if(!oldPassword.equals("")) {
+			System.out.println(oldPassword);
+			System.out.println("here");
+			if(!oldPassword.equals(currUser.getUser_password())) {
+				return "Wrong old password";
+			}else {
+				if(newPassword.equals("") || newPassword == null) {
+					return "Input your new password";
+				}else {
+					newPass = newPassword;
+				}
+			}
+		}
+		
+			
+		
+		return "";
 	}
 
 }

@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class LoginView implements EventHandler<ActionEvent> {
+public class ViewLogin implements EventHandler<ActionEvent> {
 
 	Scene loginScene;
 	VBox loginVb, loginContainer;
@@ -120,7 +120,7 @@ public class LoginView implements EventHandler<ActionEvent> {
 		toRegis.setOnAction(this);
 	}
 	
-	public LoginView() {
+	public ViewLogin() {
 		initLogin();
 		login();
 		setEventHandler();
@@ -139,12 +139,14 @@ public class LoginView implements EventHandler<ActionEvent> {
 
 			if(message == "success") {
 				if(uController.getUser().getUser_role().equalsIgnoreCase("Admin")) {
-					RegisterView view = new RegisterView();
-					Main.redirect(view.regisScene);
+					ViewChangeProfile view = new ViewChangeProfile();
+					Main.redirect(view.updateProfileScene);
 				}else if(uController.getUser().getUser_role().equalsIgnoreCase("Guest")){
-					
+					ViewChangeProfile view = new ViewChangeProfile();
+					Main.redirect(view.updateProfileScene);
 				}else {
-					
+					ViewChangeProfile view = new ViewChangeProfile();
+					Main.redirect(view.updateProfileScene);
 				}
 			}
 			
@@ -152,7 +154,7 @@ public class LoginView implements EventHandler<ActionEvent> {
 		});
 		
 		toRegis.setOnAction(e -> {
-			RegisterView view = new RegisterView();
+			ViewRegister view = new ViewRegister();
 			Main.redirect(view.regisScene);
 		});
 		

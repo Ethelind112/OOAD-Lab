@@ -21,7 +21,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
 		stage.setMaxWidth(1000);
-		new RegisterView();
+		new ViewRegister();
 	}
 
 }

@@ -44,8 +44,13 @@ public class User {
 		
 		String id = formats.format(count + 1);
 		
-//		generate id
 		String insertQuery = String.format("INSERT INTO User (user_id, user_email, user_name, user_password, user_role) VALUES ('%s', '%s', '%s', '%s', '%s')", id, email, name, password, role);
+		
+		this.user_id = id;
+		this.user_email = email;
+		this.user_name = name;
+		this.user_password = password;
+		this.user_role = role;
 		
 		connect.executeUpdate(insertQuery);
 	}
