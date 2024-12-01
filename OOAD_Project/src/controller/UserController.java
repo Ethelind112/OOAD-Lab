@@ -157,14 +157,14 @@ public class UserController {
 	}
 	
 	public String changeProfile(String email, String name, String oldPassword, String newPassword) {
-		User currUser = new User().getUserByEmail(this.user.getUser_email()); 
+		User currUser = this.user.getUserByEmail(this.user.getUser_email()); 
 		
-		String newEmail = email;
-		String newName = name;
-		String newPass = oldPassword;
+		String newEmail = this.user.getUser_email();
+		String newName = this.user.getUser_name();
+		String newOldPassword = this.user.getUser_password();
 		
-		if(email != "") {
-			if(email.equals(user.getUser_email())) {
+		if(!email.equals("")) {
+			if(email.equals(newEmail)) {
 				return "The email you inputted is the same as you old email";
 			}
 			
@@ -177,9 +177,9 @@ public class UserController {
 			}
 		}
 		
-		if(name != "") {
-			if(name.equals(user.getUser_name())) {
-				return "The email you inputted is the same as you old email";
+		if(!name.equals("")) {
+			if(name.equals(newName)) {
+				return "The username you inputted is the same as you old username";
 			}
 			
 			User temp = new User().getUserByUsername(name);
@@ -192,22 +192,45 @@ public class UserController {
 		}
 		
 		if(!oldPassword.equals("")) {
-			System.out.println(oldPassword);
-			System.out.println("here");
-			if(!oldPassword.equals(currUser.getUser_password())) {
+			
+			if(!oldPassword.equals(newOldPassword)) {
 				return "Wrong old password";
 			}else {
 				if(newPassword.equals("") || newPassword == null) {
-					return "Input your new password";
-				}else {
-					newPass = newPassword;
+					return "Input your new password to change password or\n leave the old password field blank to update the rest profile data";
 				}
+				
+				String message = checkPass(newPassword);
+				
+				if(!message.equals("")) {
+					return message;
+				}
+				
 			}
 		}
 		
-			
+		if(!newPassword.equals("") && oldPassword.equals("")) {
+			return "Input your old password";
+		}
 		
-		return "";
+		if(email.equals("") && name.equals("") && oldPassword.equals("")) {
+			return "Nothing is updated";
+		}
+		
+		
+		
+		String message = currUser.changeProfile(currUser.getUser_id(), newEmail, newName, newOldPassword, newPassword);
+		
+		if(!message.equals("fail")) {
+			this.user.setUser_email(newEmail);
+			this.user.setUser_name(newName);
+			
+			if(!newPassword.equals("")) {
+				this.user.setUser_password(newPassword);
+			}
+		}
+		
+		return message;
 	}
 
 }

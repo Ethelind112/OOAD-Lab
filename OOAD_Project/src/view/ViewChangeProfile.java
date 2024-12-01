@@ -27,7 +27,6 @@ public class ViewChangeProfile implements EventHandler<ActionEvent> {
 	PasswordField passFieldUP, newPassFieldUP;
 	
 	public void initUpdateProfile() {
-		UserController uController = new UserController();
 		
 		uPVb = new VBox();
 		uPContainer = new VBox();
@@ -46,9 +45,6 @@ public class ViewChangeProfile implements EventHandler<ActionEvent> {
 		emailFieldUP = new TextField();
 		passFieldUP = new PasswordField();
 		newPassFieldUP = new PasswordField();
-		
-		usernameFieldUP.setText(uController.getUser().getUser_email());
-		System.out.println(uController.getUser().getUser_email());
 		
 		uPBtn = new Button("Update");
 		
@@ -108,7 +104,7 @@ public class ViewChangeProfile implements EventHandler<ActionEvent> {
 		uPBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
 		uPBtn.setFont(Font.font(15));
 		
-		uPEM.setStyle("-fx-text-fill: red;");
+		uPEM.setTextFill(javafx.scene.paint.Color.RED);
 		
 		uPContainer.setMargin(uPBtn, new Insets(30, 0, 50, 0));
 	}
@@ -133,8 +129,6 @@ public class ViewChangeProfile implements EventHandler<ActionEvent> {
 	public void handle(ActionEvent event) {
 		uPBtn.setOnAction(e -> {
 			UserController uController = new UserController();
-			System.out.println(passFieldUP.getText());
-			System.out.println("test");
 			uPEM.setText(uController.changeProfile(emailFieldUP.getText(), usernameFieldUP.getText(), passFieldUP.getText(), newPassFieldUP.getText()));
 		});
 		

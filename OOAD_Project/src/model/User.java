@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -44,7 +45,22 @@ public class User {
 		
 		String id = formats.format(count + 1);
 		
-		String insertQuery = String.format("INSERT INTO User (user_id, user_email, user_name, user_password, user_role) VALUES ('%s', '%s', '%s', '%s', '%s')", id, email, name, password, role);
+//		String insertQuery = String.format("INSERT INTO User (user_id, user_email, user_name, user_password, user_role) VALUES ('%s', '%s', '%s', '%s', '%s')", id, email, name, password, role);
+		String insertQuery = "INSERT INTO User (user_id, user_email, user_name, user_password, user_role) VALUES (?, ?, ?, ?, ?)";
+		PreparedStatement ps = connect.prepareStatement(insertQuery);
+		
+		try {
+			ps.setString(1, id);
+			ps.setString(2, email);
+			ps.setString(3, name);
+			ps.setString(4, password);
+			ps.setString(5, role);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		this.user_id = id;
 		this.user_email = email;
@@ -52,30 +68,75 @@ public class User {
 		this.user_password = password;
 		this.user_role = role;
 		
-		connect.executeUpdate(insertQuery);
+//		connect.executeUpdate(insertQuery);
+	}
+	
+//	untuk change profile disini ada tambahan parameter id (tidak mengikuti class diagram) karena email dan username (atribut yang unik) dapat diganti (email dan username baru)
+//	dan untuk bisa melakukan update memerlukan suatu identitas dari user yang membedakan dari user lain. 
+//	Bila email dan name sama sama diganti menjadi yang baru dan tidak ada ID, maka query tidak akan menemukan current user yang akan diupdate
+	public String changeProfile(String id, String email, String name, String oldPassword, String newPassword) {
+
+		String query = "UPDATE user SET user_email = ?, user_name = ?, user_password = ? WHERE user_id = ?";
+		PreparedStatement ps = connect.prepareStatement(query);
+		
+		System.out.println(id);
+		System.out.println(email);
+		System.out.println(name);
+		System.out.println(oldPassword);
+		System.out.println(newPassword);
+		
+		try {
+			ps.setString(1, email);
+			ps.setString(2, name);
+			
+			if(newPassword.equals("") || newPassword == null) {
+				ps.setString(3, oldPassword);
+			}else {
+				ps.setString(3, newPassword);
+			}
+			
+			ps.setString(4, id);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			return "fail";
+		}
+		
+		return "success";
 	}
 	
 	public User getUserByEmail(String email) {
-		String readDateQuery = String.format("SELECT * FROM user WHERE user_email = '%s'", email);
+//		String readDateQuery = String.format("SELECT * FROM user WHERE user_email = '%s'", email);
+		String readDateQuery = "SELECT * FROM user WHERE user_email = ?";
 		
-		ResultSet readData = connect.execute(readDateQuery);
+		PreparedStatement ps = connect.prepareStatement(readDateQuery);
+		ResultSet readData = null;
 		
 		try {
+			ps.setString(1, email);
+			readData = ps.executeQuery();
+			
 			if(readData != null && readData.next())
 				return new User(readData.getString("user_id"), readData.getString("user_email"), readData.getString("user_name"), readData.getString("user_password"), readData.getString("user_role"));
-		} catch (SQLException e) {
-			return null;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
 		}
 		
 		return null;
 	}
 	
 	public User getUserByUsername(String name) {
-		String readDateQuery = String.format("SELECT * FROM user WHERE user_name = '%s'", name);
+//		String readDateQuery = String.format("SELECT * FROM user WHERE user_name = '%s'", name);
+		String readDateQuery = "SELECT * FROM user WHERE user_name = ?";
 		
-		ResultSet readData = connect.execute(readDateQuery);
+		PreparedStatement ps = connect.prepareStatement(readDateQuery);
+		ResultSet readData = null;
+		
+//		ResultSet readData = connect.execute(readDateQuery);
 		
 		try {
+			ps.setString(1, name);
+			readData = ps.executeQuery();
+			
 			if(readData != null && readData.next())
 				return new User(readData.getString("user_id"), readData.getString("user_email"), readData.getString("user_name"), readData.getString("user_password"), readData.getString("user_role"));
 		} catch (SQLException e) {
