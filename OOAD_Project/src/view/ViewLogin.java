@@ -142,8 +142,8 @@ public class ViewLogin implements EventHandler<ActionEvent> {
 					ViewChangeProfile view = new ViewChangeProfile();
 					Main.redirect(view.updateProfileScene);
 				}else if(uController.getUser().getUser_role().equalsIgnoreCase("Guest")){
-					ViewChangeProfile view = new ViewChangeProfile();
-					Main.redirect(view.updateProfileScene);
+					ViewInvitation view = new ViewInvitation();
+					Main.redirect(view.invitationScene);
 				}else {
 					ViewChangeProfile view = new ViewChangeProfile();
 					Main.redirect(view.updateProfileScene);
