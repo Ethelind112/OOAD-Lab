@@ -14,32 +14,54 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import model.Event;
 import model.Invitation;
 
-public class ViewInvitation implements EventHandler<ActionEvent> {
+public class ViewInvitation {
 
 	Scene invitationScene;
-	VBox invitationVb, invitationContainer;
+	BorderPane invitationPage;
+	VBox invitationContainer;
 	Label invitationTitle, invitationDescription, invitationEM;
 	TableView<Event> invitationTable;
 	Button acceptBtn;
 	
+	MenuBar menubar;
+	Menu invitation, event, updateProfile;
+	MenuItem iInvitation, iEvent, iUpdateProfile;
+	
 	public void initInvitation() {
-		invitationVb = new VBox();
+		invitationPage = new BorderPane();
 		invitationContainer = new VBox();
-		invitationScene = new Scene(invitationVb, 1000, 700);
+		invitationScene = new Scene(invitationPage, 1000, 700);
 		invitationTitle = new Label("Invitation");
 		invitationDescription = new Label("This is your invitation, select the invitation from the table bellow before clicking on the accept button.");
 		invitationEM = new Label("");
 		acceptBtn = new Button("Accept");
 		invitationTable = new TableView<>();
+		
+		menubar = new MenuBar();
+		invitation = new Menu("Invitations");
+		event = new Menu("Accepted Events");
+		updateProfile = new Menu("Update Profile");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		iUpdateProfile = new MenuItem("Update Profile");
 	}
 	
 	public void setTable() {
@@ -81,15 +103,24 @@ public class ViewInvitation implements EventHandler<ActionEvent> {
 		
 		setTable();
 		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, updateProfile);
+		
 		invitationContainer.getChildren().addAll(invitationTitle, invitationDescription, acceptBtn, invitationEM, invitationTable);
-		invitationVb.getChildren().add(invitationContainer);
+		invitationPage.setTop(menubar);
+		invitationPage.setCenter(invitationContainer);
 	}
 	
 	public void invitationStyling(){
-		invitationVb.setAlignment(Pos.TOP_CENTER); //menengahkan posisi container
-		invitationVb.setStyle("-fx-background-color: white;");
+//		invitationVb.setAlignment(Pos.TOP_CENTER); //menengahkan posisi container
+		invitationContainer.setStyle("-fx-background-color: white;");
 	
 		invitationContainer.setMaxWidth(900);
+		
+		menubar.setPadding(new Insets(10, 10, 10, 10));
 		
 		invitationTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
 		invitationContainer.setMargin(invitationTitle, new Insets(50,0,10,0));
@@ -102,6 +133,8 @@ public class ViewInvitation implements EventHandler<ActionEvent> {
 		
 		invitationContainer.setMargin(acceptBtn, new Insets(20, 0, 10, 0));
 		invitationContainer.setMargin(invitationEM, new Insets(0, 0, 30, 0));
+		
+		invitationPage.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 	}
 	
 	public void invitation() {
@@ -110,18 +143,6 @@ public class ViewInvitation implements EventHandler<ActionEvent> {
 	}
 
 	public void setEventHandler() {
-		acceptBtn.setOnAction(this);
-	}
-	
-	public ViewInvitation() {
-		initInvitation();
-		invitation();
-		setEventHandler();
-		Main.redirect(invitationScene);
-	}
-
-	@Override
-	public void handle(ActionEvent event) {
 		acceptBtn.setOnAction(e -> {
 			Event selectedInvitation = invitationTable.getSelectionModel().getSelectedItem();
 			if(selectedInvitation != null) {
@@ -131,11 +152,32 @@ public class ViewInvitation implements EventHandler<ActionEvent> {
 				gController.acceptInvitation(eventID);
 				setTable();
 				
+				ViewEvents view = new ViewEvents();
+				Main.redirect(view.eventScene);
+				
 			}else {
 				invitationEM.setText("Choose the invitation bellow");
 			}
 			System.out.println("pressed");
 		});
+		
+
+		iEvent.setOnAction(e -> {
+			ViewEvents view = new ViewEvents();
+			Main.redirect(view.eventScene);
+		});
+		
+		iUpdateProfile.setOnAction(e -> {
+			ViewChangeProfile view = new ViewChangeProfile();
+			Main.redirect(view.updateProfileScene);
+		});
+	}
+	
+	public ViewInvitation() {
+		initInvitation();
+		invitation();
+		setEventHandler();
+		Main.redirect(invitationScene);
 	}
 
 }

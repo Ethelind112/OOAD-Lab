@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.ArrayList;
+
+import model.Event;
 import model.Guest;
 
 public class GuestController {
@@ -12,6 +15,11 @@ public class GuestController {
 		Guest guest = new Guest();
 		
 		return guest.acceptInvitation(eventID);
+	}
+	
+	public ArrayList<Event> viewAcceptedEvents(String email){
+		Guest guest = new Guest();
+		return guest.viewAcceptedEvents(email);
 	}
 	
 }
