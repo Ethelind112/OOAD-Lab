@@ -104,7 +104,7 @@ public class ViewRegister implements EventHandler<ActionEvent> {
 		passFieldR.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
 		
 		roleLbl.setFont(Font.font(15));
-		roleCB.getItems().addAll("Event Organizer", "Vendor", "Guest");
+		roleCB.getItems().addAll("Event Organizer", "Vendor", "Guest", "Admin");
 		roleCB.setMinWidth(300);
 		roleCB.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
 		

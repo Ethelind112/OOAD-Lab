@@ -156,6 +156,7 @@ public class ViewEvents {
 		initInvitation();
 		invitation();
 		setEventHandler();
+		
 		Main.redirect(eventScene);
 	}
 
