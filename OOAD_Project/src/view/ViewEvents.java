@@ -2,6 +2,7 @@ package view;
 
 import java.util.ArrayList;
 
+import controller.EventController;
 import controller.GuestController;
 import controller.InvitationController;
 import controller.UserController;
@@ -40,6 +41,7 @@ public class ViewEvents {
 	MenuItem iInvitation, iEvent, iUpdateProfile;
 	
 	public void initInvitation() {
+		
 		eventPage = new BorderPane();
 		eventContainer = new VBox();
 		eventScene = new Scene(eventPage, 1000, 700);

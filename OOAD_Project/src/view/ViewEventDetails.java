@@ -1,5 +1,8 @@
 package view;
 
+import controller.EventController;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -7,11 +10,16 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import model.Event;
 
 public class ViewEventDetails {
 	
@@ -28,16 +36,19 @@ public class ViewEventDetails {
 	Menu invitation, event, updateProfile;
 	MenuItem iInvitation, iEvent, iUpdateProfile;
 	
-	public void initEventDetail() {
+	public void initEventDetail(String eventID) {
+		EventController eController = new EventController();
+		Event currEvent = eController.viewEventDetails(eventID);
+		
 		eventDetailContainer = new VBox();
 		eventDetailPage = new BorderPane();
 		eventDetailScene = new Scene(eventDetailPage, 1000, 700);
-		eventName = new Label("");
-		eventDescription = new Label("");
-		eventDate = new Label("");
-		eventLocation = new Label("");
+		eventName = new Label(currEvent.getEvent_name());
+		eventDescription = new Label(currEvent.getEvent_description());
+		eventDate = new Label(currEvent.getEvent_date());
+		eventLocation = new Label(currEvent.getEvent_location());
 		dateLbl = new Label("Date: ");
-		locationLbl = new Label("Location");
+		locationLbl = new Label("Location: ");
 		location = new HBox();
 		date = new HBox();
 		
@@ -65,10 +76,38 @@ public class ViewEventDetails {
 		eventDetailPage.setCenter(eventDetailContainer);
 	}
 	
-	public ViewEventDetails(String eventId) {
+	public void eventDetailStyling() {
+		eventDetailPage.setStyle("-fx-background-color: white;");
+		eventDetailContainer.setMaxWidth(900);
+		menubar.setPadding(new Insets(10, 10, 10, 10));
+		
+		eventName.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+		eventDetailContainer.setMargin(eventName, new Insets(50,0,10,0));
+		eventDetailContainer.setMargin(eventDescription, new Insets(0,0,20,0));
+		eventDetailContainer.setAlignment(Pos.TOP_CENTER);
+		location.setAlignment(Pos.TOP_CENTER);
+		date.setAlignment(Pos.TOP_CENTER);
+	}
+	
+	public void setEventHandler() {
+		iInvitation.setOnAction(e -> {
+			ViewInvitation view = new ViewInvitation();
+			Main.redirect(view.invitationScene);
+		});
+		
+		iUpdateProfile.setOnAction(e -> {
+			ViewChangeProfile view = new ViewChangeProfile();
+			Main.redirect(view.updateProfileScene);
+		});
+		
+	}
+	
+	public ViewEventDetails(String eventID) {
 		this.eventId = eventId;
-		initEventDetail();
+		initEventDetail(eventID);
 		initDetailComponent();
+		eventDetailStyling();
+		setEventHandler();
 		
 		Main.redirect(eventDetailScene);
 	}

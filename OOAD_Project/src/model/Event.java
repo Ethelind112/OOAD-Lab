@@ -1,8 +1,15 @@
 package model;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import util.Connect;
+
 public class Event {
 	
 	String event_id, event_name, event_date, event_location, event_description, organizer_id;
+	private Connect connect = Connect.getInstance();
 
 	public Event() {
 		// TODO Auto-generated constructor stub
@@ -18,6 +25,25 @@ public class Event {
 		this.organizer_id = organizer_id;
 	}
 
+	public Event viewEventDetails(String eventID) {
+		String readEventQuery = "SELECT * FROM event WHERE event_id = ?";
+		
+		PreparedStatement ps = connect.prepareStatement(readEventQuery);
+		ResultSet readData = null;
+		
+		try {
+			ps.setString(1, eventID);
+			readData = ps.executeQuery();
+			
+			if(readData != null && readData.next())
+				return new Event(readData.getString("event_id"), readData.getString("event_name"), readData.getString("event_date"), readData.getString("event_location"), readData.getString("event_description"), readData.getString("organizer_id"));
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	public String getEvent_id() {
 		return event_id;
 	}
