@@ -18,6 +18,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
@@ -27,7 +28,7 @@ import javafx.scene.text.FontWeight;
 import model.Event;
 
 public class ViewEvents {
-
+	
 	Scene eventScene;
 	BorderPane eventPage;
 	VBox eventContainer;
@@ -134,6 +135,18 @@ public class ViewEvents {
 		iUpdateProfile.setOnAction(e -> {
 			ViewChangeProfile view = new ViewChangeProfile();
 			Main.redirect(view.updateProfileScene);
+		});
+		
+		eventTable.setRowFactory((TableView<Event> e) -> {
+			TableRow<Event> row = new TableRow<>();
+			row.setOnMouseClicked(v -> {
+				if (!row.isEmpty() && v.getClickCount() == 1) {
+					Event selectedEvent = eventTable.getSelectionModel().getSelectedItem();
+					ViewEventDetails view = new ViewEventDetails(selectedEvent.getEvent_id());
+					Main.redirect(view.eventDetailScene);
+				}
+			});
+			return row;
 		});
 	}
 	

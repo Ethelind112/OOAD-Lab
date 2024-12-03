@@ -14,6 +14,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class ViewEventDetails {
+	
+	String eventId;
 
 	Scene eventDetailScene;
 	VBox eventDetailContainer;
@@ -29,7 +31,7 @@ public class ViewEventDetails {
 	public void initEventDetail() {
 		eventDetailContainer = new VBox();
 		eventDetailPage = new BorderPane();
-		eventDetailScene = new Scene(eventDetailPage);
+		eventDetailScene = new Scene(eventDetailPage, 1000, 700);
 		eventName = new Label("");
 		eventDescription = new Label("");
 		eventDate = new Label("");
@@ -58,12 +60,13 @@ public class ViewEventDetails {
 		
 		location.getChildren().addAll(locationLbl, eventLocation);
 		date.getChildren().addAll(dateLbl, eventDate);
-		eventDetailContainer.getChildren().addAll(eventName, eventDescription, eventDate, eventLocation);
+		eventDetailContainer.getChildren().addAll(eventName, eventDescription, date, location);
 		eventDetailPage.setTop(menubar);
 		eventDetailPage.setCenter(eventDetailContainer);
 	}
 	
-	public ViewEventDetails() {
+	public ViewEventDetails(String eventId) {
+		this.eventId = eventId;
 		initEventDetail();
 		initDetailComponent();
 		
