@@ -24,12 +24,13 @@ public class User {
 	public User() {
 	}
 	
-	public void register(String email, String name, String password, String role) {
+	public String register(String email, String name, String password, String role) {
 		
 		String readDateQuery = "SELECT * FROM user";
 		
 		ResultSet readData = connect.execute(readDateQuery);
 		
+//		Generate ID
 		int count = 0;
 		
 		try {
@@ -37,15 +38,13 @@ public class User {
 				count++;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		DecimalFormat formats = new DecimalFormat("00000");
-		
 		String id = formats.format(count + 1);
 		
-//		String insertQuery = String.format("INSERT INTO User (user_id, user_email, user_name, user_password, user_role) VALUES ('%s', '%s', '%s', '%s', '%s')", id, email, name, password, role);
+//		memasukan data ke database
 		String insertQuery = "INSERT INTO User (user_id, user_email, user_name, user_password, user_role) VALUES (?, ?, ?, ?, ?)";
 		PreparedStatement ps = connect.prepareStatement(insertQuery);
 		
@@ -57,10 +56,9 @@ public class User {
 			ps.setString(5, role);
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			mengirim error message bila gagal memasukan data ke database
+			return "fail";
 		}
-		
 		
 		this.user_id = id;
 		this.user_email = email;
@@ -68,7 +66,8 @@ public class User {
 		this.user_password = password;
 		this.user_role = role;
 		
-//		connect.executeUpdate(insertQuery);
+//		mengirimkan success message bila berhasil memasukan data ke database
+		return "success";
 	}
 	
 //	untuk change profile disini ada tambahan parameter id (tidak mengikuti class diagram) karena email dan username (atribut yang unik) dapat diganti (email dan username baru)

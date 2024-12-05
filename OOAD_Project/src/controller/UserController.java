@@ -25,13 +25,6 @@ public class UserController {
 			return "Please Fill All The Field";
 		}
 		
-		//cek keunikan dari database
-		User user = new User().getUserByEmail(email);
-		
-		if(user != null) {
-			return "Email Is Already Registered";
-		}
-		
 		return "";
 	}
 	
@@ -40,13 +33,6 @@ public class UserController {
 		//bila email kosong, keluarkan error message
 		if(uName.isEmpty()) {
 			return "Please Fill All The Field";
-		}
-		
-		//check keunikan dari database
-		User user = new User().getUserByUsername(uName);
-		
-		if(user != null) {
-			return "Username Is Already Used";
 		}
 		
 		return "";
@@ -91,22 +77,41 @@ public class UserController {
 	}
 	
 	public String register(String email, String name, String password, String role) {
+//		mendapatkan user dengan email dan name yang ada di parameter, digunakan untuk melakukan pengecekan keunikan
+		User userName = new User().getUserByUsername(name);
+		User userEmail = new User().getUserByEmail(email);
+		
+//		melakukan pengecekan inputan email, name, dan password yang harus sesuai ketentuan
 		String message = checkRegisterInput(email, name, password);
 		
+//		melakukan pengecekan bila role telah dipilih atau belum
 		if(checkRole(role) != "") {
 			return checkRole(role);
 		}
 		
-//		Masukin data ke database
+//		melakukan pengecekan bila user yang didapatkan dari email sudah terdaftar atau belum	
+		if(userEmail != null) {
+			return "Email Is Already Registered";
+		}
+		
+//		melakukan pengecekan bila user yang didapatkan dari username sudah terdaftar atau belum	
+		if(userName != null) {
+			return "Username Is Already Used";
+		}
+		
+//		Masukin data ke database bila tidak error
 		
 		if(message == "") {
 			User user = new User();
-			user.register(email, name, password, role);
+			message = user.register(email, name, password, role);
 			
 			this.user = user;
 			
+//			mengirim success message
 			return "success";
 		}
+		
+//		mengirim error message	
 		return message;
 	}
 	
