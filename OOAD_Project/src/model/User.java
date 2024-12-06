@@ -24,6 +24,8 @@ public class User {
 	public User() {
 	}
 	
+//	Tidak ada function checkRegister dalam model user, karena flow mengikuti sequence diagram yang juga tidak memiliki checkRegister dalam model user
+//	karena dalam sequence diagram telah getUserByEmail dan getUserByUsername dalam controller, sehingga telah dilakukan pengecekan keunikan di controller
 	public String register(String email, String name, String password, String role) {
 		
 		String readDateQuery = "SELECT * FROM user";

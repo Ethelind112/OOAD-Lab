@@ -32,6 +32,8 @@ import model.Event;
 import model.Invitation;
 
 public class ViewInvitation {
+	
+	private String email;
 
 	Scene invitationScene;
 	BorderPane invitationPage;
@@ -56,18 +58,21 @@ public class ViewInvitation {
 		
 		menubar = new MenuBar();
 		invitation = new Menu("Invitations");
-		event = new Menu("Accepted Events");
+		event = new Menu("Events");
 		updateProfile = new Menu("Update Profile");
 		
 		iInvitation = new MenuItem("Invitation");
 		iEvent = new MenuItem("Accepted Events");
 		iUpdateProfile = new MenuItem("Update Profile");
+		
+//		tambahin if else untuk element menu vendor
+		
 	}
 	
 	public void setTable() {
 		InvitationController iController = new InvitationController();
-		UserController uController = new UserController();
-		ArrayList<Event> invitation = iController.getInvitations(uController.getUser().getUser_email());
+//		UserController uController = new UserController();
+		ArrayList<Event> invitation = iController.getInvitations(this.email);
 		
 		ObservableList<Event> invitationData = FXCollections.observableArrayList(invitation);
 		
@@ -115,7 +120,6 @@ public class ViewInvitation {
 	}
 	
 	public void invitationStyling(){
-//		invitationVb.setAlignment(Pos.TOP_CENTER); //menengahkan posisi container
 		invitationContainer.setStyle("-fx-background-color: white;");
 	
 		invitationContainer.setMaxWidth(900);
@@ -152,9 +156,6 @@ public class ViewInvitation {
 				gController.acceptInvitation(eventID);
 				setTable();
 				
-				ViewEvents view = new ViewEvents();
-				Main.redirect(view.eventScene);
-				
 			}else {
 				invitationEM.setText("Choose the invitation bellow");
 			}
@@ -163,7 +164,7 @@ public class ViewInvitation {
 		
 
 		iEvent.setOnAction(e -> {
-			ViewEvents view = new ViewEvents();
+			ViewEvents view = new ViewEvents(this.email);
 			Main.redirect(view.eventScene);
 		});
 		
@@ -171,9 +172,14 @@ public class ViewInvitation {
 			ViewChangeProfile view = new ViewChangeProfile();
 			Main.redirect(view.updateProfileScene);
 		});
+		
+//		setonaction click menuitem tambahan vendor
+		
 	}
 	
-	public ViewInvitation() {
+	public ViewInvitation(String email) {
+		this.email = email;
+		
 		initInvitation();
 		invitation();
 		setEventHandler();

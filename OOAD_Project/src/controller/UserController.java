@@ -126,10 +126,10 @@ public class UserController {
 		User user = new User().getUserByEmail(email);
 		
 		if(user != null) {
-			return "";
+			return "success";
 		}
 		
-		return "Email Not Found";
+		return "fail";
 	}
 	
 	public String checkPasswordLogin(String pass) {
@@ -138,21 +138,27 @@ public class UserController {
 			return "Please Fill All The Field";
 		}
 		
-		return "";
+		return "success";
 	}
 	
+//	untuk login tidak memiliki flow dalam sequence, activity, dan tidak ada method dalam class diagram sehingga dibuat dengan flow sendiri
 	public String login(String email, String password) {
-		if(checkEmailLogin(email) != "") {
+		User user = new User().getUserByEmail(email);
+		
+		if(checkEmailLogin(email).equals("fail")) {
 			return checkEmailLogin(email);
 		}
 		
-		if(checkPasswordLogin(password) != "") {
+		if(!checkPasswordLogin(password).equals("success")) {
 			return checkPasswordLogin(password);
 		}
 		
-//		check ke database email sama password sama gak
-		User user = new User().getUserByEmail(email);
+//		mengecek bila email telah terdaftar atau belum
+		if(user == null) {
+			return "Email Not Found";
+		}
 		
+//		check ke database email sama password sama gak
 		if(!user.getUser_password().equals(password)) {
 			return "Password and Email Don't Match";
 		}

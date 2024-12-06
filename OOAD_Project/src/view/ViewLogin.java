@@ -10,9 +10,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -72,21 +76,23 @@ public class ViewLogin implements EventHandler<ActionEvent> {
 	public void loginStyling(){
 		loginVb.setAlignment(Pos.CENTER); //menengahkan posisi container
 		loginVb.setStyle("-fx-background-color: #133E87;");
+		loginVb.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
 		
 		loginContainer.setAlignment(Pos.CENTER);
 		loginContainer.setMaxWidth(500);
-		loginContainer.setStyle("-fx-background-color: white;");
+//		loginContainer.setStyle("-fx-background-color: white;");
+		loginContainer.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, null)));
 		
 		loginTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
 		loginContainer.setMargin(loginTitle, new Insets(50,0,30,0));
 		
 		emailLbl.setFont(Font.font(15));
 		emailField.setMinWidth(300);
-		emailField.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
+//		emailField.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
 		
 		passLbl.setFont(Font.font(15));
 		passField.setMinWidth(300);
-		passField.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
+//		passField.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
 		
 		loginFill.setAlignment(Pos.CENTER);//menengahkan loginFill
 		loginFill.setVgap(10);
@@ -95,14 +101,19 @@ public class ViewLogin implements EventHandler<ActionEvent> {
 		
 		loginBtn.setPadding(new Insets(10, 0, 10, 0));
 		loginBtn.setMinWidth(100);
-		loginBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
+//		loginBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
+		loginBtn.setTextFill(Color.WHITE);
+		loginBtn.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
 		loginBtn.setFont(Font.font(15));
 		
 		bottomAuthL.setAlignment(Pos.CENTER); //menengahkan bottomAuthL
-		toRegis.setStyle("-fx-background-color: transparent; -fx-text-fill: #133E87;");
+//		toRegis.setStyle("-fx-background-color: transparent; -fx-text-fill: #133E87;");
+		toRegis.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, null)));
+		toRegis.setTextFill(Color.web("#133E87"));
 		toRegis.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		
-		loginEM.setStyle("-fx-text-fill: red;");
+//		loginEM.setStyle("-fx-text-fill: red;");
+		loginEM.setTextFill(Color.RED);
 		
 		loginContainer.setMargin(loginBtn, new Insets(20, 0, 0, 0));
 		loginContainer.setMargin(bottomAuthL, new Insets(10, 0, 50, 0));
@@ -138,15 +149,19 @@ public class ViewLogin implements EventHandler<ActionEvent> {
 			String message = uController.login(email, pass);
 
 			if(message == "success") {
+				System.out.println(uController.getUser().getUser_role());
 				if(uController.getUser().getUser_role().equalsIgnoreCase("Admin")) {
-					ViewChangeProfile view = new ViewChangeProfile();
-					Main.redirect(view.updateProfileScene);
+					ViewEvents view = new ViewEvents(email);
+					Main.redirect(view.eventScene);
 				}else if(uController.getUser().getUser_role().equalsIgnoreCase("Guest")){
-					ViewInvitation view = new ViewInvitation();
+					ViewInvitation view = new ViewInvitation(email);
 					Main.redirect(view.invitationScene);
-				}else {
-					ViewChangeProfile view = new ViewChangeProfile();
-					Main.redirect(view.updateProfileScene);
+				}else if(uController.getUser().getUser_role().equalsIgnoreCase("Event Organizer")) {
+					ViewEvents view = new ViewEvents(email);
+					Main.redirect(view.eventScene);
+				}else if(uController.getUser().getUser_role().equalsIgnoreCase("Vendor")) {
+					ViewInvitation view = new ViewInvitation(email);
+					Main.redirect(view.invitationScene);
 				}
 			}
 			

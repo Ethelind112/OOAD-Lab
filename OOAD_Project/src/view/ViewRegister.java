@@ -11,13 +11,17 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class ViewRegister implements EventHandler<ActionEvent> {
+public class ViewRegister {
 
 	Scene regisScene;
 	VBox regisVB, regisContainer;
@@ -82,31 +86,27 @@ public class ViewRegister implements EventHandler<ActionEvent> {
 	
 	public void registStyling() {
 		regisVB.setAlignment(Pos.CENTER);
-		regisVB.setStyle("-fx-background-color: #133E87;");
+		regisVB.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
 		
 		regisContainer.setAlignment(Pos.CENTER); //menengahkan posisi container
 		regisContainer.setMaxWidth(500);
-		regisContainer.setStyle("-fx-background-color: white;");
+		regisContainer.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, null)));
 		
 		regisTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
 		regisContainer.setMargin(regisTitle, new Insets(50,0,30,0));
 		
 		emailLblR.setFont(Font.font(15));
 		emailFieldR.setMinWidth(300);
-		emailFieldR.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
 		
 		usernameLbl.setFont(Font.font(15));
 		usernameFieldR.setMinWidth(300);
-		usernameFieldR.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
 		
 		passLblR.setFont(Font.font(15));
 		passFieldR.setMinWidth(300);
-		passFieldR.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
 		
 		roleLbl.setFont(Font.font(15));
 		roleCB.getItems().addAll("Event Organizer", "Vendor", "Guest", "Admin");
 		roleCB.setMinWidth(300);
-		roleCB.setStyle("-fx-background-color: white; -fx-border-color: #e6e6e6");
 		
 		regisFill.setAlignment(Pos.CENTER); //menengahkan regisFill
 		regisFill.setVgap(10);
@@ -115,15 +115,16 @@ public class ViewRegister implements EventHandler<ActionEvent> {
 		
 		regisBtn.setPadding(new Insets(10, 0, 10, 0));
 		regisBtn.setMinWidth(100);
-		regisBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
+		regisBtn.setTextFill(Color.WHITE);
+		regisBtn.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
 		regisBtn.setFont(Font.font(15));
 		
 		bottomAuthR.setAlignment(Pos.CENTER); //menengahkan bottomAuthR
-		toLogin.setStyle("-fx-background-color: transparent; -fx-text-fill: #133E87;");
+		toLogin.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, null)));
+		toLogin.setTextFill(Color.web("#133E87"));
 		toLogin.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		
-		
-		regisEM.setStyle("-fx-text-fill: red;");
+		regisEM.setTextFill(Color.RED);
 		
 		regisContainer.setMargin(regisBtn, new Insets(20, 0, 0, 0));
 		regisContainer.setMargin(bottomAuthR, new Insets(10, 0, 50, 0));
@@ -135,20 +136,6 @@ public class ViewRegister implements EventHandler<ActionEvent> {
 	}
 	
 	public void setEventHandler() {
-		regisBtn.setOnAction(this);
-		toLogin.setOnAction(this);
-	}
-	
-	public ViewRegister() {
-		initRegister();
-		register();
-		setEventHandler();
-		
-		Main.redirect(regisScene);
-	}
-
-	@Override
-	public void handle(ActionEvent event) {
 		regisBtn.setOnAction(e -> {
 
 //			mengambil data dari inputan
@@ -168,11 +155,17 @@ public class ViewRegister implements EventHandler<ActionEvent> {
 
 			if(message == "success") {
 				if(role.equalsIgnoreCase("Admin")) {
-					
+					ViewEvents view = new ViewEvents(email);
+					Main.redirect(view.eventScene);
 				}else if(role.equalsIgnoreCase("Guest")) {
-					
-				}else {
-					
+					ViewInvitation view = new ViewInvitation(email);
+					Main.redirect(view.invitationScene);
+				}else if(role.equalsIgnoreCase("Event Organizer")) {
+					ViewEvents view = new ViewEvents(email);
+					Main.redirect(view.eventScene);
+				}else if(role.equalsIgnoreCase("Vendor")) {
+					ViewInvitation view = new ViewInvitation(email);
+					Main.redirect(view.invitationScene);
 				}
 			}
 			
@@ -183,7 +176,14 @@ public class ViewRegister implements EventHandler<ActionEvent> {
 			ViewLogin view = new ViewLogin();
 			Main.redirect(view.loginScene);
 		});
+	}
+	
+	public ViewRegister() {
+		initRegister();
+		register();
+		setEventHandler();
 		
+		Main.redirect(regisScene);
 	}
 
 }

@@ -30,6 +30,8 @@ import model.Event;
 
 public class ViewEvents {
 	
+	String email;
+	
 	Scene eventScene;
 	BorderPane eventPage;
 	VBox eventContainer;
@@ -45,13 +47,13 @@ public class ViewEvents {
 		eventPage = new BorderPane();
 		eventContainer = new VBox();
 		eventScene = new Scene(eventPage, 1000, 700);
-		eventTitle = new Label("Invitation");
-		eventDescription = new Label("This is your invitation, select the invitation from the table bellow before clicking on the accept button.");
+		eventTitle = new Label("Events");
+		eventDescription = new Label("This is your event list, select the event from the table bellow to view the details");
 		eventTable = new TableView<>();
 		
 		menubar = new MenuBar();
 		invitation = new Menu("Invitations");
-		event = new Menu("Accepted Events");
+		event = new Menu("Events");
 		updateProfile = new Menu("Update Profile");
 		
 		iInvitation = new MenuItem("Invitation");
@@ -110,7 +112,6 @@ public class ViewEvents {
 	}
 	
 	public void invitationStyling(){
-//		eventPage.setAlignment(Pos.TOP_CENTER); //menengahkan posisi container
 		eventPage.setStyle("-fx-background-color: white;");
 	
 		eventContainer.setMaxWidth(900);
@@ -130,7 +131,7 @@ public class ViewEvents {
 
 	public void setEventHandler() {
 		iInvitation.setOnAction(e -> {
-			ViewInvitation view = new ViewInvitation();
+			ViewInvitation view = new ViewInvitation(this.email);
 			Main.redirect(view.invitationScene);
 		});
 		
@@ -152,7 +153,9 @@ public class ViewEvents {
 		});
 	}
 	
-	public ViewEvents() {
+	public ViewEvents(String email) {
+		this.email = email;
+		
 		initInvitation();
 		invitation();
 		setEventHandler();

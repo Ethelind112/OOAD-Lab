@@ -1,6 +1,7 @@
 package view;
 
 import controller.EventController;
+import controller.UserController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -54,7 +55,7 @@ public class ViewEventDetails {
 		
 		menubar = new MenuBar();
 		invitation = new Menu("Invitations");
-		event = new Menu("Accepted Events");
+		event = new Menu("Events");
 		updateProfile = new Menu("Update Profile");
 		
 		iInvitation = new MenuItem("Invitation");
@@ -91,13 +92,20 @@ public class ViewEventDetails {
 	
 	public void setEventHandler() {
 		iInvitation.setOnAction(e -> {
-			ViewInvitation view = new ViewInvitation();
+			UserController uController = new UserController();
+			ViewInvitation view = new ViewInvitation(uController.getUser().getUser_email());
 			Main.redirect(view.invitationScene);
 		});
 		
 		iUpdateProfile.setOnAction(e -> {
 			ViewChangeProfile view = new ViewChangeProfile();
 			Main.redirect(view.updateProfileScene);
+		});
+		
+		iEvent.setOnAction(e -> {
+			UserController uController = new UserController();
+			ViewEvents view = new ViewEvents(uController.getUser().getUser_email());
+			Main.redirect(view.eventScene);
 		});
 		
 	}

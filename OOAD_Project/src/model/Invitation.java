@@ -13,7 +13,7 @@ public class Invitation {
 	private Connect connect = Connect.getInstance();
 	
 	public Invitation() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public ArrayList<Event> getInvitations(String email) {
