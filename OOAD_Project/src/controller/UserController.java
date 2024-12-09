@@ -17,7 +17,13 @@ public class UserController {
 		this.user = user;
 	}
 
-
+	public User getUserByEmail(String email) {
+		return user.getUserByEmail(email);
+	}
+	
+	public User getUserByUsername(String name) {
+		return user.getUserByUsername(name);
+	}
 
 	//	Mengecek inputan email user saat registrasi
 	public String checkEmail(String email) {
@@ -78,8 +84,8 @@ public class UserController {
 	
 	public String register(String email, String name, String password, String role) {
 //		mendapatkan user dengan email dan name yang ada di parameter, digunakan untuk melakukan pengecekan keunikan
-		User userName = new User().getUserByUsername(name);
-		User userEmail = new User().getUserByEmail(email);
+		User userName = getUserByUsername(name);
+		User userEmail = getUserByEmail(email);
 		
 //		melakukan pengecekan inputan email, name, dan password yang harus sesuai ketentuan
 		String message = checkRegisterInput(email, name, password);
@@ -122,14 +128,7 @@ public class UserController {
 			return "Please Fill All The Field";
 		}
 		
-		//Check ada email ato gak di database
-		User user = new User().getUserByEmail(email);
-		
-		if(user != null) {
-			return "success";
-		}
-		
-		return "fail";
+		return "success";
 	}
 	
 	public String checkPasswordLogin(String pass) {
@@ -141,11 +140,10 @@ public class UserController {
 		return "success";
 	}
 	
-//	untuk login tidak memiliki flow dalam sequence, activity, dan tidak ada method dalam class diagram sehingga dibuat dengan flow sendiri
+//	untuk login tidak memiliki flow dalam sequence dan activity sehingga dibuat dengan flow sendiri
 	public String login(String email, String password) {
-		User user = new User().getUserByEmail(email);
 		
-		if(checkEmailLogin(email).equals("fail")) {
+		if(checkEmailLogin(email).equals("Please Fill All The Field")) {
 			return checkEmailLogin(email);
 		}
 		
@@ -153,22 +151,20 @@ public class UserController {
 			return checkPasswordLogin(password);
 		}
 		
-//		mengecek bila email telah terdaftar atau belum
-		if(user == null) {
-			return "Email Not Found";
+		String message = new User().login(email, password);
+		
+		if(!message.equals("success")) {
+			return message;
 		}
 		
-//		check ke database email sama password sama gak
-		if(!user.getUser_password().equals(password)) {
-			return "Password and Email Don't Match";
-		}
+		User user= getUserByEmail(email);
 		
 		this.user = user;
 		return "success";
 	}
 	
-	public String changeProfile(String email, String name, String oldPassword, String newPassword) {
-		User currUser = this.user.getUserByEmail(this.user.getUser_email()); 
+	public String checkChangeProfileInput(String email, String name, String oldPassword, String newPassword) {
+		User currUser = getUserByEmail(this.user.getUser_email()); 
 		
 		String newEmail = this.user.getUser_email();
 		String newName = this.user.getUser_name();
@@ -178,27 +174,11 @@ public class UserController {
 			if(email.equals(newEmail)) {
 				return "The email you inputted is the same as you old email";
 			}
-			
-			User temp = new User().getUserByEmail(email);
-			
-			if(temp == null) {
-				newEmail = email;
-			}else {
-				return "The email you entered already registered";
-			}
 		}
 		
 		if(!name.equals("")) {
 			if(name.equals(newName)) {
 				return "The username you inputted is the same as you old username";
-			}
-			
-			User temp = new User().getUserByUsername(name);
-			
-			if(temp == null) {
-				newName = name;
-			}else {
-				return "The username you entered already used";
 			}
 		}
 		
@@ -228,6 +208,46 @@ public class UserController {
 			return "Nothing is updated";
 		}
 		
+		return "success";
+	}
+	
+	public String changeProfile(String email, String name, String oldPassword, String newPassword) {
+		User currUser = getUserByEmail(this.user.getUser_email()); 
+		
+		String newEmail = currUser.getUser_email();
+		String newName = currUser.getUser_name();
+		String newOldPassword = currUser.getUser_password();
+		
+		String tempMessage = checkChangeProfileInput(email, name, oldPassword, newPassword);
+		
+//		bila validasi basic tidak berhasil, maka kembalikan error message
+		if(!tempMessage.equals("success")) {
+			return tempMessage;
+		}
+		
+
+		if(!email.equals("")) {
+//			mengambil user dari email yang dimasukan dan check keunikan
+			User temp = getUserByEmail(email);
+			
+			if(temp == null) {
+				newEmail = email;
+			}else {
+				return "The email you entered already registered";
+			}
+		}
+		
+		
+		if(!name.equals("")) {
+//			mengambil user dari username yang dimasukan dan check keunikan
+			User temp = getUserByUsername(name);
+			
+			if(temp == null) {
+				newName = name;
+			}else {
+				return "The username you entered already used";
+			}
+		}
 		
 		
 		String message = currUser.changeProfile(currUser.getUser_id(), newEmail, newName, newOldPassword, newPassword);

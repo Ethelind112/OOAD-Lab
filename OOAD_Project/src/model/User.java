@@ -24,18 +24,54 @@ public class User {
 	public User() {
 	}
 	
-//	Tidak ada function checkRegister dalam model user, karena flow mengikuti sequence diagram yang juga tidak memiliki checkRegister dalam model user
-//	karena dalam sequence diagram telah getUserByEmail dan getUserByUsername dalam controller, sehingga telah dilakukan pengecekan keunikan di controller
+//	Dalam flow sequence diagram yang diberikan pada soal, proses register di userController telah getUsername dan getEmail dari User model, 
+//	sehingga pengecekan keunikan kedua attribute dilakukan pada controller (dapat juga dilihat pada gambar)
+//	Namun karena pada class diagram ada function untuk checkRegisterInput di User model, maka dilakukan pengecekan kembali
+	public String checkRegisterInput(String email, String name, String password) {
+
+//		mendapatkan user dengan email dan name yang ada di parameter, digunakan untuk melakukan pengecekan keunikan
+		User userName = getUserByUsername(name);
+		User userEmail = getUserByEmail(email);
+		
+//		melakukan pengecekan bila user yang didapatkan dari email sudah terdaftar atau belum	
+		if(userEmail != null) {
+			return "Email Is Already Registered";
+		}
+		
+//		melakukan pengecekan bila user yang didapatkan dari username sudah terdaftar atau belum	
+		if(userName != null) {
+			return "Username Is Already Used";
+		}
+		
+//		melakukan pengecekan password
+		if(password.isEmpty()) {
+			return "Please Fill All The Field";
+		}else if(password.length() < 5) {
+			return "Password must at least 5 characters long";
+		}
+		
+//		mengembalikan success message bila berhasil
+		return "success";
+	}
+	
+//	melakukan proses registrasi
 	public String register(String email, String name, String password, String role) {
 		
-		String readDateQuery = "SELECT * FROM user";
+		String message = checkRegisterInput(email, name, password);
 		
+		if(!message.equals("success")) {
+			return message;
+		}
+		
+//		mengambil semua user dari database
+		String readDateQuery = "SELECT * FROM user";
 		ResultSet readData = connect.execute(readDateQuery);
 		
 //		Generate ID
 		int count = 0;
 		
 		try {
+//			menghitung jumlah user yang sudah ada
 			while(readData.next()) {
 				count++;
 			}
@@ -58,33 +94,34 @@ public class User {
 			ps.setString(5, role);
 			ps.executeUpdate();
 		} catch (SQLException e) {
-//			mengirim error message bila gagal memasukan data ke database
+//			mengirim error message bila gagal
 			return "fail";
 		}
-		
-		this.user_id = id;
-		this.user_email = email;
-		this.user_name = name;
-		this.user_password = password;
-		this.user_role = role;
 		
 //		mengirimkan success message bila berhasil memasukan data ke database
 		return "success";
 	}
 	
-//	untuk change profile disini ada tambahan parameter id (tidak mengikuti class diagram) karena email dan username (atribut yang unik) dapat diganti (email dan username baru)
-//	dan untuk bisa melakukan update memerlukan suatu identitas dari user yang membedakan dari user lain. 
-//	Bila email dan name sama sama diganti menjadi yang baru dan tidak ada ID, maka query tidak akan menemukan current user yang akan diupdate
-	public String changeProfile(String id, String email, String name, String oldPassword, String newPassword) {
-
+	public String login(String email, String password) {
+		//Check ada email ato gak di database
+		User user = getUserByEmail(email);
+				
+		if(user == null) {
+			return "Email Not Found";
+		}
+		
+//		check ke database email sama password sama gak
+		if(!user.getUser_password().equals(password)) {
+			return "Password and Email Don't Match";
+		}
+		
+		return "success";
+	}
+	
+//	mengecek bila input dari change profile dapat berhasil dimasukan ke database
+	public String checkChangeProfileInput(String id, String email, String name, String oldPassword, String newPassword) {
 		String query = "UPDATE user SET user_email = ?, user_name = ?, user_password = ? WHERE user_id = ?";
 		PreparedStatement ps = connect.prepareStatement(query);
-		
-		System.out.println(id);
-		System.out.println(email);
-		System.out.println(name);
-		System.out.println(oldPassword);
-		System.out.println(newPassword);
 		
 		try {
 			ps.setString(1, email);
@@ -105,8 +142,14 @@ public class User {
 		return "success";
 	}
 	
+//	untuk change profile disini ada tambahan parameter id (tidak mengikuti class diagram) karena email dan username (atribut yang unik) dapat diganti (email dan username baru)
+//	dan untuk bisa melakukan update memerlukan suatu identitas dari user yang membedakan dari user lain. 
+//	Bila email dan name sama sama diganti menjadi yang baru dan tidak ada ID, maka query tidak akan menemukan current user yang akan diupdate
+	public String changeProfile(String id, String email, String name, String oldPassword, String newPassword) {
+		return checkChangeProfileInput(id, email, name, oldPassword, newPassword);
+	}
+	
 	public User getUserByEmail(String email) {
-//		String readDateQuery = String.format("SELECT * FROM user WHERE user_email = '%s'", email);
 		String readDateQuery = "SELECT * FROM user WHERE user_email = ?";
 		
 		PreparedStatement ps = connect.prepareStatement(readDateQuery);
@@ -126,13 +169,10 @@ public class User {
 	}
 	
 	public User getUserByUsername(String name) {
-//		String readDateQuery = String.format("SELECT * FROM user WHERE user_name = '%s'", name);
 		String readDateQuery = "SELECT * FROM user WHERE user_name = ?";
 		
 		PreparedStatement ps = connect.prepareStatement(readDateQuery);
 		ResultSet readData = null;
-		
-//		ResultSet readData = connect.execute(readDateQuery);
 		
 		try {
 			ps.setString(1, name);
