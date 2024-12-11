@@ -135,55 +135,92 @@ public class ViewRegister {
 		registStyling();
 	}
 	
-	public void setEventHandler() {
-		regisBtn.setOnAction(e -> {
-
-//			mengambil data dari inputan
-			String email = emailFieldR.getText();
-			String uName = usernameFieldR.getText();
-			String pass = passFieldR.getText();
-			String role = "";
-			
-			if(roleCB != null) {
-				role = roleCB.getValue();
-			}
-			
-			UserController uController = new UserController();
-			
-//			proses registrasi ke controller
-			String message = uController.register(email, uName, pass, role);
-
-			if(message == "success") {
-				if(role.equalsIgnoreCase("Admin")) {
-					ViewEvents view = new ViewEvents(email);
-					Main.redirect(view.eventScene);
-				}else if(role.equalsIgnoreCase("Guest")) {
-					ViewInvitation view = new ViewInvitation(email);
-					Main.redirect(view.invitationScene);
-				}else if(role.equalsIgnoreCase("Event Organizer")) {
-					ViewEvents view = new ViewEvents(email);
-					Main.redirect(view.eventScene);
-				}else if(role.equalsIgnoreCase("Vendor")) {
-					ViewInvitation view = new ViewInvitation(email);
-					Main.redirect(view.invitationScene);
-				}
-			}
-			
-			regisEM.setText(message);
-		});
+//	public void setEventHandler() {
+//		regisBtn.setOnAction(e -> {
+//
+////			mengambil data dari inputan
+//			String email = emailFieldR.getText();
+//			String uName = usernameFieldR.getText();
+//			String pass = passFieldR.getText();
+//			String role = "";
+//			
+//			if(roleCB != null) {
+//				role = roleCB.getValue();
+//			}
+//			
+//			UserController uController = new UserController();
+//			
+////			proses registrasi ke controller
+//			String message = uController.register(email, uName, pass, role);
+//
+//			if(message == "success") {
+//				if(role.equalsIgnoreCase("Admin")) {
+//					ViewEvents view = new ViewEvents(email);
+//					Main.redirect(view.eventScene);
+//				}else if(role.equalsIgnoreCase("Guest")) {
+//					ViewInvitation view = new ViewInvitation(email);
+//					Main.redirect(view.invitationScene);
+//				}else if(role.equalsIgnoreCase("Event Organizer")) {
+//					ViewEvents view = new ViewEvents(email);
+//					Main.redirect(view.eventScene);
+//				}else if(role.equalsIgnoreCase("Vendor")) {
+//					ViewInvitation view = new ViewInvitation(email);
+//					Main.redirect(view.invitationScene);
+//				}
+//			}
+//			
+//			regisEM.setText(message);
+//		});
+//		
+//		toLogin.setOnAction(e -> {
+//			ViewLogin view = new ViewLogin();
+//			Main.redirect(view.loginScene);
+//		});
+//	}
+	
+	public String getEmailInput() {
+		return emailFieldR.getText();
+	}
+	
+	public String getUserNameInput() {
+		return usernameFieldR.getText();
+	}
+	
+	public String getPasswordInput() {
+		return passFieldR.getText();
+	}
+	
+	public String getRoleInput() {
+		String role = "";
 		
-		toLogin.setOnAction(e -> {
-			ViewLogin view = new ViewLogin();
-			Main.redirect(view.loginScene);
-		});
+		if(roleCB != null) {
+			role = roleCB.getValue();
+		}
+		
+		return role;
+	}
+	
+	public void setErrorMessage(String message) {
+		regisEM.setText(message);
+	}
+	
+	public void setRegisButton(EventHandler<ActionEvent> handler) {
+		regisBtn.setOnAction(handler);
+	}
+
+	public void setToLoginButton(EventHandler<ActionEvent> handler) {
+		toLogin.setOnAction(handler);
+	}
+	
+	public Scene getScene() {
+		return regisScene;
 	}
 	
 	public ViewRegister() {
 		initRegister();
 		register();
-		setEventHandler();
 		
 		Main.redirect(regisScene);
 	}
-
+	
 }

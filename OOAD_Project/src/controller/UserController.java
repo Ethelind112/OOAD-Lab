@@ -1,12 +1,115 @@
 package controller;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import model.User;
+import view.Main;
+import view.ViewEvents;
+import view.ViewInvitation;
+import view.ViewLogin;
+import view.ViewRegister;
 
 public class UserController {
 
 	private static User user = new User();
+	private ViewRegister regisView;
+	private ViewLogin loginView;
 	
 	public UserController() {
+		
+	}
+	
+	public UserController(ViewLogin loginView) {
+		this.loginView = loginView;
+		
+		
+		loginView.setLoginButton(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				String email = loginView.getEmailInput();
+				String pass = loginView.getPasswordInput();
+				
+				String message = login(email, pass);
+
+				if(message == "success") {
+					if(user.getUser_role().equalsIgnoreCase("Admin")) {
+						ViewEvents view = new ViewEvents(email);
+						Main.redirect(view.getScene());
+					}else if(user.getUser_role().equalsIgnoreCase("Guest")){
+						ViewInvitation view = new ViewInvitation(email);
+						Main.redirect(view.getScene());
+					}else if(user.getUser_role().equalsIgnoreCase("Event Organizer")) {
+						ViewEvents view = new ViewEvents(email);
+						Main.redirect(view.getScene());
+					}else if(user.getUser_role().equalsIgnoreCase("Vendor")) {
+						ViewInvitation view = new ViewInvitation(email);
+						Main.redirect(view.getScene());
+					}
+				}
+				
+				loginView.setErrorMessage(message);
+				
+			}
+		});
+		
+		loginView.setToRegisButton(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				ViewRegister view = new ViewRegister();
+				UserController uController = new UserController(view);
+				Main.redirect(view.getScene());
+			}
+		});
+	}
+	
+	public UserController(ViewRegister regisView) {
+		this.regisView = regisView;
+		
+		regisView.setRegisButton(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+	//			mengambil data dari inputan
+				String email = regisView.getEmailInput();
+				String uName = regisView.getUserNameInput();
+				String pass = regisView.getPasswordInput();
+				String role = regisView.getRoleInput();
+				
+	//			proses registrasi ke controller
+				String message = register(email, uName, pass, role);
+	
+				if(message == "success") {
+					if(role.equalsIgnoreCase("Admin")) {
+						ViewEvents view = new ViewEvents(email);
+						Main.redirect(view.getScene());
+					}else if(role.equalsIgnoreCase("Guest")) {
+						ViewInvitation view = new ViewInvitation(email);
+						Main.redirect(view.getScene());
+					}else if(role.equalsIgnoreCase("Event Organizer")) {
+						ViewEvents view = new ViewEvents(email);
+						Main.redirect(view.getScene());
+					}else if(role.equalsIgnoreCase("Vendor")) {
+						ViewInvitation view = new ViewInvitation(email);
+						Main.redirect(view.getScene());
+					}
+				}
+				
+				regisView.setErrorMessage(message);
+				
+			}
+		});
+		
+		regisView.setToLoginButton(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				ViewLogin view = new ViewLogin();
+				UserController uController = new UserController(view);
+				Main.redirect(view.getScene());
+			}
+		});
 	}
 	
 	public User getUser() {
