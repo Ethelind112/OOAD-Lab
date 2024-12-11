@@ -186,8 +186,4 @@ public class ViewInvitation {
 		Main.redirect(invitationScene);
 	}
 
-	public Scene getScene() {
-		return invitationScene;
-	}
-	
 }
