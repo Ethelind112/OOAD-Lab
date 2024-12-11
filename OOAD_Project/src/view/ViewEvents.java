@@ -162,5 +162,9 @@ public class ViewEvents {
 		
 		Main.redirect(eventScene);
 	}
+	
+	public Scene getScene() {
+		return eventScene;
+	}
 
 }
