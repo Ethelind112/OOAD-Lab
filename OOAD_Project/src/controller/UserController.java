@@ -117,6 +117,16 @@ public class UserController {
 	public UserController(ViewChangeProfile changeProfileView) {
 		this.changeProfileView = changeProfileView;
 		
+		if(user.getUser_role().equalsIgnoreCase("guest")) {
+			changeProfileView.setGuestMenu();
+		}else if(user.getUser_role().equalsIgnoreCase("admin")) {
+			changeProfileView.setAdminMenu();
+		}else if(user.getUser_role().equalsIgnoreCase("vendor")) {
+			changeProfileView.setVendorMenu();
+		}else {
+			changeProfileView.setEventOrganizerMenu();
+		}
+		
 		changeProfileView.setChangeProfileButton(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -125,6 +135,29 @@ public class UserController {
 				changeProfileView.setErrorMessage(message);
 			}
 		});
+		
+		changeProfileView.setInvitationMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				ViewInvitation view = new ViewInvitation(user.getUser_email());
+				Main.redirect(view.getScene());
+				
+			}
+		});
+		
+		changeProfileView.setEventMenu(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				ViewEvents view = new ViewEvents(user.getUser_email());
+				Main.redirect(view.getScene());
+			}
+		});
+		
+		
+		
+		
 	}
 	
 	public User getUser() {
