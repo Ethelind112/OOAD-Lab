@@ -170,6 +170,7 @@ public class ViewInvitation {
 		
 		iUpdateProfile.setOnAction(e -> {
 			ViewChangeProfile view = new ViewChangeProfile();
+			UserController uController = new UserController(view);
 			Main.redirect(view.updateProfileScene);
 		});
 		

@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.User;
 import view.Main;
+import view.ViewChangeProfile;
 import view.ViewEvents;
 import view.ViewInvitation;
 import view.ViewLogin;
@@ -14,6 +15,7 @@ public class UserController {
 	private static User user = new User();
 	private ViewRegister regisView;
 	private ViewLogin loginView;
+	private ViewChangeProfile changeProfileView;
 	
 	public UserController() {
 		
@@ -108,6 +110,19 @@ public class UserController {
 				ViewLogin view = new ViewLogin();
 				UserController uController = new UserController(view);
 				Main.redirect(view.getScene());
+			}
+		});
+	}
+	
+	public UserController(ViewChangeProfile changeProfileView) {
+		this.changeProfileView = changeProfileView;
+		
+		changeProfileView.setChangeProfileButton(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				String message = changeProfile(changeProfileView.getEmail(), changeProfileView.getUserName(), changeProfileView.getPassword(), changeProfileView.getNewPassword());
+				changeProfileView.setErrorMessage(message);
 			}
 		});
 	}

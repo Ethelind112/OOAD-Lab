@@ -10,15 +10,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class ViewChangeProfile implements EventHandler<ActionEvent> {
+public class ViewChangeProfile {
 	
 	Scene updateProfileScene;
 	VBox uPVb, uPContainer;
+	BorderPane uPPage;
 	Label uPTitle, uPEM;
 	GridPane uPFill;
 	Button uPBtn;
@@ -29,6 +31,8 @@ public class ViewChangeProfile implements EventHandler<ActionEvent> {
 	public void initUpdateProfile() {
 		
 		uPVb = new VBox();
+		uPPage = new BorderPane();
+		
 		uPContainer = new VBox();
 		updateProfileScene = new Scene(uPVb, 1000, 700);
 		uPTitle = new Label("Update Profile");
@@ -113,25 +117,35 @@ public class ViewChangeProfile implements EventHandler<ActionEvent> {
 		initUpdateProfileComponent();
 		updateProfileStyling();
 	}
-
-	public void setEventHandler() {
-		uPBtn.setOnAction(this);
-	}
 	
 	public ViewChangeProfile() {
 		initUpdateProfile();
 		updateProfile();
-		setEventHandler();
 		Main.redirect(updateProfileScene);
 	}
 
-	@Override
-	public void handle(ActionEvent event) {
-		uPBtn.setOnAction(e -> {
-			UserController uController = new UserController();
-			uPEM.setText(uController.changeProfile(emailFieldUP.getText(), usernameFieldUP.getText(), passFieldUP.getText(), newPassFieldUP.getText()));
-		});
-		
+	public void setChangeProfileButton(EventHandler<ActionEvent> handler) {
+		uPBtn.setOnAction(handler);
+	}
+	
+	public String getEmail() {
+		return emailFieldUP.getText();
+	}
+	
+	public String getUserName() {
+		return usernameFieldUP.getText();
+	}
+	
+	public String getPassword() {
+		return passFieldUP.getText();
+	}
+	
+	public String getNewPassword() {
+		return newPassFieldUP.getText();
+	}
+	
+	public void setErrorMessage(String message) {
+		uPEM.setText(message);
 	}
 
 }
