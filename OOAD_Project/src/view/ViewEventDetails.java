@@ -3,6 +3,7 @@ package view;
 import controller.EventController;
 import controller.GuestController;
 import controller.UserController;
+import controller.VendorController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -35,8 +36,8 @@ public class ViewEventDetails {
 	HBox location, date;
 	
 	MenuBar menubar;
-	Menu invitation, event, updateProfile;
-	MenuItem iInvitation, iEvent, iUpdateProfile;
+	Menu invitation, event, updateProfile, manageVendor;
+	MenuItem iInvitation, iEvent, iUpdateProfile, iManageVendor;
 	
 	public void initEventDetail(String eventID) {
 		EventController eController = new EventController();
@@ -62,12 +63,23 @@ public class ViewEventDetails {
 		iInvitation = new MenuItem("Invitation");
 		iEvent = new MenuItem("Accepted Events");
 		iUpdateProfile = new MenuItem("Update Profile");
+		
+		String role = new UserController().getUser().getUser_role();
+		if (role.equalsIgnoreCase("Vendor")) {
+			manageVendor = new Menu("Manage Vendor");
+			iManageVendor = new MenuItem("Manage Vendor");
+		}
 	}
 	
 	public void initDetailComponent() {
 		invitation.getItems().addAll(iInvitation);
 		event.getItems().addAll(iEvent);
 		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		if(iManageVendor != null) {
+			manageVendor.getItems().addAll(iManageVendor);
+			menubar.getMenus().addAll(invitation, event, updateProfile, manageVendor);
+		}
 		
 		menubar.getMenus().addAll(invitation, event, updateProfile);
 		
@@ -106,8 +118,19 @@ public class ViewEventDetails {
 		iEvent.setOnAction(e -> {
 			UserController uController = new UserController();
 			ViewEvents view = new ViewEvents(uController.getUser().getUser_email());
-			GuestController gController = new GuestController(view, uController.getUser().getUser_email());
+			String role = new UserController().getUser().getUser_role();
+			
+			if(role.equalsIgnoreCase("Vendor")) {
+				VendorController gController = new VendorController(view, uController.getUser().getUser_email());
+			}
+			else if (role.equalsIgnoreCase("Guest")) {
+				GuestController gController = new GuestController(view, uController.getUser().getUser_email());
+			}
 			Main.redirect(view.eventScene);
+		});
+		
+		iManageVendor.setOnAction(e ->{
+			
 		});
 		
 	}

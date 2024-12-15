@@ -44,8 +44,8 @@ public class ViewInvitation {
 	Button acceptBtn;
 	
 	MenuBar menubar;
-	Menu invitation, event, updateProfile;
-	MenuItem iInvitation, iEvent, iUpdateProfile;
+	Menu invitation, event, updateProfile, manageVendor;
+	MenuItem iInvitation, iEvent, iUpdateProfile, iManageVendor;
 	
 	public void initInvitation() {
 		invitationPage = new BorderPane();
@@ -67,7 +67,11 @@ public class ViewInvitation {
 		iUpdateProfile = new MenuItem("Update Profile");
 		
 //		tambahin if else untuk element menu vendor
-		
+		String role = new UserController().getUser().getUser_role();
+		if (role.equalsIgnoreCase("Vendor")) {
+			manageVendor = new Menu("Manage Vendor");
+			iManageVendor = new MenuItem("Manage Vendor");
+		}
 	}
 	
 	public void setTable() {
@@ -113,6 +117,10 @@ public class ViewInvitation {
 		event.getItems().addAll(iEvent);
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
+		if(iManageVendor != null) {
+			manageVendor.getItems().addAll(iManageVendor);
+			menubar.getMenus().addAll(invitation, event, updateProfile, manageVendor);
+		}
 		menubar.getMenus().addAll(invitation, event, updateProfile);
 		
 		invitationContainer.getChildren().addAll(invitationTitle, invitationDescription, acceptBtn, invitationEM, invitationTable);
@@ -192,7 +200,9 @@ public class ViewInvitation {
 		});
 		
 //		setonaction click menuitem tambahan vendor
-		
+		iManageVendor.setOnAction(e ->{
+			
+		});
 	}
 	
 	public ViewInvitation(String email) {

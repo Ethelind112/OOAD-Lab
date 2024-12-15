@@ -41,8 +41,8 @@ public class ViewEvents {
 	ObservableList<Event> eventData;
 	
 	MenuBar menubar;
-	Menu invitation, event, updateProfile;
-	MenuItem iInvitation, iEvent, iUpdateProfile;
+	Menu invitation, event, updateProfile, manageVendor;
+	MenuItem iInvitation, iEvent, iUpdateProfile, iManageVendor;
 	
 	TableRow<Event> row;
 	
@@ -63,6 +63,12 @@ public class ViewEvents {
 		iInvitation = new MenuItem("Invitation");
 		iEvent = new MenuItem("Accepted Events");
 		iUpdateProfile = new MenuItem("Update Profile");
+		
+		String role = new UserController().getUser().getUser_role();
+		if (role.equalsIgnoreCase("Vendor")) {
+			manageVendor = new Menu("Manage Vendor");
+			iManageVendor = new MenuItem("Manage Vendor");
+		}
 	}
 	
 	public void setTable() {
@@ -106,6 +112,11 @@ public class ViewEvents {
 		event.getItems().addAll(iEvent);
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
+		if(iManageVendor != null) {
+			manageVendor.getItems().addAll(iManageVendor);
+			menubar.getMenus().addAll(invitation, event, updateProfile, manageVendor);
+		}
+		
 		menubar.getMenus().addAll(invitation, event, updateProfile);
 		
 		eventContainer.getChildren().addAll(eventTitle, eventDescription, eventTable);
@@ -146,6 +157,10 @@ public class ViewEvents {
 	
 	public void setInvitationMenu(EventHandler<ActionEvent> handler) {
 		iInvitation.setOnAction(handler);
+	}
+	
+	public void setManageVendorMenu(EventHandler<ActionEvent> handler) {
+		iManageVendor.setOnAction(handler);
 	}
 	
 	public void setEventList(ObservableList<Event> events) {
