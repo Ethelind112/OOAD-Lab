@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import controller.GuestController;
 import controller.InvitationController;
 import controller.UserController;
+import controller.VendorController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -152,8 +153,16 @@ public class ViewInvitation {
 			if(selectedInvitation != null) {
 				invitationEM.setText("");
 				String eventID = selectedInvitation.getEvent_id();
-				GuestController gController = new GuestController();
-				gController.acceptInvitation(eventID);
+				String role = new UserController().getUser().getUser_role();
+				
+				if(role.equalsIgnoreCase("Vendor")) {
+					VendorController vController = new VendorController();
+					vController.acceptInvitation(eventID);
+				}
+				else if (role.equalsIgnoreCase("Guest")) {
+					GuestController gController = new GuestController();
+					gController.acceptInvitation(eventID);
+				}
 				setTable();
 				
 			}else {
@@ -165,7 +174,14 @@ public class ViewInvitation {
 
 		iEvent.setOnAction(e -> {
 			ViewEvents view = new ViewEvents(this.email);
-			GuestController gController = new GuestController(view, email);
+			String role = new UserController().getUser().getUser_role();
+			
+			if(role.equalsIgnoreCase("Vendor")) {
+				VendorController vController = new VendorController(view, email);
+			}
+			else if (role.equalsIgnoreCase("Guest")) {
+				GuestController gController = new GuestController(view, email);
+			}
 			Main.redirect(view.eventScene);
 		});
 		
