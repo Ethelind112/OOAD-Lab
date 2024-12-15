@@ -75,22 +75,36 @@ public class EventOrganizer extends User {
 
     public String addGuest(String eventID, Guest guest) {
         String checkEventQuery = "SELECT * FROM event WHERE event_id = ?";
-        String insertGuestQuery = "INSERT INTO event_guest (event_id, guest_id) VALUES (?, ?)";
-        
+        String countInvQuery = "SELECT COUNT(*) as total FROM invitation";
+        String insertInviteQuery = "INSERT INTO invitation (invitation_id, event_id, user_id, invitation_status) VALUES (?, ?, ?, ?)";
+
         try {
-            PreparedStatement ps1 = connect.prepareStatement(checkEventQuery);
-            ps1.setString(1, eventID);
-            ResultSet rs = ps1.executeQuery();
-            
-            if (rs.next()) {
-                PreparedStatement ps2 = connect.prepareStatement(insertGuestQuery);
-                ps2.setString(1, eventID);
-                ps2.setString(2, guest.getUser_id());
-                ps2.executeUpdate();
-                return "Guest successfully added to the event.";
-            } else {
+            PreparedStatement psEvent = connect.prepareStatement(checkEventQuery);
+            psEvent.setString(1, eventID);
+            ResultSet rsEvent = psEvent.executeQuery();
+
+            if (!rsEvent.next()) {
                 return "Error: Event not found.";
             }
+
+            PreparedStatement psCount = connect.prepareStatement(countInvQuery);
+            ResultSet rsCount = psCount.executeQuery();
+            int count = 0;
+            if (rsCount.next()) {
+                count = rsCount.getInt("total");
+            }
+
+            DecimalFormat format = new DecimalFormat("00000");
+            String invitationID = format.format(count + 1);
+
+            PreparedStatement psInsert = connect.prepareStatement(insertInviteQuery);
+            psInsert.setString(1, invitationID);
+            psInsert.setString(2, eventID);
+            psInsert.setString(3, guest.getUser_id());
+            psInsert.setString(4, "pending");
+            psInsert.executeUpdate();
+
+            return "Guest invitation successfully created with invitation ID: " + invitationID;
         } catch (SQLException e) {
             e.printStackTrace();
             return "Error: Unable to add guest.";
@@ -143,7 +157,6 @@ public class EventOrganizer extends User {
     }
     
     public String viewOrganizedTransactionDetails(String eventID) {
-
         String eventQuery = "SELECT * FROM event WHERE event_id = ? AND organizer_id = ?";
         String transactionQuery = "SELECT * FROM transactions WHERE event_id = ?";
         StringBuilder transactionDetails = new StringBuilder();
@@ -160,7 +173,7 @@ public class EventOrganizer extends User {
                 transactionDetails.append("Event Name: ").append(rsEvent.getString("event_name")).append("\n");
                 transactionDetails.append("Date: ").append(rsEvent.getString("event_date")).append("\n");
                 transactionDetails.append("Location: ").append(rsEvent.getString("event_location")).append("\n");
-                transactionDetails.append("Description: ").append(rsEvent.getString("event_description")).append("\n");
+                transactionDetails.append("Description: ").append(rsEvent.getString("event_description")).append("\n\n");
 
                 PreparedStatement psTransaction = connect.prepareStatement(transactionQuery);
                 psTransaction.setString(1, eventID);
