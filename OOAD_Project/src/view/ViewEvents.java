@@ -22,6 +22,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -37,10 +38,13 @@ public class ViewEvents {
 	VBox eventContainer;
 	Label eventTitle, eventDescription;
 	TableView<Event> eventTable;
+	ObservableList<Event> eventData;
 	
 	MenuBar menubar;
 	Menu invitation, event, updateProfile;
 	MenuItem iInvitation, iEvent, iUpdateProfile;
+	
+	TableRow<Event> row;
 	
 	public void initInvitation() {
 		
@@ -62,15 +66,11 @@ public class ViewEvents {
 	}
 	
 	public void setTable() {
-		GuestController gController = new GuestController();
-		UserController uController = new UserController();
-		ArrayList<Event> invitation = gController.viewAcceptedEvents(uController.getUser().getUser_email());
 		
-		ObservableList<Event> eventData = FXCollections.observableArrayList(invitation);
 		
 		TableColumn<Event,String> idColumn = new TableColumn<>("Id");
 		idColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("event_id"));
-		idColumn.setMinWidth(eventContainer.getWidth()/8);
+		idColumn.setMinWidth(eventContainer.getWidth()/6);
 		
 		TableColumn<Event,String> nameColumn = new TableColumn<>("Name");
 		nameColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("event_name"));
@@ -78,21 +78,23 @@ public class ViewEvents {
 		
 		TableColumn<Event,String> dateColumn = new TableColumn<>("Date");
 		dateColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("event_date"));
-		dateColumn.setMinWidth(eventContainer.getWidth()/8);
+		dateColumn.setMinWidth(eventContainer.getWidth()/6);
 		
 		TableColumn<Event,String> locationColumn = new TableColumn<>("Location");
 		locationColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("event_location"));
-		locationColumn.setMinWidth(eventContainer.getWidth()/8);
+		locationColumn.setMinWidth(eventContainer.getWidth()/6);
 		
 		TableColumn<Event,String> descriptionColumn = new TableColumn<>("Description");
 		descriptionColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("event_description"));
-		descriptionColumn.setMinWidth(eventContainer.getWidth()/3);
+		descriptionColumn.setMinWidth(eventContainer.getWidth()/6);
 		
 		TableColumn<Event,String> organizerColumn = new TableColumn<>("Organizer");
 		organizerColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("organizer_id"));
-		organizerColumn.setMinWidth(eventContainer.getWidth()/8);
+		organizerColumn.setMinWidth(eventContainer.getWidth()/6);
 		
 		eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn);
+		
+		eventData = FXCollections.observableArrayList();
 		eventTable.setItems(eventData);
 	}
 	
@@ -128,30 +130,30 @@ public class ViewEvents {
 		initInvitationComponent();
 		invitationStyling();
 	}
-
-	public void setEventHandler() {
-		iInvitation.setOnAction(e -> {
-			ViewInvitation view = new ViewInvitation(this.email);
-			Main.redirect(view.invitationScene);
-		});
-		
-		iUpdateProfile.setOnAction(e -> {
-			ViewChangeProfile view = new ViewChangeProfile();
-			UserController uController = new UserController(view);
-			Main.redirect(view.updateProfileScene);
-		});
+	
+	public void setEventDetailButton(EventHandler<MouseEvent> handler) {
 		
 		eventTable.setRowFactory((TableView<Event> e) -> {
-			TableRow<Event> row = new TableRow<>();
-			row.setOnMouseClicked(v -> {
-				if (!row.isEmpty() && v.getClickCount() == 1) {
-					Event selectedEvent = eventTable.getSelectionModel().getSelectedItem();
-					ViewEventDetails view = new ViewEventDetails(selectedEvent.getEvent_id());
-					Main.redirect(view.eventDetailScene);
-				}
-			});
+			row = new TableRow<>();
+			row.setOnMouseClicked(handler);
 			return row;
 		});
+	}
+	
+	public void setChangeProfileMenu(EventHandler<ActionEvent> handler) {
+		iUpdateProfile.setOnAction(handler);
+	}
+	
+	public void setInvitationMenu(EventHandler<ActionEvent> handler) {
+		iInvitation.setOnAction(handler);
+	}
+	
+	public void setEventList(ObservableList<Event> events) {
+		eventData.setAll(events);
+	}
+	
+	public TableView<Event> getEventTable(){
+		return eventTable;
 	}
 	
 	public ViewEvents(String email) {
@@ -159,7 +161,6 @@ public class ViewEvents {
 		
 		initInvitation();
 		invitation();
-		setEventHandler();
 		
 		Main.redirect(eventScene);
 	}

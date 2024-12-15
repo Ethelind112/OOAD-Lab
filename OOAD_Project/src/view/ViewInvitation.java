@@ -165,12 +165,13 @@ public class ViewInvitation {
 
 		iEvent.setOnAction(e -> {
 			ViewEvents view = new ViewEvents(this.email);
+			GuestController gController = new GuestController(view, email);
 			Main.redirect(view.eventScene);
 		});
 		
 		iUpdateProfile.setOnAction(e -> {
 			ViewChangeProfile view = new ViewChangeProfile();
-			UserController uController = new UserController(view);
+			UserController uController = new UserController(view, email);
 			Main.redirect(view.updateProfileScene);
 		});
 		

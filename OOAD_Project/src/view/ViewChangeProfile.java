@@ -237,5 +237,9 @@ public class ViewChangeProfile {
 	public void setErrorMessage(String message) {
 		uPEM.setText(message);
 	}
+	
+	public Scene getScene() {
+		return updateProfileScene;
+	}
 
 }

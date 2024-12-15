@@ -114,17 +114,54 @@ public class UserController {
 		});
 	}
 	
-	public UserController(ViewChangeProfile changeProfileView) {
+	public UserController(ViewChangeProfile changeProfileView, String email) {
 		this.changeProfileView = changeProfileView;
 		
 		if(user.getUser_role().equalsIgnoreCase("guest")) {
 			changeProfileView.setGuestMenu();
+			
+			changeProfileView.setEventMenu(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+					ViewEvents view = new ViewEvents(user.getUser_email());
+					GuestController gController = new GuestController(view, email);
+					Main.redirect(view.getScene());
+				}
+			});
 		}else if(user.getUser_role().equalsIgnoreCase("admin")) {
 			changeProfileView.setAdminMenu();
+			
+			changeProfileView.setEventMenu(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+					ViewEvents view = new ViewEvents(user.getUser_email());
+					Main.redirect(view.getScene());
+				}
+			});
 		}else if(user.getUser_role().equalsIgnoreCase("vendor")) {
 			changeProfileView.setVendorMenu();
+			
+			changeProfileView.setEventMenu(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+					ViewEvents view = new ViewEvents(user.getUser_email());
+					Main.redirect(view.getScene());
+				}
+			});
 		}else {
 			changeProfileView.setEventOrganizerMenu();
+			
+			changeProfileView.setEventMenu(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+					ViewEvents view = new ViewEvents(user.getUser_email());
+					Main.redirect(view.getScene());
+				}
+			});
 		}
 		
 		changeProfileView.setChangeProfileButton(new EventHandler<ActionEvent>() {
@@ -145,19 +182,6 @@ public class UserController {
 				
 			}
 		});
-		
-		changeProfileView.setEventMenu(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				ViewEvents view = new ViewEvents(user.getUser_email());
-				Main.redirect(view.getScene());
-			}
-		});
-		
-		
-		
-		
 	}
 	
 	public User getUser() {
