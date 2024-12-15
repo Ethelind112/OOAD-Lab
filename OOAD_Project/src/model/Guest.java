@@ -40,7 +40,6 @@ public class Guest extends User {
 			
 			if(readData != null && readData.next()) {
 				String id = readData.getString("user_id");
-				System.out.println(id);
 				
 //				Cari invitation dari user_id diatas
 				String readInvitationQuery = "SELECT event_id FROM invitation WHERE user_id = ? AND invitation_status = 'accepted'";

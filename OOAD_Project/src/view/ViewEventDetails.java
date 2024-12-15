@@ -1,6 +1,7 @@
 package view;
 
 import controller.EventController;
+import controller.GuestController;
 import controller.UserController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,7 +27,7 @@ public class ViewEventDetails {
 	
 	String eventId;
 
-	Scene eventDetailScene;
+	private Scene eventDetailScene;
 	VBox eventDetailContainer;
 	BorderPane eventDetailPage;
 	Label eventName, eventDescription, eventDate, eventLocation, dateLbl, locationLbl;
@@ -105,6 +106,7 @@ public class ViewEventDetails {
 		iEvent.setOnAction(e -> {
 			UserController uController = new UserController();
 			ViewEvents view = new ViewEvents(uController.getUser().getUser_email());
+			GuestController gController = new GuestController(view, uController.getUser().getUser_email());
 			Main.redirect(view.eventScene);
 		});
 		
@@ -118,6 +120,10 @@ public class ViewEventDetails {
 		setEventHandler();
 		
 		Main.redirect(eventDetailScene);
+	}
+	
+	public Scene getScene() {
+		return eventDetailScene;
 	}
 
 }

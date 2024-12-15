@@ -1,5 +1,6 @@
 package view;
 
+import controller.UserController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,7 +22,8 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
 		stage.setMaxWidth(1000);
-		new ViewRegister();
+		ViewRegister view = new ViewRegister();
+		UserController uController = new UserController(view);
 	}
 
 }

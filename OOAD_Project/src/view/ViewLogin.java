@@ -20,7 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class ViewLogin implements EventHandler<ActionEvent> {
+public class ViewLogin {
 
 	Scene loginScene;
 	VBox loginVb, loginContainer;
@@ -125,54 +125,35 @@ public class ViewLogin implements EventHandler<ActionEvent> {
 		loginStyling();
 	}
 	
+	public void setErrorMessage(String message) {
+		loginEM.setText(message);
+	}
 	
-	public void setEventHandler() {
-		loginBtn.setOnAction(this);
-		toRegis.setOnAction(this);
+	public String getEmailInput() {
+		return emailField.getText();
+	}
+	
+	public String getPasswordInput()
+	{
+		return passField.getText();
+	}
+	
+	public void setLoginButton(EventHandler<ActionEvent> handler) {
+		loginBtn.setOnAction(handler);
+	}
+	
+	public void setToRegisButton(EventHandler<ActionEvent> handler) {
+		toRegis.setOnAction(handler);
+	}
+	
+	public Scene getScene() {
+		return loginScene;
 	}
 	
 	public ViewLogin() {
 		initLogin();
 		login();
-		setEventHandler();
 		Main.redirect(loginScene);
-	}
-
-	@Override
-	public void handle(ActionEvent event) {
-		loginBtn.setOnAction(e -> {
-			String email = emailField.getText();
-			String pass = passField.getText();
-			
-			UserController uController = new UserController();
-			
-			String message = uController.login(email, pass);
-
-			if(message == "success") {
-				System.out.println(uController.getUser().getUser_role());
-				if(uController.getUser().getUser_role().equalsIgnoreCase("Admin")) {
-					ViewEvents view = new ViewEvents(email);
-					Main.redirect(view.eventScene);
-				}else if(uController.getUser().getUser_role().equalsIgnoreCase("Guest")){
-					ViewInvitation view = new ViewInvitation(email);
-					Main.redirect(view.invitationScene);
-				}else if(uController.getUser().getUser_role().equalsIgnoreCase("Event Organizer")) {
-					ViewEvents view = new ViewEvents(email);
-					Main.redirect(view.eventScene);
-				}else if(uController.getUser().getUser_role().equalsIgnoreCase("Vendor")) {
-					ViewInvitation view = new ViewInvitation(email);
-					Main.redirect(view.invitationScene);
-				}
-			}
-			
-			loginEM.setText(message);
-		});
-		
-		toRegis.setOnAction(e -> {
-			ViewRegister view = new ViewRegister();
-			Main.redirect(view.regisScene);
-		});
-		
 	}
 
 }
