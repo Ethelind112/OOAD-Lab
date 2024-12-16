@@ -42,6 +42,7 @@ public class ViewInvitation {
 	Label invitationTitle, invitationDescription, invitationEM;
 	TableView<Event> invitationTable;
 	Button acceptBtn;
+	ObservableList<Event> invitationData;
 	
 	MenuBar menubar;
 	Menu invitation, event, updateProfile, manageVendor;
@@ -75,11 +76,8 @@ public class ViewInvitation {
 	}
 	
 	public void setTable() {
-		InvitationController iController = new InvitationController();
-//		UserController uController = new UserController();
-		ArrayList<Event> invitation = iController.getInvitations(this.email);
 		
-		ObservableList<Event> invitationData = FXCollections.observableArrayList(invitation);
+		invitationData = FXCollections.observableArrayList();
 		
 		TableColumn<Event,String> idColumn = new TableColumn<>("Id");
 		idColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("event_id"));
@@ -154,68 +152,41 @@ public class ViewInvitation {
 		initInvitationComponent();
 		invitationStyling();
 	}
-
-	public void setEventHandler() {
-		acceptBtn.setOnAction(e -> {
-			Event selectedInvitation = invitationTable.getSelectionModel().getSelectedItem();
-			if(selectedInvitation != null) {
-				invitationEM.setText("");
-				String eventID = selectedInvitation.getEvent_id();
-				String role = new UserController().getUser().getUser_role();
-				
-				if(role.equalsIgnoreCase("Vendor")) {
-					VendorController vController = new VendorController();
-					vController.acceptInvitation(eventID);
-				}
-				else if (role.equalsIgnoreCase("Guest")) {
-					GuestController gController = new GuestController();
-					gController.acceptInvitation(eventID);
-				}
-				setTable();
-				
-			}else {
-				invitationEM.setText("Choose the invitation bellow");
-			}
-			System.out.println("pressed");
-		});
-		
-
-		iEvent.setOnAction(e -> {
-			ViewEvents view = new ViewEvents(this.email);
-			String role = new UserController().getUser().getUser_role();
-			
-			if(role.equalsIgnoreCase("Vendor")) {
-				VendorController vController = new VendorController(view, email);
-			}
-			else if (role.equalsIgnoreCase("Guest")) {
-				GuestController gController = new GuestController(view, email);
-			}
-			Main.redirect(view.eventScene);
-		});
-		
-		iUpdateProfile.setOnAction(e -> {
-			ViewChangeProfile view = new ViewChangeProfile();
-			UserController uController = new UserController(view, email);
-			Main.redirect(view.updateProfileScene);
-		});
-		
-//		setonaction click menuitem tambahan vendor
-		iManageVendor.setOnAction(e ->{
-			
-		});
-	}
 	
 	public ViewInvitation(String email) {
 		this.email = email;
 		
 		initInvitation();
 		invitation();
-		setEventHandler();
 		Main.redirect(invitationScene);
 	}
 
 	public Scene getScene() {
 		return invitationScene;
+	}
+	
+	public void setErrorMessage(String message) {
+		invitationEM.setText(message);
+	}
+	
+	public void setChangeProfileMenu(EventHandler<ActionEvent> handler) {
+		iUpdateProfile.setOnAction(handler);
+	}
+	
+	public void setEventMenu(EventHandler<ActionEvent> handler) {
+		iEvent.setOnAction(handler);
+	}
+	
+	public void setAcceptButton(EventHandler<ActionEvent> handler) {
+		acceptBtn.setOnAction(handler);
+	}
+	
+	public TableView<Event> getInvitationTable(){
+		return invitationTable;
+	}
+	
+	public void setInvitationList(ObservableList<Event> invitations) {
+		invitationData.setAll(invitations);
 	}
 	
 }

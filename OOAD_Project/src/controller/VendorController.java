@@ -34,6 +34,7 @@ public class VendorController {
 			@Override
 			public void handle(ActionEvent event) {
 				ViewInvitation view = new ViewInvitation(email);
+				InvitationController iController = new InvitationController(view, email);
 				Main.redirect(view.getScene());
 			}
 		});
@@ -53,7 +54,8 @@ public class VendorController {
 			@Override
 			public void handle(MouseEvent event) {
 				Event selectedEvent = acceptedInvView.getEventTable().getSelectionModel().getSelectedItem();
-				ViewEventDetails view = new ViewEventDetails(selectedEvent.getEvent_id());
+				ViewEventDetails view = new ViewEventDetails();
+				EventController eController = new EventController(view, email, selectedEvent.getEvent_id());
 				Main.redirect(view.getScene());
 			}
 			

@@ -4,6 +4,9 @@ import controller.EventController;
 import controller.GuestController;
 import controller.UserController;
 import controller.VendorController;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,8 +29,6 @@ import model.Event;
 
 public class ViewEventDetails {
 	
-	String eventId;
-
 	private Scene eventDetailScene;
 	VBox eventDetailContainer;
 	BorderPane eventDetailPage;
@@ -39,17 +40,14 @@ public class ViewEventDetails {
 	Menu invitation, event, updateProfile, manageVendor;
 	MenuItem iInvitation, iEvent, iUpdateProfile, iManageVendor;
 	
-	public void initEventDetail(String eventID) {
-		EventController eController = new EventController();
-		Event currEvent = eController.viewEventDetails(eventID);
-		
+	public void initEventDetail() {
 		eventDetailContainer = new VBox();
 		eventDetailPage = new BorderPane();
 		eventDetailScene = new Scene(eventDetailPage, 1000, 700);
-		eventName = new Label(currEvent.getEvent_name());
-		eventDescription = new Label(currEvent.getEvent_description());
-		eventDate = new Label(currEvent.getEvent_date());
-		eventLocation = new Label(currEvent.getEvent_location());
+		eventName = new Label();
+		eventDescription = new Label();
+		eventDate = new Label();
+		eventLocation = new Label();
 		dateLbl = new Label("Date: ");
 		locationLbl = new Label("Location: ");
 		location = new HBox();
@@ -103,44 +101,10 @@ public class ViewEventDetails {
 		date.setAlignment(Pos.TOP_CENTER);
 	}
 	
-	public void setEventHandler() {
-		iInvitation.setOnAction(e -> {
-			UserController uController = new UserController();
-			ViewInvitation view = new ViewInvitation(uController.getUser().getUser_email());
-			Main.redirect(view.invitationScene);
-		});
-		
-		iUpdateProfile.setOnAction(e -> {
-			ViewChangeProfile view = new ViewChangeProfile();
-			Main.redirect(view.updateProfileScene);
-		});
-		
-		iEvent.setOnAction(e -> {
-			UserController uController = new UserController();
-			ViewEvents view = new ViewEvents(uController.getUser().getUser_email());
-			String role = new UserController().getUser().getUser_role();
-			
-			if(role.equalsIgnoreCase("Vendor")) {
-				VendorController gController = new VendorController(view, uController.getUser().getUser_email());
-			}
-			else if (role.equalsIgnoreCase("Guest")) {
-				GuestController gController = new GuestController(view, uController.getUser().getUser_email());
-			}
-			Main.redirect(view.eventScene);
-		});
-		
-		iManageVendor.setOnAction(e ->{
-			
-		});
-		
-	}
-	
-	public ViewEventDetails(String eventID) {
-		this.eventId = eventId;
-		initEventDetail(eventID);
+	public ViewEventDetails() {
+		initEventDetail();
 		initDetailComponent();
 		eventDetailStyling();
-		setEventHandler();
 		
 		Main.redirect(eventDetailScene);
 	}
@@ -148,5 +112,36 @@ public class ViewEventDetails {
 	public Scene getScene() {
 		return eventDetailScene;
 	}
-
+	
+	public void setInvitationMenu(EventHandler<ActionEvent> handler) {
+		iInvitation.setOnAction(handler);
+	}
+	
+	public void setManageVendorMenu(EventHandler<ActionEvent> handler) {
+		iManageVendor.setOnAction(handler);
+	}
+	
+	public void setChangeProfileMenu(EventHandler<ActionEvent> handler) {
+		iUpdateProfile.setOnAction(handler);
+	}
+	
+	public void setEventMenu(EventHandler<ActionEvent> handler) {
+		iEvent.setOnAction(handler);
+	}
+	
+	public void setEventName(String name) {
+		eventName.setText(name);
+	}
+	
+	public void setEventDesc(String desc) {
+		eventDescription.setText(desc);
+	}
+	
+	public void setEventDate(String date) {
+		eventDate.setText(date);
+	}
+	
+	public void setEventLoc(String location) {
+		eventLocation.setText(location);
+	}
 }

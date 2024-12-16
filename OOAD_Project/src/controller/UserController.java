@@ -40,12 +40,14 @@ public class UserController {
 						Main.redirect(view.getScene());
 					}else if(user.getUser_role().equalsIgnoreCase("Guest")){
 						ViewInvitation view = new ViewInvitation(email);
+						InvitationController iController = new InvitationController(view, user.getUser_email());
 						Main.redirect(view.getScene());
 					}else if(user.getUser_role().equalsIgnoreCase("Event Organizer")) {
 						ViewEvents view = new ViewEvents(email);
 						Main.redirect(view.getScene());
 					}else if(user.getUser_role().equalsIgnoreCase("Vendor")) {
 						ViewInvitation view = new ViewInvitation(email);
+						InvitationController iController = new InvitationController(view, user.getUser_email());
 						Main.redirect(view.getScene());
 					}
 				}
@@ -88,12 +90,14 @@ public class UserController {
 						Main.redirect(view.getScene());
 					}else if(role.equalsIgnoreCase("Guest")) {
 						ViewInvitation view = new ViewInvitation(email);
+						InvitationController iController = new InvitationController(view, user.getUser_email());
 						Main.redirect(view.getScene());
 					}else if(role.equalsIgnoreCase("Event Organizer")) {
 						ViewEvents view = new ViewEvents(email);
 						Main.redirect(view.getScene());
 					}else if(role.equalsIgnoreCase("Vendor")) {
 						ViewInvitation view = new ViewInvitation(email);
+						InvitationController iController = new InvitationController(view, user.getUser_email());
 						Main.redirect(view.getScene());
 					}
 				}
@@ -178,6 +182,7 @@ public class UserController {
 			@Override
 			public void handle(ActionEvent event) {
 				ViewInvitation view = new ViewInvitation(user.getUser_email());
+				InvitationController iController = new InvitationController(view, email);
 				Main.redirect(view.getScene());
 				
 			}
