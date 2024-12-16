@@ -37,8 +37,8 @@ public class ViewEventDetails {
 	HBox location, date;
 	
 	MenuBar menubar;
-	Menu invitation, event, updateProfile, manageVendor;
-	MenuItem iInvitation, iEvent, iUpdateProfile, iManageVendor;
+	Menu invitation, event, updateProfile, users, manageVendor, createEvent;
+	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor, iCreateEvent;
 	
 	public void initEventDetail() {
 		eventDetailContainer = new VBox();
@@ -107,6 +107,72 @@ public class ViewEventDetails {
 		eventDetailStyling();
 		
 		Main.redirect(eventDetailScene);
+	}
+	
+	public void setGuestMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, updateProfile);
+
+	}
+	
+	public void setAdminMenu() {
+		users = new Menu("Users");
+		event = new Menu("Events");
+		
+		iUsers = new MenuItem("Users");
+		iEvent = new MenuItem("Accepted Events");
+		
+		users.getItems().addAll(iUsers);
+		event.getItems().addAll(iEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(event, users, updateProfile);
+
+	}
+	
+	public void setVendorMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		manageVendor = new Menu("Manage Vendor");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		iManageVendor = new MenuItem("Manage Vendor");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		manageVendor.getItems().addAll(iManageVendor);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, manageVendor, updateProfile);
+
+	}
+	
+	public void setEventOrganizerMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		createEvent = new Menu("Create Event");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		iCreateEvent = new MenuItem("Create Event");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		createEvent.getItems().addAll(iCreateEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, createEvent, updateProfile);
+
 	}
 	
 	public Scene getScene() {

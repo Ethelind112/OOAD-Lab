@@ -17,7 +17,7 @@ public class ViewEventOrganizer extends JFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
         
-        tabbedPane.addTab("Create Event", new ViewCreateEvent(controller));
+//        tabbedPane.addTab("Create Event", new ViewCreateEvent(controller));
         tabbedPane.addTab("Add Vendor", new ViewAddVendor(controller));
         tabbedPane.addTab("Add Guest", new ViewAddGuest(controller));
         tabbedPane.addTab("Edit Event Name", new ViewEditEventName(controller));

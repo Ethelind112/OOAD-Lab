@@ -3,6 +3,7 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.Event;
+import model.User;
 import view.Main;
 import view.ViewChangeProfile;
 import view.ViewEventDetails;
@@ -21,6 +22,12 @@ public class EventController {
 	public EventController(ViewEventDetails eventDetView, String email, String eventID) {
 		this.eventDetView = eventDetView;
 		this.email = email;
+		
+		User user = new User().getUserByEmail(email);
+		
+//		if(user.getUser_role().equalsIgnoreCase("guest")) {
+//			eventDetView.setGuestMenu();
+//		}
 		
 		eventDetView.setInvitationMenu(new EventHandler<ActionEvent>() {
 			
@@ -47,7 +54,7 @@ public class EventController {
 			@Override
 			public void handle(ActionEvent event) {
 				UserController uController = new UserController();
-				ViewEvents view = new ViewEvents(uController.getUser().getUser_email());
+				ViewEvents view = new ViewEvents(uController.getUserByEmail(email).getUser_email());
 				String role = new UserController().getUser().getUser_role();
 				
 				if(role.equalsIgnoreCase("Vendor")) {

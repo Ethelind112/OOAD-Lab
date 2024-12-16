@@ -90,14 +90,14 @@ public class UserController {
 						Main.redirect(view.getScene());
 					}else if(role.equalsIgnoreCase("Guest")) {
 						ViewInvitation view = new ViewInvitation(email);
-						InvitationController iController = new InvitationController(view, user.getUser_email());
+						InvitationController iController = new InvitationController(view, email);
 						Main.redirect(view.getScene());
 					}else if(role.equalsIgnoreCase("Event Organizer")) {
 						ViewEvents view = new ViewEvents(email);
 						Main.redirect(view.getScene());
 					}else if(role.equalsIgnoreCase("Vendor")) {
 						ViewInvitation view = new ViewInvitation(email);
-						InvitationController iController = new InvitationController(view, user.getUser_email());
+						InvitationController iController = new InvitationController(view, email);
 						Main.redirect(view.getScene());
 					}
 				}
@@ -120,6 +120,7 @@ public class UserController {
 	
 	public UserController(ViewChangeProfile changeProfileView, String email) {
 		this.changeProfileView = changeProfileView;
+		User user = new User().getUserByEmail(email);
 		
 		if(user.getUser_role().equalsIgnoreCase("guest")) {
 			changeProfileView.setGuestMenu();
