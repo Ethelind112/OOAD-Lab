@@ -1,76 +1,144 @@
 package view;
 
-import controller.EventOrganizerController;
-import model.Guest;
+import controller.UserController;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+public class ViewAddGuest {
 
-public class ViewAddGuest extends JPanel {
+    Scene addGuestScene;
+    VBox addGuestVB, addGuestContainer;
+    Label addGuestTitle, addGuestEM, haveAcc;
+    GridPane addGuestFill;
+    Button addGuestBtn, toLogin;
+    TextField nameField, emailField;
+    Label nameLbl, emailLbl;
+    ComboBox<String> genderCB;
+    HBox bottomAuth;
 
-    private JTextField eventIDField;
-    private JTextField guestIDField;
-    private JTextField guestEmailField;
-    private JTextField guestNameField;
-    private JTextField guestPasswordField;
-    private JLabel resultLabel;
-    private EventOrganizerController controller;
+    public void initAddGuest() {
+        addGuestVB = new VBox();
+        addGuestContainer = new VBox();
+        addGuestScene = new Scene(addGuestVB, 1000, 700);
 
-    public ViewAddGuest(EventOrganizerController controller) {
-        this.controller = controller;
-        setLayout(new BorderLayout());
+        addGuestTitle = new Label("Add Guest");
+        addGuestFill = new GridPane();
 
-        JPanel formPanel = new JPanel(new GridLayout(7,2,5,5));
+        nameLbl = new Label("Name");
+        nameField = new TextField();
 
-        JLabel instructions = new JLabel("Enter the event and guest details below to send an invitation. The guest will need to accept the invitation later.");
-        formPanel.add(instructions);
-        formPanel.add(new JLabel("")); 
+        emailLbl = new Label("Email");
+        emailField = new TextField();
 
-        formPanel.add(new JLabel("Event ID:"));
-        eventIDField = new JTextField();
-        formPanel.add(eventIDField);
+        genderCB = new ComboBox<>();
+        genderCB.getItems().addAll("Male", "Female", "Other");
 
-        formPanel.add(new JLabel("Guest ID:"));
-        guestIDField = new JTextField();
-        formPanel.add(guestIDField);
+        addGuestBtn = new Button("Add Guest");
 
-        formPanel.add(new JLabel("Guest Email:"));
-        guestEmailField = new JTextField();
-        formPanel.add(guestEmailField);
+        bottomAuth = new HBox();
+        addGuestEM = new Label();
 
-        formPanel.add(new JLabel("Guest Name:"));
-        guestNameField = new JTextField();
-        formPanel.add(guestNameField);
+        setEventHandler();
+    }
 
-        formPanel.add(new JLabel("Guest Password:"));
-        guestPasswordField = new JTextField();
-        formPanel.add(guestPasswordField);
+    public void initAddGuestComponent() {
+        addGuestFill.add(nameLbl, 0, 0);
+        addGuestFill.add(nameField, 1, 0);
 
-        add(formPanel, BorderLayout.CENTER);
+        addGuestFill.add(emailLbl, 0, 2);
+        addGuestFill.add(emailField, 1, 2);
 
-        JButton inviteButton = new JButton("Send Invitation");
-        resultLabel = new JLabel("");
-        inviteButton.addActionListener(new ActionListener() {
+        addGuestFill.add(new Label("Gender"), 0, 4);
+        addGuestFill.add(genderCB, 1, 4);
+
+        addGuestContainer.getChildren().addAll(addGuestTitle, addGuestFill, addGuestEM, addGuestBtn);
+        addGuestVB.getChildren().add(addGuestContainer);
+    }
+
+    public void addGuestStyling() {
+        addGuestVB.setAlignment(Pos.CENTER);
+        addGuestVB.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
+
+        addGuestContainer.setAlignment(Pos.CENTER); 
+        addGuestContainer.setMaxWidth(500);
+        addGuestContainer.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, null)));
+
+        addGuestTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        addGuestContainer.setMargin(addGuestTitle, new Insets(50, 0, 30, 0));
+
+        nameLbl.setFont(Font.font(15));
+        nameField.setMinWidth(300);
+
+        emailLbl.setFont(Font.font(15));
+        emailField.setMinWidth(300);
+
+        genderCB.setMinWidth(300);
+
+        addGuestFill.setAlignment(Pos.CENTER); 
+        addGuestFill.setVgap(10);
+        addGuestFill.setHgap(30);
+        addGuestFill.setPadding(new Insets(10));
+
+        addGuestBtn.setPadding(new Insets(10, 0, 10, 0));
+        addGuestBtn.setMinWidth(100);
+        addGuestBtn.setTextFill(Color.WHITE);
+        addGuestBtn.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
+        addGuestBtn.setFont(Font.font(15));
+
+        addGuestContainer.setMargin(addGuestBtn, new Insets(20, 0, 0, 0));
+    }
+
+    public void setEventHandler() {
+        addGuestBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                String eventID = eventIDField.getText().trim();
-                String gID = guestIDField.getText().trim();
-                String gEmail = guestEmailField.getText().trim();
-                String gName = guestNameField.getText().trim();
-                String gPassword = guestPasswordField.getText().trim();
+            public void handle(ActionEvent event) {
+                String name = nameField.getText();
+                String email = emailField.getText();
+                String gender = genderCB.getValue();
 
-                Guest guest = new Guest();
-                String result = controller.addGuest(eventID, guest);
-                resultLabel.setText(result);
+                if (name.isEmpty() || email.isEmpty() || gender == null) {
+                    addGuestEM.setText("All fields are required!");
+                    addGuestEM.setTextFill(Color.RED);
+                    return;
+                }
+
+                UserController uController = new UserController();
+
+                String message = uController.register(email, name, email, gender);
+
+                addGuestEM.setText(message);
+                if (message.equals("Guest added successfully!")) {
+                    nameField.clear();
+                    emailField.clear();
+                    genderCB.setValue(null);
+                }
             }
         });
+    }
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(inviteButton, BorderLayout.WEST);
-        bottomPanel.add(resultLabel, BorderLayout.CENTER);
+    public Scene getScene() {
+        return addGuestScene;
+    }
 
-        add(bottomPanel, BorderLayout.SOUTH);
+    public ViewAddGuest() {
+        initAddGuest();
+        initAddGuestComponent();
+        addGuestStyling();
     }
 }
