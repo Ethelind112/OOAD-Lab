@@ -70,6 +70,7 @@ public class ViewManageVendor {
 		
 		MGcontainer.getChildren().addAll(MGtitle, MGdesc, editBtn, MGem, pTable);
 		MGpage.setCenter(MGcontainer);
+		MGpage.setBottom(backBtn);
 	}
 	
 	public void productStyle(){
@@ -86,7 +87,13 @@ public class ViewManageVendor {
 		editBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
 		editBtn.setFont(Font.font(15));
 		
+		backBtn.setPadding(new Insets(10, 0, 10, 0));
+		backBtn.setMinWidth(100);
+		backBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
+		backBtn.setFont(Font.font(15));
+		
 		MGcontainer.setMargin(editBtn, new Insets(20, 0, 10, 0));
+		MGcontainer.setMargin(backBtn, new Insets(20, 0, 10, 0));
 		MGcontainer.setMargin(MGem, new Insets(0, 0, 30, 0));
 		
 		MGpage.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -111,8 +118,12 @@ public class ViewManageVendor {
 		MGem.setText(message);
 	}
 
-	public void setAcceptButton(EventHandler<ActionEvent> handler) {
+	public void setEditButton(EventHandler<ActionEvent> handler) {
 		editBtn.setOnAction(handler);
+	}
+	
+	public void setbackButton(EventHandler<ActionEvent> handler) {
+		backBtn.setOnAction(handler);
 	}
 	
 	public TableView<Products> getInvitationTable(){
