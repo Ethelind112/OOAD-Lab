@@ -34,6 +34,13 @@ public class InvitationController {
 //		memasukan data bila ada ke tabel di view
 		loadInvitationList();
 		
+		if(user.getUser_role().equalsIgnoreCase("guest")) {
+			invitationView.setGuestMenu();
+		}else {
+			invitationView.setVendorMenu();
+		}
+		
+		
 //		set hal yang dilakukan saat click change profile menu button
 		invitationView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
 			

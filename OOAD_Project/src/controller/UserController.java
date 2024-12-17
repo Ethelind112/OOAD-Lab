@@ -150,6 +150,7 @@ public class UserController {
 				@Override
 				public void handle(ActionEvent event) {
 					ViewEvents view = new ViewEvents(user.getUser_email());
+					VendorController cController = new VendorController(view, email);
 					Main.redirect(view.getScene());
 				}
 			});

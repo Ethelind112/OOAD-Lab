@@ -41,8 +41,8 @@ public class ViewEvents {
 	ObservableList<Event> eventData;
 	
 	MenuBar menubar;
-	Menu invitation, event, updateProfile, manageVendor;
-	MenuItem iInvitation, iEvent, iUpdateProfile, iManageVendor;
+	Menu invitation, event, updateProfile, users, manageVendor, createEvent;
+	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor, iCreateEvent;
 	
 	TableRow<Event> row;
 	
@@ -56,19 +56,10 @@ public class ViewEvents {
 		eventTable = new TableView<>();
 		
 		menubar = new MenuBar();
-		invitation = new Menu("Invitations");
-		event = new Menu("Events");
+		
 		updateProfile = new Menu("Update Profile");
 		
-		iInvitation = new MenuItem("Invitation");
-		iEvent = new MenuItem("Accepted Events");
 		iUpdateProfile = new MenuItem("Update Profile");
-		
-		String role = new UserController().getUser().getUser_role();
-		if (role.equalsIgnoreCase("Vendor")) {
-			manageVendor = new Menu("Manage Vendor");
-			iManageVendor = new MenuItem("Manage Vendor");
-		}
 	}
 	
 	public void setTable() {
@@ -108,17 +99,6 @@ public class ViewEvents {
 		
 		setTable();
 		
-		invitation.getItems().addAll(iInvitation);
-		event.getItems().addAll(iEvent);
-		updateProfile.getItems().addAll(iUpdateProfile);
-		
-		if(iManageVendor != null) {
-			manageVendor.getItems().addAll(iManageVendor);
-			menubar.getMenus().addAll(invitation, event, updateProfile, manageVendor);
-		}
-		
-		menubar.getMenus().addAll(invitation, event, updateProfile);
-		
 		eventContainer.getChildren().addAll(eventTitle, eventDescription, eventTable);
 		eventPage.setTop(menubar);
 		eventPage.setCenter(eventContainer);
@@ -140,6 +120,72 @@ public class ViewEvents {
 	public void invitation() {
 		initInvitationComponent();
 		invitationStyling();
+	}
+	
+	public void setGuestMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, updateProfile);
+
+	}
+	
+	public void setAdminMenu() {
+		users = new Menu("Users");
+		event = new Menu("Events");
+		
+		iUsers = new MenuItem("Users");
+		iEvent = new MenuItem("Accepted Events");
+		
+		users.getItems().addAll(iUsers);
+		event.getItems().addAll(iEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(event, users, updateProfile);
+
+	}
+	
+	public void setVendorMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		manageVendor = new Menu("Manage Vendor");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		iManageVendor = new MenuItem("Manage Vendor");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		manageVendor.getItems().addAll(iManageVendor);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, manageVendor, updateProfile);
+
+	}
+	
+	public void setEventOrganizerMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		createEvent = new Menu("Create Event");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		iCreateEvent = new MenuItem("Create Event");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		createEvent.getItems().addAll(iCreateEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, createEvent, updateProfile);
+
 	}
 	
 	public void setEventDetailButton(EventHandler<MouseEvent> handler) {

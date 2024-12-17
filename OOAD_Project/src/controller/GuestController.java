@@ -32,6 +32,8 @@ public class GuestController {
 //		memasukan data bila ada ke tabel di view
 		loadEventList();
 		
+		acceptedInvView.setGuestMenu();
+		
 //		set hal yang dilakukan saat click invitation menu button
 		acceptedInvView.setInvitationMenu(new EventHandler<ActionEvent>() {
 			

@@ -59,20 +59,10 @@ public class ViewInvitation {
 		invitationTable = new TableView<>();
 		
 		menubar = new MenuBar();
-		invitation = new Menu("Invitations");
-		event = new Menu("Events");
+		
 		updateProfile = new Menu("Update Profile");
 		
-		iInvitation = new MenuItem("Invitation");
-		iEvent = new MenuItem("Accepted Events");
 		iUpdateProfile = new MenuItem("Update Profile");
-		
-//		tambahin if else untuk element menu vendor
-		String role = new UserController().getUser().getUser_role();
-		if (role.equalsIgnoreCase("Vendor")) {
-			manageVendor = new Menu("Manage Vendor");
-			iManageVendor = new MenuItem("Manage Vendor");
-		}
 	}
 	
 	public void setTable() {
@@ -111,16 +101,6 @@ public class ViewInvitation {
 		
 		setTable();
 		
-		invitation.getItems().addAll(iInvitation);
-		event.getItems().addAll(iEvent);
-		updateProfile.getItems().addAll(iUpdateProfile);
-		
-		if(iManageVendor != null) {
-			manageVendor.getItems().addAll(iManageVendor);
-			menubar.getMenus().addAll(invitation, event, updateProfile, manageVendor);
-		}
-		menubar.getMenus().addAll(invitation, event, updateProfile);
-		
 		invitationContainer.getChildren().addAll(invitationTitle, invitationDescription, acceptBtn, invitationEM, invitationTable);
 		invitationPage.setTop(menubar);
 		invitationPage.setCenter(invitationContainer);
@@ -146,6 +126,39 @@ public class ViewInvitation {
 		invitationContainer.setMargin(invitationEM, new Insets(0, 0, 30, 0));
 		
 		invitationPage.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+	}
+	
+	public void setGuestMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, updateProfile);
+
+	}
+	
+	public void setVendorMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		manageVendor = new Menu("Manage Vendor");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		iManageVendor = new MenuItem("Manage Vendor");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		manageVendor.getItems().addAll(iManageVendor);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, manageVendor, updateProfile);
+
 	}
 	
 	public void invitation() {

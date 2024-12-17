@@ -29,6 +29,8 @@ public class VendorController {
 		
 		loadEventList();
 		
+		acceptedInvView.setVendorMenu();
+		
 		acceptedInvView.setInvitationMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
