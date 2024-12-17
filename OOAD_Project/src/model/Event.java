@@ -12,11 +12,10 @@ public class Event {
 	private Connect connect = Connect.getInstance();
 
 	public Event() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
-	public Event(String event_id, String event_name, String event_date, String event_location, String event_description,
-			String organizer_id) {
+	public Event(String event_id, String event_name, String event_date, String event_location, String event_description, String organizer_id) {
 		this.event_id = event_id;
 		this.event_name = event_name;
 		this.event_date = event_date;
@@ -25,7 +24,9 @@ public class Event {
 		this.organizer_id = organizer_id;
 	}
 
+//	mengambil data detail dari event
 	public Event viewEventDetails(String eventID) {
+//		mengambil semua kolum data dari database yang memiliki eventid tersebut
 		String readEventQuery = "SELECT * FROM event WHERE event_id = ?";
 		
 		PreparedStatement ps = connect.prepareStatement(readEventQuery);
@@ -35,12 +36,14 @@ public class Event {
 			ps.setString(1, eventID);
 			readData = ps.executeQuery();
 			
+//			bila ditemukan data event, maka buat event model untuk di return
 			if(readData != null && readData.next())
 				return new Event(readData.getString("event_id"), readData.getString("event_name"), readData.getString("event_date"), readData.getString("event_location"), readData.getString("event_description"), readData.getString("organizer_id"));
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 		
+//		bila tidak ditemukan maka return null
 		return null;
 	}
 	

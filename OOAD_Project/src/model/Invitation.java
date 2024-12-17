@@ -27,6 +27,7 @@ public class Invitation {
 			ps.setString(1, email);
 			readData = ps.executeQuery();
 			
+//			bila user ditemukan maka mengambil data invitation event
 			if(readData != null && readData.next()) {
 				String id = readData.getString("user_id");
 				System.out.println(id);
@@ -39,8 +40,10 @@ public class Invitation {
 				ps1.setString(1, id);
 				ResultSet readInvitationData = ps1.executeQuery();
 				
+//				untuk menampung eventid yang terkumpul
 				ArrayList<String> eventId = new ArrayList<>();
 				
+//				memasukan event id ke arraylist bila ditemukan eventid yang belum di accept
 				while(readInvitationData.next()) {
 					System.out.println(readInvitationData.getString("event_id"));
 					eventId.add(readInvitationData.getString("event_id"));
@@ -68,6 +71,8 @@ public class Invitation {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+//		bila tidak menemukan data yang diperlukan maka return null
 		return null;
 	}
 

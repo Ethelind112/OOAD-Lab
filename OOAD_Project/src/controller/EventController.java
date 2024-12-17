@@ -16,19 +16,22 @@ public class EventController {
 	ViewEventDetails eventDetView;
 
 	public EventController() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	
+//	handle view event details untuk semua role
 	public EventController(ViewEventDetails eventDetView, String email, String eventID) {
 		this.eventDetView = eventDetView;
 		this.email = email;
 		
+//		mengambil user dari email
 		User user = new User().getUserByEmail(email);
 		
 //		if(user.getUser_role().equalsIgnoreCase("guest")) {
 //			eventDetView.setGuestMenu();
 //		}
 		
+//		set hal yang dilakukan saat click invitation menu button
 		eventDetView.setInvitationMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -39,6 +42,7 @@ public class EventController {
 			}
 		});
 		
+//		set hal yang dilakukan saat click change profile menu button
 		eventDetView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -49,6 +53,7 @@ public class EventController {
 			}
 		});
 		
+//		set hal yang dilakukan saat click event menu button
 		eventDetView.setEventMenu(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -57,6 +62,7 @@ public class EventController {
 				ViewEvents view = new ViewEvents(uController.getUserByEmail(email).getUser_email());
 				String role = new UserController().getUser().getUser_role();
 				
+//				proses controller berdasarkan rolenya
 				if(role.equalsIgnoreCase("Vendor")) {
 					VendorController gController = new VendorController(view, uController.getUser().getUser_email());
 				}
@@ -67,8 +73,10 @@ public class EventController {
 			}
 		});
 		
+//		membuat event model dari event yang didapatkan
 		Event currEvent = viewEventDetails(eventID);
 		
+//		mengeset semua elemen berdasarkan data yang ditemukan
 		eventDetView.setEventName(currEvent.getEvent_name());
 		eventDetView.setEventDesc(currEvent.getEvent_description());
 		eventDetView.setEventDate(currEvent.getEvent_date());

@@ -57,12 +57,15 @@ public class User {
 //	melakukan proses registrasi
 	public String register(String email, String name, String password, String role) {
 		
+//		memanggil function untuk mengecek input kembali (detail penjelasan ada diatas functionnya)
 		String message = checkRegisterInput(email, name, password);
 		
+//		bila gagal mengembalikan error message
 		if(!message.equals("success")) {
 			return message;
 		}
 		
+//		bila berhasil
 //		mengambil semua user dari database
 		String readDateQuery = "SELECT * FROM user";
 		ResultSet readData = connect.execute(readDateQuery);
@@ -79,6 +82,7 @@ public class User {
 			e.printStackTrace();
 		}
 		
+//		membuat format ID
 		DecimalFormat formats = new DecimalFormat("00000");
 		String id = formats.format(count + 1);
 		
@@ -118,8 +122,65 @@ public class User {
 		return "success";
 	}
 	
-//	mengecek bila input dari change profile dapat berhasil dimasukan ke database
-	public String checkChangeProfileInput(String id, String email, String name, String oldPassword, String newPassword) {
+//	Sama halnya dengan register, checkChangeProfileInput telah sepenuhnya dilakukan oleh UserController, sehingga tidak lagi diperlukan pada User model
+	public String checkChangeProfileInput(String email, String name, String oldPassword, String newPassword) {
+		User currUser = getUserByEmail(user_email); 
+		
+		String newEmail = user_email;
+		String newName = user_name;
+		String newOldPassword = user_password;
+		
+		if(!email.equals("")) {
+			if(email.equals(newEmail)) {
+				return "The email you inputted is the same as you old email";
+			}
+		}
+		
+		if(!name.equals("")) {
+			if(name.equals(newName)) {
+				return "The username you inputted is the same as you old username";
+			}
+		}
+		
+		if(!oldPassword.equals("")) {
+			
+			if(!oldPassword.equals(newOldPassword)) {
+				return "Wrong old password";
+			}else {
+				if(newPassword.equals("") || newPassword == null) {
+					return "Input your new password to change password or\n leave the old password field blank to update the rest profile data";
+				}
+				
+				String message = "";
+				
+				if(newPassword.isEmpty()) {
+					message = "Please Fill All The Field";
+				}else if(newPassword.length() < 5) {
+					message = "Password must at least 5 characters long";
+				}
+				
+				if(!message.equals("")) {
+					return message;
+				}
+				
+			}
+		}
+		
+		if(!newPassword.equals("") && oldPassword.equals("")) {
+			return "Input your old password";
+		}
+		
+		if(email.equals("") && name.equals("") && oldPassword.equals("")) {
+			return "Nothing is updated";
+		}
+		
+		return "success";
+	}
+	
+//	untuk change profile disini ada tambahan parameter id (tidak mengikuti class diagram) karena email dan username (atribut yang unik) dapat diganti (email dan username baru)
+//	dan untuk bisa melakukan update memerlukan suatu identitas dari user yang membedakan dari user lain. 
+//	Bila email dan name sama sama diganti menjadi yang baru dan tidak ada ID, maka query tidak akan menemukan current user yang akan diupdate
+	public String changeProfile(String id, String email, String name, String oldPassword, String newPassword) {
 		String query = "UPDATE user SET user_email = ?, user_name = ?, user_password = ? WHERE user_id = ?";
 		PreparedStatement ps = connect.prepareStatement(query);
 		
@@ -142,13 +203,7 @@ public class User {
 		return "success";
 	}
 	
-//	untuk change profile disini ada tambahan parameter id (tidak mengikuti class diagram) karena email dan username (atribut yang unik) dapat diganti (email dan username baru)
-//	dan untuk bisa melakukan update memerlukan suatu identitas dari user yang membedakan dari user lain. 
-//	Bila email dan name sama sama diganti menjadi yang baru dan tidak ada ID, maka query tidak akan menemukan current user yang akan diupdate
-	public String changeProfile(String id, String email, String name, String oldPassword, String newPassword) {
-		return checkChangeProfileInput(id, email, name, oldPassword, newPassword);
-	}
-	
+//	Mengambil user berdasarkan email
 	public User getUserByEmail(String email) {
 		String readDateQuery = "SELECT * FROM user WHERE user_email = ?";
 		
@@ -159,15 +214,18 @@ public class User {
 			ps.setString(1, email);
 			readData = ps.executeQuery();
 			
+//			bila ditemukan, buat user model baru untuk di return
 			if(readData != null && readData.next())
 				return new User(readData.getString("user_id"), readData.getString("user_email"), readData.getString("user_name"), readData.getString("user_password"), readData.getString("user_role"));
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 		
+//		bila tidak ditemukan maka return null
 		return null;
 	}
 	
+//	Mengambil user berdasarkan username
 	public User getUserByUsername(String name) {
 		String readDateQuery = "SELECT * FROM user WHERE user_name = ?";
 		
@@ -178,11 +236,14 @@ public class User {
 			ps.setString(1, name);
 			readData = ps.executeQuery();
 			
+//			bila ditemukan, buat user model baru untuk di return
 			if(readData != null && readData.next())
 				return new User(readData.getString("user_id"), readData.getString("user_email"), readData.getString("user_name"), readData.getString("user_password"), readData.getString("user_role"));
 		} catch (SQLException e) {
 			return null;
 		}
+		
+//		bila tidak ditemukan maka return null
 		return null;
 	}
 

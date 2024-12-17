@@ -12,7 +12,9 @@ import view.ViewRegister;
 
 public class UserController {
 
+//	menambahkan user model agar proses yang tidak perlu getuserbyemail di sequence diagram dapat dengan mudah mengambil data yang tersimpan disini
 	private static User user = new User();
+	
 	private ViewRegister regisView;
 	private ViewLogin loginView;
 	private ViewChangeProfile changeProfileView;
@@ -21,19 +23,23 @@ public class UserController {
 		
 	}
 	
+//	controller untuk handle view login (set hal yang perlu dilakukan saat click button)
 	public UserController(ViewLogin loginView) {
 		this.loginView = loginView;
 		
-		
+//		set hal yang dilakukan pada saat click login button
 		loginView.setLoginButton(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent event) {
+	//			mengambil data dari inputan
 				String email = loginView.getEmailInput();
 				String pass = loginView.getPasswordInput();
 				
+	//			proses login di controller
 				String message = login(email, pass);
 
+	//			redirect ke view berdasarkan role nya
 				if(message == "success") {
 					if(user.getUser_role().equalsIgnoreCase("Admin")) {
 						ViewEvents view = new ViewEvents(email);
@@ -51,12 +57,12 @@ public class UserController {
 						Main.redirect(view.getScene());
 					}
 				}
-				
+//				bila tidak berhasil akan memunculkan error message
 				loginView.setErrorMessage(message);
-				
 			}
 		});
 		
+//		set hal yang dilakukan pada saat click toregis button
 		loginView.setToRegisButton(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -68,9 +74,11 @@ public class UserController {
 		});
 	}
 	
+//	controller untuk handle view register (set hal yang perlu dilakukan saat click button)
 	public UserController(ViewRegister regisView) {
 		this.regisView = regisView;
 		
+//		set hal yang dilakukan pada saat click toregis button
 		regisView.setRegisButton(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -81,9 +89,10 @@ public class UserController {
 				String pass = regisView.getPasswordInput();
 				String role = regisView.getRoleInput();
 				
-	//			proses registrasi ke controller
+	//			proses registrasi di controller
 				String message = register(email, uName, pass, role);
 	
+    //			redirect ke view berdasarkan role nya
 				if(message == "success") {
 					if(role.equalsIgnoreCase("Admin")) {
 						ViewEvents view = new ViewEvents(email);
@@ -102,11 +111,13 @@ public class UserController {
 					}
 				}
 				
+//				bila tidak berhasil akan memunculkan error message
 				regisView.setErrorMessage(message);
 				
 			}
 		});
 		
+//		set hal yang dilakukan pada saat click tologin button
 		regisView.setToLoginButton(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -118,10 +129,12 @@ public class UserController {
 		});
 	}
 	
+//	controller untuk handle view change profile (set hal yang perlu dilakukan saat click button)
 	public UserController(ViewChangeProfile changeProfileView, String email) {
 		this.changeProfileView = changeProfileView;
 		User user = new User().getUserByEmail(email);
 		
+//		mengeset menu dan onclick event berdasarkan role
 		if(user.getUser_role().equalsIgnoreCase("guest")) {
 			changeProfileView.setGuestMenu();
 			
@@ -169,6 +182,7 @@ public class UserController {
 			});
 		}
 		
+//		set hal yang dilakukan saat click update button
 		changeProfileView.setChangeProfileButton(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -178,6 +192,7 @@ public class UserController {
 			}
 		});
 		
+//		set hal yang dilakukan saat click invitation menu button
 		changeProfileView.setInvitationMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -430,9 +445,10 @@ public class UserController {
 			}
 		}
 		
-		
+//		message yang diterima dari proses change profile
 		String message = currUser.changeProfile(currUser.getUser_id(), newEmail, newName, newOldPassword, newPassword);
 		
+//		bila berhasil maka update data user terbaru
 		if(!message.equals("fail")) {
 			this.user.setUser_email(newEmail);
 			this.user.setUser_name(newName);

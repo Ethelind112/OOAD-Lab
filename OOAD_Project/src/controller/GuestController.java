@@ -21,15 +21,18 @@ public class GuestController {
 	private String email;
 	
 	public GuestController() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
+//	handle acceptedinvitationview untuk guest
 	public GuestController(ViewEvents acceptedInvView, String email) {
 		this.acceptedInvView = acceptedInvView;
 		this.email = email;
 		
+//		memasukan data bila ada ke tabel di view
 		loadEventList();
 		
+//		set hal yang dilakukan saat click invitation menu button
 		acceptedInvView.setInvitationMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -40,6 +43,7 @@ public class GuestController {
 			}
 		});
 		
+//		set hal yang dilakukan saat click change profile menu button
 		acceptedInvView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -50,6 +54,7 @@ public class GuestController {
 			}
 		});
 		
+//		set hal yang dilakukan saat click event untuk redirect ke event detail
 		acceptedInvView.setEventDetailButton(new EventHandler<MouseEvent>() {
 
 			@Override
@@ -63,6 +68,7 @@ public class GuestController {
 		});
 	}
 	
+//	untuk mengeload data event ke dalam tabel di view
 	public void loadEventList() {
 		GuestController gController = new GuestController();
 		UserController uController = new UserController();
