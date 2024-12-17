@@ -9,6 +9,7 @@ import view.ViewEvents;
 import view.ViewInvitation;
 import view.ViewLogin;
 import view.ViewRegister;
+import view.ViewUser;
 
 public class UserController {
 
@@ -18,6 +19,7 @@ public class UserController {
 	private ViewRegister regisView;
 	private ViewLogin loginView;
 	private ViewChangeProfile changeProfileView;
+	private ViewUser userView;
 	
 	public UserController() {
 		
@@ -138,6 +140,7 @@ public class UserController {
 				@Override
 				public void handle(ActionEvent event) {
 					ViewEvents view = new ViewEvents(user.getUser_email());
+					AdminController adminC = new AdminController(view, email);
 					Main.redirect(view.getScene());
 				}
 			});
@@ -185,6 +188,37 @@ public class UserController {
 			}
 		});
 	}
+	
+////	controller untuk handle view user (set hal yang perlu dilakukan saat click button)
+//	public UserController(ViewUser userView) {
+//		this.userView = userView;
+//		
+////		set hal yang dilakukan pada saat click login button
+//		userView.setADeleteButton(new EventHandler<ActionEvent>() {
+//			
+//			@Override
+//			public void handle(ActionEvent event) {
+//	//			mengambil data dari inputan
+//				User selectedUser = userView.getUserTable().getSelectionModel().getSelectedItem();
+//				if(selectedUser != null) {
+//					userView.setErrorMessage("");
+//					
+////					mengambil userid yang diclick
+//					String userId = selectedUser.getUser_id();
+//					
+////					proses delete user menggunakan user class (mengikuti sequence diagram)
+//					AdminController adminC = new AdminController();
+//					adminC.deleteUser(userId);
+//					
+//					userView.setTable();
+//					
+//				}else {
+////					bila tidak ada yang diselect maka minta admin untuk click user
+//					userView.setErrorMessage("Choose the user bellow");
+//				}
+//			}
+//		});
+//	}
 	
 	public User getUser() {
 		return user;

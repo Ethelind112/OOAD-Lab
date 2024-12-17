@@ -218,6 +218,10 @@ public class ViewChangeProfile {
 		iEvent.setOnAction(handler);
 	}
 	
+	public void setUserMenu(EventHandler<ActionEvent> handler) {
+		iUsers.setOnAction(handler);
+	}
+	
 	public String getEmail() {
 		return emailFieldUP.getText();
 	}

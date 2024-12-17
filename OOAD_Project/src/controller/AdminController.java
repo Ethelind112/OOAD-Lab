@@ -9,6 +9,7 @@ import model.Admin;
 import model.Event;
 import model.User;
 import view.Main;
+import view.ViewChangeProfile;
 import view.ViewEvents;
 import view.ViewLogin;
 import view.ViewUser;
@@ -18,6 +19,7 @@ public class AdminController {
 	private static Admin admin = new Admin();
 	private ViewEvents acceptedInvView;
 	private ViewUser userView;
+	private ViewChangeProfile changeProfileView;
 	private String email;
 
 	public AdminController() {
@@ -35,7 +37,7 @@ public class AdminController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				Main.toUserPage();
+				Main.toUserPage(email);
 			}
 		});
 		
@@ -59,8 +61,25 @@ public class AdminController {
 		});
 	}
 	
-	public AdminController(ViewUser userView) {
+	public AdminController(ViewUser userView, String email) {
 		this.userView = userView;
+		this.email = email;
+		
+		userView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Main.toChangeProfilePage(email);
+			}
+		});
+		
+		userView.setEventMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Main.toEventPage(email);
+			}
+		});
 		
 //		set hal yang dilakukan pada saat click delete button
 		userView.setADeleteButton(new EventHandler<ActionEvent>() {
@@ -84,6 +103,31 @@ public class AdminController {
 //					bila tidak ada yang diselect maka minta user untuk click invitationnya
 					userView.setErrorMessage("Choose the user bellow");
 				}
+			}
+		});
+	}
+	
+	public AdminController(ViewChangeProfile changeProfileView, String email) {
+		this.changeProfileView = changeProfileView;
+		this.email = email;
+		
+		changeProfileView.setAdminMenu();
+		
+//		set hal yang dilakukan saat click user menu button
+		changeProfileView.setUserMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+//				AdminController adminC = new AdminController(userView, email);
+				Main.toUserPage(email);
+			}
+		});
+	
+		changeProfileView.setEventMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Main.toEventPage(email);
 			}
 		});
 	}

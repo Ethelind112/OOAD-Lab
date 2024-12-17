@@ -74,9 +74,9 @@ public class Main extends Application {
 		Main.redirect(view.getScene());
 	}
 	
-	public static void toUserPage() {
+	public static void toUserPage(String email) {
 		ViewUser view = new ViewUser();
-		AdminController uController = new AdminController(view);
+		AdminController adminC = new AdminController(view, email);
 		Main.redirect(view.getScene());
 	}
 	

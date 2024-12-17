@@ -41,20 +41,21 @@ public class ViewUser {
 	
 	Label errorM;
 	BorderPane userPage;
-	VBox userContainer, delUserVB;
+	VBox userContainer, userVB, delVB;
 	Label userTitle;
 	TableView<User> userTable;
 	
 	MenuBar menubar;
-	Menu invitation, event, updateProfile, user;
-	MenuItem iInvitation, iEvent, iUpdateProfile, iUser;
+	Menu event, updateProfile, user;
+	MenuItem iEvent, iUpdateProfile, iUser;
 	Button delBtn;
 	
 	TableRow<User> row;
 	ObservableList<User> userData;
 	
 	public void initUser() {
-		delUserVB = new VBox();
+		userVB = new VBox();
+		delVB = new VBox();
 		
 		userPage = new BorderPane();
 		userContainer = new VBox();
@@ -63,12 +64,12 @@ public class ViewUser {
 		userTable = new TableView<>();
 		
 		menubar = new MenuBar();
-		user = new Menu("Users");
 		event = new Menu("Events");
+		user = new Menu("Users");
 		updateProfile = new Menu("Update Profile");
-			
-		iUser = new MenuItem("Users");
+		
 		iEvent = new MenuItem("Events");
+		iUser = new MenuItem("Users");
 		iUpdateProfile = new MenuItem("Update Profile");
 		
 		delBtn = new Button("Delete User");
@@ -98,21 +99,20 @@ public class ViewUser {
 		userData = FXCollections.observableArrayList();
 		userTable.setItems(userData);
 		
-		userContainer.getChildren().addAll(delBtn);
-		delUserVB.getChildren().add(userContainer);
+		delVB.getChildren().add(delBtn);
+		userContainer.getChildren().addAll(userTitle, userTable, delVB);
 	}
 	
 	public void initUserComponent() {
 		
 		setTable();
-
-		user.getItems().addAll(iUser);
+		
 		event.getItems().addAll(iEvent);
+		user.getItems().addAll(iUser);
 		updateProfile.getItems().addAll(iUpdateProfile);
 			
-		menubar.getMenus().addAll(user, event, updateProfile);
+		menubar.getMenus().addAll(event, user, updateProfile);
 		
-		userContainer.getChildren().addAll(userTitle, userTable);
 		userPage.setTop(menubar);
 		userPage.setCenter(userContainer);
 	}
@@ -128,15 +128,16 @@ public class ViewUser {
 		userContainer.setMargin(userTitle, new Insets(50,0,10,0));
 		userContainer.setAlignment(Pos.TOP_CENTER);
 		
+		delVB.setAlignment(Pos.CENTER);
+		delVB.setPadding(new Insets(10, 0, 0, 0));
+		
 		delBtn.setPadding(new Insets(10, 0, 10, 0));
-		delBtn.setMinWidth(100);
+		delBtn.setMinWidth(150);
 		delBtn.setTextFill(Color.WHITE);
 		delBtn.setBackground(new Background(new BackgroundFill(Color.web("#b20000"), CornerRadii.EMPTY, null)));
 		delBtn.setFont(Font.font(15));
 		
 		errorM.setTextFill(Color.RED);
-		
-		userContainer.setMargin(delBtn, new Insets(20, 0, 0, 0));
 	}
 	
 	public void user() {
@@ -162,6 +163,14 @@ public class ViewUser {
 	
 	public TableView<User> getUserTable(){
 		return userTable;
+	}
+	
+	public void setChangeProfileMenu(EventHandler<ActionEvent> handler) {
+		iUpdateProfile.setOnAction(handler);
+	}
+	
+	public void setEventMenu(EventHandler<ActionEvent> handler) {
+		iEvent.setOnAction(handler);
 	}
 	
 	public ViewUser() {
