@@ -1,49 +1,54 @@
 package view;
 
 import controller.EventOrganizerController;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
-public class ViewEditEventName extends JPanel {
+public class ViewEditEventName {
 
-    private JTextField eventIDField;
-    private JTextField newEventNameField;
-    private JLabel resultLabel;
     private EventOrganizerController controller;
-
-    public ViewEditEventName(EventOrganizerController controller) {
+    private Stage primaryStage;
+    
+    public ViewEditEventName(EventOrganizerController controller, Stage stage) {
         this.controller = controller;
-        setLayout(new BorderLayout());
+        this.primaryStage = stage;
+        initialize();
+    }
 
-        JPanel formPanel = new JPanel(new GridLayout(2,2,5,5));
-        formPanel.add(new JLabel("Event ID:"));
-        eventIDField = new JTextField();
-        formPanel.add(eventIDField);
+    private void initialize() {
+        Label eventIDLabel = new Label("Event ID:");
+        Label newEventNameLabel = new Label("New Event Name:");
+        TextField eventIDField = new TextField();
+        TextField newEventNameField = new TextField();
+        Label resultLabel = new Label();
+        Button editButton = new Button("Edit Event Name");
 
-        formPanel.add(new JLabel("New Event Name:"));
-        newEventNameField = new JTextField();
-        formPanel.add(newEventNameField);
-
-        add(formPanel, BorderLayout.CENTER);
-
-        JButton editButton = new JButton("Edit Event Name");
-        resultLabel = new JLabel("");
-        editButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String eventID = eventIDField.getText().trim();
-                String newName = newEventNameField.getText().trim();
-                String result = controller.editEventName(eventID, newName);
-                resultLabel.setText(result);
-            }
+        editButton.setOnAction(event -> {
+            String eventID = eventIDField.getText().trim();
+            String newName = newEventNameField.getText().trim();
+            String result = controller.editEventName(eventID, newName);
+            resultLabel.setText(result);
         });
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(editButton, BorderLayout.WEST);
-        bottomPanel.add(resultLabel, BorderLayout.CENTER);
+        VBox layout = new VBox(10);
+        layout.setAlignment(Pos.CENTER);
+        layout.setStyle("-fx-padding: 20; -fx-background-color: #f4f4f4;");
+    
+        layout.getChildren().addAll(eventIDLabel, eventIDField, newEventNameLabel, newEventNameField, editButton, resultLabel);
 
-        add(bottomPanel, BorderLayout.SOUTH);
+        eventIDLabel.setFont(new Font("Arial", 14));
+        newEventNameLabel.setFont(new Font("Arial", 14));
+        editButton.setFont(new Font("Arial", 14));
+
+        Scene scene = new Scene(layout, 400, 300);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Edit Event Name");
+        primaryStage.show();
     }
 }
