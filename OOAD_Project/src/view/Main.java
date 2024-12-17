@@ -1,5 +1,6 @@
 package view;
 
+import controller.AdminController;
 import controller.EventController;
 import controller.GuestController;
 import controller.InvitationController;
@@ -42,6 +43,8 @@ public class Main extends Application {
 		}
 		else if (role.equalsIgnoreCase("Guest")) {
 			GuestController gController = new GuestController(view, uController.getUser().getUser_email());
+		}else if(role.equalsIgnoreCase("Admin")) {
+			AdminController adminC = new AdminController(view, uController.getUser().getUser_email());
 		}
 		
 		redirect(view.getScene());
@@ -62,6 +65,12 @@ public class Main extends Application {
 	public static void toLoginPage() {
 		ViewLogin view = new ViewLogin();
 		UserController uController = new UserController(view);
+		Main.redirect(view.getScene());
+	}
+	
+	public static void toUserPage() {
+		ViewUser view = new ViewUser();
+		AdminController uController = new AdminController(view);
 		Main.redirect(view.getScene());
 	}
 	

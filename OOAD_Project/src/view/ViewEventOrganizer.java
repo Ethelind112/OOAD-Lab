@@ -33,12 +33,12 @@ public class ViewEventOrganizer extends Application {
         Button editEventNameButton = new Button("Edit Event Name");
         Button createEventButton = new Button("Create Event");
 
-        viewOrganizedEventsButton.setOnAction(e -> showView(new ViewOrganizedEvents(controller)));
-        viewTransactionDetailsButton.setOnAction(e -> showView(new ViewTransactionDetails(controller)));
-        addVendorButton.setOnAction(e -> showView(new ViewAddVendor(controller)));
-        addGuestButton.setOnAction(e -> showView(new ViewAddGuest())); // Navigate to ViewAddGuest
-        editEventNameButton.setOnAction(e -> showView(new ViewEditEventName(controller)));
-        createEventButton.setOnAction(e -> showView(new ViewCreateEvent(controller)));
+//        viewOrganizedEventsButton.setOnAction(e -> showView(new ViewOrganizedEvents(controller)));
+//        viewTransactionDetailsButton.setOnAction(e -> showView(new ViewTransactionDetails(controller)));
+//        addVendorButton.setOnAction(e -> showView(new ViewAddVendor(controller)));
+//        addGuestButton.setOnAction(e -> showView(new ViewAddGuest())); // Navigate to ViewAddGuest
+//        editEventNameButton.setOnAction(e -> showView(new ViewEditEventName(controller)));
+//        createEventButton.setOnAction(e -> showView(new ViewCreateEvent(controller)));
 
         navigation.getChildren().addAll(
                 createEventButton,
@@ -51,7 +51,7 @@ public class ViewEventOrganizer extends Application {
 
         root.setLeft(navigation);
 
-        root.setCenter(new ViewCreateEvent(controller));
+//        root.setCenter(new ViewCreateEvent(controller));
 
         Scene scene = new Scene(root, 1000, 700);
         primaryStage.setTitle("Event Organizer Dashboard");
@@ -60,8 +60,8 @@ public class ViewEventOrganizer extends Application {
     }
 
     private void showView(javafx.scene.layout.Region view) {
-        BorderPane root = (BorderPane) this.getScene().getRoot();
-        root.setCenter(view);
+//        BorderPane root = (BorderPane) this.getScene().getRoot();
+//        root.setCenter(view);
     }
 
     public static void main(String[] args) {

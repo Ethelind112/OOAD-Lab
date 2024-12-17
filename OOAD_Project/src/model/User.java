@@ -286,5 +286,7 @@ public class User {
 	public void setUser_role(String user_role) {
 		this.user_role = user_role;
 	}
+	
+	
 
 }

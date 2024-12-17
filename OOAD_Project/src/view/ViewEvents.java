@@ -149,7 +149,6 @@ public class ViewEvents {
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
 		menubar.getMenus().addAll(event, users, updateProfile);
-
 	}
 	
 	public void setVendorMenu() {
@@ -207,6 +206,10 @@ public class ViewEvents {
 	
 	public void setManageVendorMenu(EventHandler<ActionEvent> handler) {
 		iManageVendor.setOnAction(handler);
+	}
+	
+	public void setUserMenu(EventHandler<ActionEvent> handler) {
+		iUsers.setOnAction(handler);
 	}
 	
 	public void setEventList(ObservableList<Event> events) {
