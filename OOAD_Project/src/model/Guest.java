@@ -9,7 +9,7 @@ import util.Connect;
 
 public class Guest extends User {
 
-	String accepted_invitations;
+	private String accepted_invitations;
 	private Connect connect = Connect.getInstance();
 	
 //	process accept invitation dengan mengubah invitation status menjadi accepted

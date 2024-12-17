@@ -8,7 +8,7 @@ import util.Connect;
 
 public class Event {
 	
-	String event_id, event_name, event_date, event_location, event_description, organizer_id;
+	private String event_id, event_name, event_date, event_location, event_description, organizer_id;
 	private Connect connect = Connect.getInstance();
 
 	public Event() {

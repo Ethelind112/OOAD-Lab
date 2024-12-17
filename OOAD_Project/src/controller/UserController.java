@@ -83,7 +83,7 @@ public class UserController {
 				
 	//			proses registrasi di controller
 				String message = register(email, uName, pass, role);
-	
+				
     //			redirect ke view berdasarkan role nya
 				if(message == "success") {
 					if(role.equalsIgnoreCase("Admin")) {
@@ -116,7 +116,6 @@ public class UserController {
 //	controller untuk handle view change profile (set hal yang perlu dilakukan saat click button)
 	public UserController(ViewChangeProfile changeProfileView, String email) {
 		this.changeProfileView = changeProfileView;
-		User user = new User().getUserByEmail(email);
 		
 //		mengeset menu dan onclick event berdasarkan role
 		if(user.getUser_role().equalsIgnoreCase("guest")) {
@@ -183,7 +182,6 @@ public class UserController {
 			@Override
 			public void handle(ActionEvent event) {
 				Main.toInvitationPage(email);
-				
 			}
 		});
 	}

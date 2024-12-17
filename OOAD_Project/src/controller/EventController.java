@@ -14,6 +14,7 @@ public class EventController {
 	
 	private String email;
 	private ViewEventDetails eventDetView;
+	private Event event;
 
 	public EventController() {
 		
@@ -23,6 +24,7 @@ public class EventController {
 	public EventController(ViewEventDetails eventDetView, String email, String eventID) {
 		this.eventDetView = eventDetView;
 		this.email = email;
+		this.event = new Event();
 		
 //		mengambil user dari email
 		User user = new User().getUserByEmail(email);
@@ -69,7 +71,6 @@ public class EventController {
 	}
 	
 	public Event viewEventDetails(String eventID) {
-		Event event = new Event();
 		return event.viewEventDetails(eventID);
 	}
 

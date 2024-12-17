@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import util.Connect;
 
 public class Vendor extends User {
-	String accepted_invitations;
+	private String accepted_invitations;
 	private Connect connect = Connect.getInstance();
 	
 	//ngatur logika adding product (name dan description) vendor

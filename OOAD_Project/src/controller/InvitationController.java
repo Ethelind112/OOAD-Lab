@@ -18,6 +18,8 @@ public class InvitationController {
 
 	private ViewInvitation invitationView;
 	private String email;
+	private User user;
+	private Invitation invitation;
 	
 	public InvitationController() {
 		
@@ -27,9 +29,9 @@ public class InvitationController {
 	public InvitationController(ViewInvitation invitationView, String email) {
 		this.invitationView = invitationView;
 		this.email = email;
+		invitation = new Invitation();
 		
-		UserController uController = new UserController();
-		User user = uController.getUserByEmail(email);
+		user = new User().getUserByEmail(email);
 		
 //		memasukan data bila ada ke tabel di view
 		loadInvitationList();
@@ -64,7 +66,6 @@ public class InvitationController {
 					String eventID = selectedInvitation.getEvent_id();
 					
 //					proses accept invitation menggunakan invitation class (mengikuti sequence diagram)
-					Invitation invitation = new Invitation();
 					invitation.acceptInvitation(eventID);
 					
 					invitationView.setTable();
@@ -114,7 +115,6 @@ public class InvitationController {
 	
 //	untuk mengeload data invitation ke dalam tabel di view
 	public ArrayList<Event> getInvitations(String email) {
-		Invitation invitation = new Invitation();
 		return invitation.getInvitations(email);
 	}
 }
