@@ -186,6 +186,10 @@ public class ViewInvitation {
 		iUpdateProfile.setOnAction(handler);
 	}
 	
+	public void setManageVendor(EventHandler<ActionEvent> handler) {
+		iManageVendor.setOnAction(handler);
+	}
+	
 	public void setEventMenu(EventHandler<ActionEvent> handler) {
 		iEvent.setOnAction(handler);
 	}

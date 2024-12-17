@@ -52,6 +52,16 @@ public class InvitationController {
 			}
 		});
 		
+		//hal yang dilakukan saat click managevendor
+		invitationView.setManageVendor(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Main.toManageVendorPage(email);
+			}
+		});
+
+		
 //		set hal yang dilakukan saat click accept button
 		invitationView.setAcceptButton(new EventHandler<ActionEvent>() {
 			

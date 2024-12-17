@@ -31,6 +31,12 @@ public class Main extends Application {
 		redirect(view.getScene());
 	}
 	
+	public static void toManageVendorPage(String email) {
+		ViewManageVendor view = new ViewManageVendor();
+		redirect(view.getMGscene());
+	}
+
+	
 	public static void toEventPage(String email) {
 		UserController uController = new UserController();
 		
