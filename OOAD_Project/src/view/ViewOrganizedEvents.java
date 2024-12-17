@@ -1,53 +1,54 @@
 package view;
 
 import controller.EventOrganizerController;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.Event;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import model.EventOrganizer;
 
-public class ViewOrganizedEvents extends JPanel {
+import java.util.List;
 
-    private JTextArea eventsTextArea;
+public class ViewOrganizedEvents {
+
     private EventOrganizerController controller;
+    private Stage stage;
 
-    public ViewOrganizedEvents(EventOrganizerController controller) {
-        this.controller = controller;
-        setLayout(new BorderLayout());
-
-        eventsTextArea = new JTextArea();
-        eventsTextArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(eventsTextArea);
-
-        JButton viewButton = new JButton("View Organized Events");
-        viewButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ArrayList<Event> events = controller.viewOrganizedEvents();
-                displayEvents(events);
-            }
-        });
-
-        add(viewButton, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+    public ViewOrganizedEvents(EventOrganizer eventOrganizer, Stage stage) {
+        this.controller = new EventOrganizerController(eventOrganizer);
+        this.stage = stage;
     }
 
-    private void displayEvents(ArrayList<Event> events) {
-        eventsTextArea.setText("");
-        if (events.isEmpty()) {
-            eventsTextArea.setText("No events found.");
-        } else {
-            for (Event ev : events) {
-                eventsTextArea.append("Event ID: " + ev.getEvent_id() + "\n");
-                eventsTextArea.append("Name: " + ev.getEvent_name() + "\n");
-                eventsTextArea.append("Date: " + ev.getEvent_date() + "\n");
-                eventsTextArea.append("Location: " + ev.getEvent_location() + "\n");
-                eventsTextArea.append("Description: " + ev.getEvent_description() + "\n");
-                eventsTextArea.append("Organizer ID: " + ev.getOrganizer_id() + "\n");
-                eventsTextArea.append("-----------------------------------------------------\n");
-            }
+    public void displayOrganizedEvents() {
+        List<Event> events = controller.viewOrganizedEvents();
+
+        ListView<String> eventsListView = new ListView<>();
+        for (Event event : events) {
+            eventsListView.getItems().add(event.getEvent_name() + " | " + event.getEvent_date());
         }
+
+        if (events.isEmpty()) {
+            eventsListView.getItems().add("No events found.");
+        }
+
+        VBox eventListLayout = new VBox(10, eventsListView);
+        eventListLayout.setAlignment(Pos.CENTER);
+
+        Scene eventListScene = new Scene(eventListLayout, 400, 300);
+        stage.setTitle("My Organized Events");
+        stage.setScene(eventListScene);
+        stage.show();
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
