@@ -39,9 +39,7 @@ public class InvitationController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				ViewChangeProfile view = new ViewChangeProfile();
-				UserController uController = new UserController(view, email);
-				Main.redirect(view.getScene());
+				Main.toChangeProfilePage(email);
 			}
 		});
 		
@@ -57,17 +55,11 @@ public class InvitationController {
 					
 //					mengambil eventid yang diclick
 					String eventID = selectedInvitation.getEvent_id();
-					String role = new UserController().getUser().getUser_role();
 					
-//					proses accept invitation berdasarkan role
-					if(role.equalsIgnoreCase("Vendor")) {
-						VendorController vController = new VendorController();
-						vController.acceptInvitation(eventID);
-					}
-					else if (role.equalsIgnoreCase("Guest")) {
-						GuestController gController = new GuestController();
-						gController.acceptInvitation(eventID);
-					}
+//					proses accept invitation menggunakan invitation class (mengikuti sequence diagram)
+					Invitation invitation = new Invitation();
+					invitation.acceptInvitation(eventID);
+					
 					invitationView.setTable();
 					
 				}else {

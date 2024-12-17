@@ -37,9 +37,7 @@ public class GuestController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				ViewInvitation view = new ViewInvitation(email);
-				InvitationController iController = new InvitationController(view, email);
-				Main.redirect(view.getScene());
+				Main.toInvitationPage(email);
 			}
 		});
 		
@@ -48,9 +46,7 @@ public class GuestController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				ViewChangeProfile view = new ViewChangeProfile();
-				UserController uController = new UserController(view, email);
-				Main.redirect(view.getScene());
+				Main.toChangeProfilePage(email);
 			}
 		});
 		
@@ -60,9 +56,7 @@ public class GuestController {
 			@Override
 			public void handle(MouseEvent event) {
 				Event selectedEvent = acceptedInvView.getEventTable().getSelectionModel().getSelectedItem();
-				ViewEventDetails view = new ViewEventDetails();
-				EventController eController = new EventController(view, email, selectedEvent.getEvent_id());
-				Main.redirect(view.getScene());
+				Main.toEventDetailPage(email, selectedEvent.getEvent_id());
 			}
 			
 		});
@@ -70,9 +64,7 @@ public class GuestController {
 	
 //	untuk mengeload data event ke dalam tabel di view
 	public void loadEventList() {
-		GuestController gController = new GuestController();
-		UserController uController = new UserController();
-		ArrayList<Event> invitation = gController.viewAcceptedEvents(uController.getUser().getUser_email());
+		ArrayList<Event> invitation = viewAcceptedEvents(email);
 		
 		ObservableList<Event> eventData = FXCollections.observableArrayList(invitation);
 		

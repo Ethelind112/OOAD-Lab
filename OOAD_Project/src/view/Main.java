@@ -1,6 +1,10 @@
 package view;
 
+import controller.EventController;
+import controller.GuestController;
+import controller.InvitationController;
 import controller.UserController;
+import controller.VendorController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -13,6 +17,54 @@ public class Main extends Application {
 		launch(args);
 	}
 
+	public static void toInvitationPage(String email) {
+		ViewInvitation view = new ViewInvitation(email);
+		InvitationController iController = new InvitationController(view, email);
+		
+		redirect(view.getScene());
+	}
+	
+	public static void toChangeProfilePage(String email) {
+		ViewChangeProfile view = new ViewChangeProfile();
+		UserController uController = new UserController(view, email);
+		redirect(view.getScene());
+	}
+	
+	public static void toEventPage(String email) {
+		UserController uController = new UserController();
+		
+		ViewEvents view = new ViewEvents(email);
+		String role = uController.getUser().getUser_role();
+		
+//		proses controller berdasarkan rolenya
+		if(role.equalsIgnoreCase("Vendor")) {
+			VendorController gController = new VendorController(view, uController.getUser().getUser_email());
+		}
+		else if (role.equalsIgnoreCase("Guest")) {
+			GuestController gController = new GuestController(view, uController.getUser().getUser_email());
+		}
+		
+		redirect(view.getScene());
+	}
+	
+	public static void toEventDetailPage(String email, String eventID) {
+		ViewEventDetails view = new ViewEventDetails();
+		EventController eController = new EventController(view, email, eventID);
+		redirect(view.getScene());
+	}
+	
+	public static void toRegisterPage() {
+		ViewRegister view = new ViewRegister();
+		UserController uController = new UserController(view);
+		Main.redirect(view.getScene());
+	}
+	
+	public static void toLoginPage() {
+		ViewLogin view = new ViewLogin();
+		UserController uController = new UserController(view);
+		Main.redirect(view.getScene());
+	}
+	
 	public static void redirect(Scene scene) {
 		stage.setScene(scene);
 		stage.show();

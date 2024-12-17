@@ -13,6 +13,7 @@ public class Guest extends User {
 	private Connect connect = Connect.getInstance();
 	
 //	process accept invitation dengan mengubah invitation status menjadi accepted
+//	di class diagram acceptinvitation ada di Guest dan Vendor. Namun di sequence diagram proses ada di Invitation
 	public String acceptInvitation(String eventID) {
 		String updateQuery = "UPDATE invitation SET invitation_status = 'accepted' WHERE event_id = ?";
 		PreparedStatement ps = connect.prepareStatement(updateQuery);

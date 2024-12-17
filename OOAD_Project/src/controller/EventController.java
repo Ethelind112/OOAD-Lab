@@ -12,8 +12,8 @@ import view.ViewInvitation;
 
 public class EventController {
 	
-	String email;
-	ViewEventDetails eventDetView;
+	private String email;
+	private ViewEventDetails eventDetView;
 
 	public EventController() {
 		
@@ -36,9 +36,7 @@ public class EventController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				ViewInvitation view = new ViewInvitation(email);
-				InvitationController iController = new InvitationController(view, email);
-				Main.redirect(view.getScene());
+				Main.toInvitationPage(email);
 			}
 		});
 		
@@ -47,9 +45,7 @@ public class EventController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				ViewChangeProfile view = new ViewChangeProfile();
-				UserController uController = new UserController(view, email);
-				Main.redirect(view.getScene());
+				Main.toChangeProfilePage(email);
 			}
 		});
 		
@@ -58,18 +54,7 @@ public class EventController {
 
 			@Override
 			public void handle(ActionEvent event) {
-				UserController uController = new UserController();
-				ViewEvents view = new ViewEvents(uController.getUserByEmail(email).getUser_email());
-				String role = new UserController().getUser().getUser_role();
-				
-//				proses controller berdasarkan rolenya
-				if(role.equalsIgnoreCase("Vendor")) {
-					VendorController gController = new VendorController(view, uController.getUser().getUser_email());
-				}
-				else if (role.equalsIgnoreCase("Guest")) {
-					GuestController gController = new GuestController(view, uController.getUser().getUser_email());
-				}
-				Main.redirect(view.getScene());
+				Main.toEventPage(email);
 			}
 		});
 		

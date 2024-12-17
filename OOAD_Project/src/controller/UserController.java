@@ -42,19 +42,13 @@ public class UserController {
 	//			redirect ke view berdasarkan role nya
 				if(message == "success") {
 					if(user.getUser_role().equalsIgnoreCase("Admin")) {
-						ViewEvents view = new ViewEvents(email);
-						Main.redirect(view.getScene());
+						Main.toEventPage(user.getUser_email());
 					}else if(user.getUser_role().equalsIgnoreCase("Guest")){
-						ViewInvitation view = new ViewInvitation(email);
-						InvitationController iController = new InvitationController(view, user.getUser_email());
-						Main.redirect(view.getScene());
+						Main.toInvitationPage(user.getUser_email());
 					}else if(user.getUser_role().equalsIgnoreCase("Event Organizer")) {
-						ViewEvents view = new ViewEvents(email);
-						Main.redirect(view.getScene());
+						Main.toEventPage(user.getUser_email());
 					}else if(user.getUser_role().equalsIgnoreCase("Vendor")) {
-						ViewInvitation view = new ViewInvitation(email);
-						InvitationController iController = new InvitationController(view, user.getUser_email());
-						Main.redirect(view.getScene());
+						Main.toInvitationPage(user.getUser_email());
 					}
 				}
 //				bila tidak berhasil akan memunculkan error message
@@ -67,9 +61,7 @@ public class UserController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				ViewRegister view = new ViewRegister();
-				UserController uController = new UserController(view);
-				Main.redirect(view.getScene());
+				Main.toRegisterPage();
 			}
 		});
 	}
@@ -95,19 +87,13 @@ public class UserController {
     //			redirect ke view berdasarkan role nya
 				if(message == "success") {
 					if(role.equalsIgnoreCase("Admin")) {
-						ViewEvents view = new ViewEvents(email);
-						Main.redirect(view.getScene());
+						Main.toEventPage(email);
 					}else if(role.equalsIgnoreCase("Guest")) {
-						ViewInvitation view = new ViewInvitation(email);
-						InvitationController iController = new InvitationController(view, email);
-						Main.redirect(view.getScene());
+						Main.toInvitationPage(email);
 					}else if(role.equalsIgnoreCase("Event Organizer")) {
-						ViewEvents view = new ViewEvents(email);
-						Main.redirect(view.getScene());
+						Main.toEventPage(email);
 					}else if(role.equalsIgnoreCase("Vendor")) {
-						ViewInvitation view = new ViewInvitation(email);
-						InvitationController iController = new InvitationController(view, email);
-						Main.redirect(view.getScene());
+						Main.toInvitationPage(email);
 					}
 				}
 				
@@ -122,9 +108,7 @@ public class UserController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				ViewLogin view = new ViewLogin();
-				UserController uController = new UserController(view);
-				Main.redirect(view.getScene());
+				Main.toLoginPage();
 			}
 		});
 	}
@@ -197,9 +181,7 @@ public class UserController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				ViewInvitation view = new ViewInvitation(user.getUser_email());
-				InvitationController iController = new InvitationController(view, email);
-				Main.redirect(view.getScene());
+				Main.toInvitationPage(email);
 				
 			}
 		});

@@ -33,9 +33,7 @@ public class VendorController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				ViewInvitation view = new ViewInvitation(email);
-				InvitationController iController = new InvitationController(view, email);
-				Main.redirect(view.getScene());
+				Main.toInvitationPage(email);
 			}
 		});
 		
@@ -43,9 +41,7 @@ public class VendorController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				ViewChangeProfile view = new ViewChangeProfile();
-				UserController uController = new UserController(view, email);
-				Main.redirect(view.getScene());
+				Main.toChangeProfilePage(email);
 			}
 		});
 		
@@ -54,18 +50,14 @@ public class VendorController {
 			@Override
 			public void handle(MouseEvent event) {
 				Event selectedEvent = acceptedInvView.getEventTable().getSelectionModel().getSelectedItem();
-				ViewEventDetails view = new ViewEventDetails();
-				EventController eController = new EventController(view, email, selectedEvent.getEvent_id());
-				Main.redirect(view.getScene());
+				Main.toEventDetailPage(email, selectedEvent.getEvent_id());
 			}
 			
 		});
 	}
 	
 	public void loadEventList() {
-		VendorController vController = new VendorController();
-		UserController uController = new UserController();
-		ArrayList<Event> invitation = vController.viewAcceptedEvents(uController.getUser().getUser_email());
+		ArrayList<Event> invitation = viewAcceptedEvents(email);
 		
 		ObservableList<Event> eventData = FXCollections.observableArrayList(invitation);
 		acceptedInvView.setEventList(eventData);
