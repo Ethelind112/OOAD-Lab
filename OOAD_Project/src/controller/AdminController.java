@@ -2,6 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -17,7 +19,7 @@ import view.ViewUser;
 public class AdminController {
 	
 	private static Admin admin = new Admin();
-	private ViewEvents acceptedInvView;
+	private ViewEvents eventView;
 	private ViewUser userView;
 	private ViewChangeProfile changeProfileView;
 	private String email;
@@ -26,14 +28,16 @@ public class AdminController {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AdminController(ViewEvents acceptedInvView, String email) {
-		this.acceptedInvView = acceptedInvView;
+	public AdminController(ViewEvents eventView, String email) {
+		this.eventView = eventView;
 		this.email = email;
 		
-		acceptedInvView.setAdminMenu();
+		eventView.setAdminMenu();
+		
+		loadEventList();
 		
 //		set hal yang dilakukan saat click user menu button
-		acceptedInvView.setUserMenu(new EventHandler<ActionEvent>() {
+		eventView.setUserMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent event) {
@@ -42,7 +46,7 @@ public class AdminController {
 		});
 		
 //		set hal yang dilakukan saat click change profile menu button
-		acceptedInvView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
+		eventView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent event) {
@@ -51,11 +55,11 @@ public class AdminController {
 		});
 		
 //		set hal yang dilakukan saat click event untuk redirect ke event detail
-		acceptedInvView.setEventDetailButton(new EventHandler<MouseEvent>() {
+		eventView.setEventDetailButton(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent event) {
-				Event selectedEvent = acceptedInvView.getEventTable().getSelectionModel().getSelectedItem();
+				Event selectedEvent = eventView.getEventTable().getSelectionModel().getSelectedItem();
 				Main.toEventDetailPage(email, selectedEvent.getEvent_id());
 			}
 		});
@@ -64,6 +68,8 @@ public class AdminController {
 	public AdminController(ViewUser userView, String email) {
 		this.userView = userView;
 		this.email = email;
+		
+		loadUserList();
 		
 		userView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
 			
@@ -132,6 +138,22 @@ public class AdminController {
 		});
 	}
 	
+	public void loadEventList() {
+		ArrayList<Event> events = viewAllEvents();
+		
+		ObservableList<Event> eventData = FXCollections.observableArrayList(events);
+		
+		eventView.setEventList(eventData);
+	}
+	
+	public void loadUserList() {
+		ArrayList<User> users = viewUsers();
+		
+		ObservableList<User> userData = FXCollections.observableArrayList(users);
+		
+		userView.setUserList(userData);
+	}
+	
 	public void deleteEvent(String eventID) {
 		admin.deleteEvent(eventID);
 	}
@@ -140,8 +162,8 @@ public class AdminController {
 		admin.deleteUser(userID);	
 	}
 	
-	public ArrayList<Event> viewEvents() {
-		return admin.viewEvents();
+	public ArrayList<Event> viewAllEvents() {
+		return admin.viewAllEvents();
 	}
 	
 	public ArrayList<User> viewUsers() {

@@ -141,6 +141,7 @@ public class ViewUser {
 	}
 	
 	public void user() {
+		initUser();
 		initUserComponent();
 		userStyling();
 	}
@@ -171,6 +172,10 @@ public class ViewUser {
 	
 	public void setEventMenu(EventHandler<ActionEvent> handler) {
 		iEvent.setOnAction(handler);
+	}
+	
+	public void setUserList(ObservableList<User> users) {
+		userData.setAll(users);
 	}
 	
 	public ViewUser() {

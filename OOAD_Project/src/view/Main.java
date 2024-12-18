@@ -90,6 +90,7 @@ public class Main extends Application {
 	
 	public static void toUserPage(String email) {
 		ViewUser view = new ViewUser();
+//		UserController uController = new UserController(view);
 		AdminController adminC = new AdminController(view, email);
 		Main.redirect(view.getScene());
 	}

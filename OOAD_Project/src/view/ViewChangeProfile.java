@@ -156,7 +156,6 @@ public class ViewChangeProfile {
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
 		menubar.getMenus().addAll(event, users, updateProfile);
-
 	}
 	
 	public void setVendorMenu() {

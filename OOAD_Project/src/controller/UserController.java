@@ -140,6 +140,14 @@ public class UserController {
 					Main.toEventPageAdmin(email);
 				}
 			});
+			
+			changeProfileView.setUserMenu(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+					Main.toUserPage(email);
+				}
+			});
 		}else if(user.getUser_role().equalsIgnoreCase("vendor")) {
 			changeProfileView.setVendorMenu();
 			
@@ -191,8 +199,9 @@ public class UserController {
 	}
 	
 ////	controller untuk handle view user (set hal yang perlu dilakukan saat click button)
-//	public UserController(ViewUser userView) {
+//	public UserController(ViewUser userView, String email) {
 //		this.userView = userView;
+//		this.email = email;
 //		
 ////		set hal yang dilakukan pada saat click login button
 //		userView.setADeleteButton(new EventHandler<ActionEvent>() {

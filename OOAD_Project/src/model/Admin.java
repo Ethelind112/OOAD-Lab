@@ -47,48 +47,61 @@ public class Admin extends User{
 		}
 	}
 	
-	public ArrayList<Event> viewEvents(){
+	public ArrayList<Event> viewAllEvents(){
 		ArrayList<Event> events = new ArrayList<>();
-		for(int i = 0; i < events.size(); i++) {
 			String query = "SELECT * FROM event";
 			
-			PreparedStatement ps = connect.prepareStatement(query);
-			ResultSet readData = null;
-			
-			try {
-				readData = ps.executeQuery();
-				
-				while(readData != null && readData.next())
-					events.add(new Event(readData.getString("event_id"), readData.getString("event_name"), readData.getString("event_date"), readData.getString("event_location"), readData.getString("event_description"), readData.getString("organizer_id")));
-				
-				return events;
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-		}
-		return null;
+			try (PreparedStatement ps = connect.prepareStatement(query);
+			         ResultSet readEventData = ps.executeQuery()) {
+			        
+			        // Loop untuk memasukkan semua data event ke dalam list
+			        while (readEventData.next()) {
+			            events.add(new Event(
+			                readEventData.getString("event_id"), 
+			                readEventData.getString("event_name"), 
+			                readEventData.getString("event_date"), 
+			                readEventData.getString("event_location"), 
+			                readEventData.getString("event_description"), 
+			                readEventData.getString("organizer_id")
+			            ));
+			        }
+			        
+			        return events;
+			        
+			    } catch (SQLException e) {
+			        e.printStackTrace();
+			    }
+			    
+			    // Jika tidak ada event atau terjadi error, kembalikan null
+			    return null;
 	}
 	
 	public ArrayList<User> viewUser(){
 		ArrayList<User> users = new ArrayList<>();
-		for(int i = 0; i < users.size(); i++) {
-			String query = "SELECT * FROM user";
-			
-			PreparedStatement ps = connect.prepareStatement(query);
-			ResultSet readData = null;
-			
-			try {
-				readData = ps.executeQuery();
-				
-				while(readData != null && readData.next())
-					users.add(new User(readData.getString("user_id"), readData.getString("user_email"), readData.getString("user_name"), readData.getString("user_password"), readData.getString("user_role")));
-				
-				return users;
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-		}
-		return null;
+		String query = "SELECT * FROM user";
+		
+		try (PreparedStatement ps = connect.prepareStatement(query);
+		         ResultSet readEventData = ps.executeQuery()) {
+		        
+		        // Loop untuk memasukkan semua data event ke dalam list
+		        while (readEventData.next()) {
+		            users.add(new User(
+		                readEventData.getString("user_id"), 
+		                readEventData.getString("user_email"), 
+		                readEventData.getString("user_name"), 
+		                readEventData.getString("user_password"), 
+		                readEventData.getString("user_role")
+		            ));
+		        }
+		        
+		        return users;
+		        
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		    
+		    // Jika tidak ada event atau terjadi error, kembalikan null
+		    return null;
 	}
 
 }
