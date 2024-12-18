@@ -40,8 +40,16 @@ public class InvitationController {
 			invitationView.setGuestMenu();
 		}else {
 			invitationView.setVendorMenu();
+			
+			//hal yang dilakukan saat click managevendor
+			invitationView.setManageVendor(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					Main.toManageVendorPage(email);
+				}
+			});
 		}
-		
 		
 //		set hal yang dilakukan saat click change profile menu button
 		invitationView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
@@ -51,16 +59,6 @@ public class InvitationController {
 				Main.toChangeProfilePage(email);
 			}
 		});
-		
-		//hal yang dilakukan saat click managevendor
-		invitationView.setManageVendor(new EventHandler<ActionEvent>() {
-			
-			@Override
-			public void handle(ActionEvent event) {
-				Main.toManageVendorPage(email);
-			}
-		});
-
 		
 //		set hal yang dilakukan saat click accept button
 		invitationView.setAcceptButton(new EventHandler<ActionEvent>() {

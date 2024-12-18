@@ -322,7 +322,7 @@ public class UserController {
 			User user = new User();
 			message = user.register(email, name, password, role);
 			
-			this.user = user;
+			this.user = user.getUserByEmail(email);
 			
 //			mengirim success message
 			return "success";
