@@ -30,21 +30,6 @@ public class Main extends Application {
 		UserController uController = new UserController(view, email);
 		redirect(view.getScene());
 	}
-	
-	public static void toManageVendorPage(String email) {
-		ViewManageVendor view = new ViewManageVendor(email);
-		redirect(view.getMGscene());
-	}
-	
-	public static void toAddProductPage(String email) {
-		ViewAddProducts view = new ViewAddProducts(email);
-		redirect(view.getScene());
-	}
-	
-	public static void toEditProduct(String email) {
-		ViewEditProduct view = new ViewEditProduct(email);
-		redirect(view.getScene());
-	}
 
 	public static void toEventPageGuest(String email) {
 		UserController uController = new UserController();
@@ -60,6 +45,12 @@ public class Main extends Application {
 		ViewEvents view = new ViewEvents(email);
 		VendorController gController = new VendorController(view, email);
 		redirect(view.getScene());
+	}
+	
+	public static void toEventPageVendorFromManageVendor(String email) {
+		ViewManageVendor view = new ViewManageVendor(email);
+		VendorController vController = new VendorController(view, email);
+		redirect(view.getMGscene());
 	}
 	
 	public static void toEventPageAdmin(String email) {

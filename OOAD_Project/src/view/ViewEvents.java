@@ -35,7 +35,6 @@ import model.Event;
 import model.User;
 
 public class ViewEvents {
-	
 	String email;
 	
 	Scene eventScene;
