@@ -54,6 +54,31 @@ public class AdminController {
 			}
 		});
 		
+//		set hal yang dilakukan saat click delete untuk hapus event
+		eventView.setADeleteButton(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+//				mengambil data dari inputan
+				Event selectedEvent = eventView.getEventTable().getSelectionModel().getSelectedItem();
+				if(selectedEvent != null) {
+					userView.setErrorMessage("");
+					
+//					mengambil userid yang diclick
+					String eventId = selectedEvent.getEvent_id();
+					
+//					proses delete user menggunakan user class (mengikuti sequence diagram)
+					admin.deleteEvent(eventId);
+					
+					eventView.setTable();
+					
+				}else {
+//					bila tidak ada yang diselect maka minta user untuk click invitationnya
+					eventView.setErrorMessage("Choose the user bellow");
+				}
+			}
+		});
+		
 //		set hal yang dilakukan saat click event untuk redirect ke event detail
 		eventView.setEventDetailButton(new EventHandler<MouseEvent>() {
 

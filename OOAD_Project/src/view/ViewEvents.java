@@ -23,11 +23,16 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import model.Event;
+import model.User;
 
 public class ViewEvents {
 	
@@ -35,8 +40,8 @@ public class ViewEvents {
 	
 	Scene eventScene;
 	BorderPane eventPage;
-	VBox eventContainer;
-	Label eventTitle, eventDescription;
+	VBox eventContainer, delVB;
+	Label eventTitle, eventDescription, errorM;
 	TableView<Event> eventTable;
 	ObservableList<Event> eventData;
 	
@@ -45,6 +50,8 @@ public class ViewEvents {
 	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor, iCreateEvent;
 	
 	TableRow<Event> row;
+	
+	Button delBtn;
 	
 	public void initInvitation() {
 		
@@ -60,6 +67,12 @@ public class ViewEvents {
 		updateProfile = new Menu("Update Profile");
 		
 		iUpdateProfile = new MenuItem("Update Profile");
+		
+		delVB = new VBox();
+		delBtn = new Button("Delete");
+		delBtn.setDisable(true);
+		
+		errorM = new Label();
 	}
 	
 	public void setTable() {
@@ -91,6 +104,7 @@ public class ViewEvents {
 		
 		eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn);
 		
+		delVB.getChildren().add(delBtn);
 		eventData = FXCollections.observableArrayList();
 		eventTable.setItems(eventData);
 	}
@@ -99,7 +113,7 @@ public class ViewEvents {
 		
 		setTable();
 		
-		eventContainer.getChildren().addAll(eventTitle, eventDescription, eventTable);
+		eventContainer.getChildren().addAll(eventTitle, eventDescription, eventTable, delBtn);
 		eventPage.setTop(menubar);
 		eventPage.setCenter(eventContainer);
 	}
@@ -115,6 +129,17 @@ public class ViewEvents {
 		eventContainer.setMargin(eventTitle, new Insets(50,0,10,0));
 		eventContainer.setMargin(eventDescription, new Insets(0,0,50,0));
 		eventContainer.setAlignment(Pos.TOP_CENTER);
+		
+		delVB.setAlignment(Pos.CENTER);
+		delVB.setPadding(new Insets(10, 0, 0, 0));
+		
+		delBtn.setPadding(new Insets(10, 0, 10, 0));
+		delBtn.setMinWidth(150);
+		delBtn.setTextFill(Color.WHITE);
+		delBtn.setBackground(new Background(new BackgroundFill(Color.web("#b20000"), CornerRadii.EMPTY, null)));
+		delBtn.setFont(Font.font(15));
+		
+		errorM.setTextFill(Color.RED);
 	}
 	
 	public void invitation() {
@@ -142,13 +167,15 @@ public class ViewEvents {
 		event = new Menu("Events");
 		
 		iUsers = new MenuItem("Users");
-		iEvent = new MenuItem("Accepted Events");
+		iEvent = new MenuItem("Events");
 		
 		users.getItems().addAll(iUsers);
 		event.getItems().addAll(iEvent);
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
 		menubar.getMenus().addAll(event, users, updateProfile);
+		
+		delBtn.setDisable(false);
 	}
 	
 	public void setVendorMenu() {
@@ -185,6 +212,22 @@ public class ViewEvents {
 		
 		menubar.getMenus().addAll(invitation, event, createEvent, updateProfile);
 
+	}
+	
+	public void setADeleteButton(EventHandler<ActionEvent> handler) {
+		delBtn.setOnAction(handler);
+	}
+	
+	public void setMDeleteButton(EventHandler<MouseEvent> handler) {
+		eventTable.setRowFactory((TableView<Event> e) -> {
+			row = new TableRow<>();
+			row.setOnMouseClicked(handler);
+			return row;
+		});	
+	}
+	
+	public void setErrorMessage(String message) {
+		errorM.setText(message);
 	}
 	
 	public void setEventDetailButton(EventHandler<MouseEvent> handler) {

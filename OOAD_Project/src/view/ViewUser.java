@@ -146,13 +146,13 @@ public class ViewUser {
 		userStyling();
 	}
 	
-	public void setMDeleteButton(EventHandler<MouseEvent> handler) {
-		userTable.setRowFactory((TableView<User> e) -> {
-			row = new TableRow<>();
-			row.setOnMouseClicked(handler);
-			return row;
-		});	
-	}
+//	public void setMDeleteButton(EventHandler<MouseEvent> handler) {
+//		userTable.setRowFactory((TableView<User> e) -> {
+//			row = new TableRow<>();
+//			row.setOnMouseClicked(handler);
+//			return row;
+//		});	
+//	}
 	
 	public void setADeleteButton(EventHandler<ActionEvent> handler) {
 		delBtn.setOnAction(handler);

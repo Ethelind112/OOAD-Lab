@@ -32,7 +32,7 @@ public class ProductController {
 			}
 		});
 		
-		//ngatur logika click editbutton
+//		//ngatur logika click editbutton
 		managevendor.setEditButton(new EventHandler<ActionEvent>() {
 
 			@Override
