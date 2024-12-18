@@ -16,6 +16,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -24,17 +25,20 @@ import model.Event;
 import model.Products;
 
 public class ViewManageVendor {
+	String email;
 	
 	Scene MGscene;
 	BorderPane MGpage;
+	FlowPane btn;
 	VBox MGcontainer;
 	Label MGtitle, MGdesc, MGem;
 	TableView<Products> pTable;
-	Button editBtn, backBtn;
+	Button editBtn, backBtn, addBtn;
 	ObservableList<Products> pData;
 	
 	public void initProduct() {
 		MGpage = new BorderPane();
+		btn = new FlowPane();
 		MGcontainer = new VBox();
 		MGscene = new Scene(MGpage, 1000, 700);
 		MGtitle = new Label("Manage Product");
@@ -42,6 +46,7 @@ public class ViewManageVendor {
 		MGem = new Label("");
 		editBtn = new Button("Edit");
 		backBtn = new Button("Back");
+		addBtn = new Button("Add");
 		
 		pTable = new TableView<>();
 	}
@@ -68,7 +73,8 @@ public class ViewManageVendor {
 	public void initComponent() {
 		setTable();
 		
-		MGcontainer.getChildren().addAll(MGtitle, MGdesc, editBtn, MGem, pTable);
+		btn.getChildren().addAll(editBtn, addBtn);
+		MGcontainer.getChildren().addAll(MGtitle, MGdesc, btn, MGem, pTable);
 		MGpage.setCenter(MGcontainer);
 		MGpage.setBottom(backBtn);
 	}
@@ -87,10 +93,17 @@ public class ViewManageVendor {
 		editBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
 		editBtn.setFont(Font.font(15));
 		
-		backBtn.setPadding(new Insets(10, 0, 10, 0));
+		backBtn.setPadding(new Insets(10));
 		backBtn.setMinWidth(100);
 		backBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
 		backBtn.setFont(Font.font(15));
+		
+		addBtn.setPadding(new Insets(10, 0, 10, 0));
+		addBtn.setMinWidth(100);
+		addBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
+		addBtn.setFont(Font.font(15));
+		
+		btn.setHgap(20);
 		
 		MGcontainer.setMargin(editBtn, new Insets(20, 0, 10, 0));
 		MGcontainer.setMargin(backBtn, new Insets(20, 0, 10, 0));
@@ -104,7 +117,9 @@ public class ViewManageVendor {
 		productStyle();
 	}
 	
-	public ViewManageVendor() {
+	public ViewManageVendor(String email) {
+		this.email = email;
+		
 		initProduct();
 		product();
 		Main.redirect(MGscene);
@@ -124,6 +139,10 @@ public class ViewManageVendor {
 	
 	public void setbackButton(EventHandler<ActionEvent> handler) {
 		backBtn.setOnAction(handler);
+	}
+	
+	public void setAddButtonAction(EventHandler<ActionEvent> handler) {
+	    addBtn.setOnAction(handler);
 	}
 	
 	public TableView<Products> getInvitationTable(){

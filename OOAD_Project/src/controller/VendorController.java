@@ -14,6 +14,7 @@ import view.ViewChangeProfile;
 import view.ViewEventDetails;
 import view.ViewEvents;
 import view.ViewInvitation;
+import view.ViewManageVendor;
 
 public class VendorController {
 	private ViewEvents acceptedInvView;
@@ -64,6 +65,10 @@ public class VendorController {
 				Main.toManageVendorPage(email);
 			}
 		});
+	}
+	
+	public void loadProductsList() {
+		ArrayList<Products> product = 
 	}
 	
 	public void loadEventList() {

@@ -32,8 +32,18 @@ public class Main extends Application {
 	}
 	
 	public static void toManageVendorPage(String email) {
-		ViewManageVendor view = new ViewManageVendor();
+		ViewManageVendor view = new ViewManageVendor(email);
 		redirect(view.getMGscene());
+	}
+	
+	public static void toAddProductPage(String email) {
+		ViewAddProducts view = new ViewAddProducts(email);
+		redirect(view.getScene());
+	}
+	
+	public static void toEditProduct(String email) {
+		ViewEditProduct view = new ViewEditProduct(email);
+		redirect(view.getScene());
 	}
 
 	public static void toEventPageGuest(String email) {
