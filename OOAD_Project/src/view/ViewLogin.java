@@ -153,7 +153,6 @@ public class ViewLogin {
 	public ViewLogin() {
 		initLogin();
 		login();
-		Main.redirect(loginScene);
 	}
 
 }

@@ -36,22 +36,36 @@ public class Main extends Application {
 		redirect(view.getMGscene());
 	}
 
-	
-	public static void toEventPage(String email) {
+	public static void toEventPageGuest(String email) {
 		UserController uController = new UserController();
 		
 		ViewEvents view = new ViewEvents(email);
-		String role = uController.getUser().getUser_role();
+		GuestController gController = new GuestController(view, email);
+		redirect(view.getScene());
+	}
+	
+	public static void toEventPageVendor(String email) {
+		UserController uController = new UserController();
 		
-//		proses controller berdasarkan rolenya
-		if(role.equalsIgnoreCase("Vendor")) {
-			VendorController gController = new VendorController(view, uController.getUser().getUser_email());
-		}
-		else if (role.equalsIgnoreCase("Guest")) {
-			GuestController gController = new GuestController(view, uController.getUser().getUser_email());
-		}else if(role.equalsIgnoreCase("Admin")) {
-			AdminController adminC = new AdminController(view, uController.getUser().getUser_email());
-		}
+		ViewEvents view = new ViewEvents(email);
+		VendorController gController = new VendorController(view, email);
+		redirect(view.getScene());
+	}
+	
+	public static void toEventPageAdmin(String email) {
+		UserController uController = new UserController();
+		
+		ViewEvents view = new ViewEvents(email);
+		AdminController adminC = new AdminController(view, email);
+		redirect(view.getScene());
+	}
+	
+	public static void toEventPageEO(String email) {
+		UserController uController = new UserController();
+		
+		ViewEvents view = new ViewEvents(email);
+		
+//		Tambahin Controller EO
 		
 		redirect(view.getScene());
 	}
@@ -91,6 +105,7 @@ public class Main extends Application {
 		stage.setMaxWidth(1000);
 		ViewRegister view = new ViewRegister();
 		UserController uController = new UserController(view);
+		redirect(view.getScene());
 	}
 
 }

@@ -56,7 +56,15 @@ public class EventController {
 
 			@Override
 			public void handle(ActionEvent event) {
-				Main.toEventPage(email);
+				if(user.getUser_role().equalsIgnoreCase("Admin")) {
+					Main.toEventPageAdmin(user.getUser_email());
+				}else if(user.getUser_role().equalsIgnoreCase("Guest")){
+					Main.toInvitationPage(user.getUser_email());
+				}else if(user.getUser_role().equalsIgnoreCase("Event Organizer")) {
+					Main.toEventPageEO(user.getUser_email());
+				}else if(user.getUser_role().equalsIgnoreCase("Vendor")) {
+					Main.toInvitationPage(user.getUser_email());
+				}
 			}
 		});
 		

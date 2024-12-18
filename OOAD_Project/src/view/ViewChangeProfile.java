@@ -203,7 +203,6 @@ public class ViewChangeProfile {
 	public ViewChangeProfile() {
 		initUpdateProfile();
 		updateProfile();
-		Main.redirect(updateProfileScene);
 	}
 
 	public void setChangeProfileButton(EventHandler<ActionEvent> handler) {
@@ -220,6 +219,10 @@ public class ViewChangeProfile {
 	
 	public void setUserMenu(EventHandler<ActionEvent> handler) {
 		iUsers.setOnAction(handler);
+	}
+	
+	public void setManageVendorMenu(EventHandler<ActionEvent> handler) {
+		iManageVendor.setOnAction(handler);
 	}
 	
 	public String getEmail() {

@@ -171,7 +171,6 @@ public class ViewInvitation {
 		
 		initInvitation();
 		invitation();
-		Main.redirect(invitationScene);
 	}
 
 	public Scene getScene() {

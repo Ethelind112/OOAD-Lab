@@ -77,7 +77,7 @@ public class AdminController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				Main.toEventPage(email);
+				Main.toEventPageAdmin(email);
 			}
 		});
 		
@@ -127,7 +127,7 @@ public class AdminController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				Main.toEventPage(email);
+				Main.toEventPageAdmin(email);
 			}
 		});
 	}

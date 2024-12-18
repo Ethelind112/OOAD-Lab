@@ -92,9 +92,7 @@ public class InvitationController {
 
 				@Override
 				public void handle(ActionEvent event) {
-					ViewEvents view = new ViewEvents(user.getUser_email());
-					GuestController gController = new GuestController(view, email);
-					Main.redirect(view.getScene());
+					Main.toEventPageGuest(email);
 				}
 			});
 		}else if(user.getUser_role().equalsIgnoreCase("vendor")) {
@@ -103,9 +101,7 @@ public class InvitationController {
 
 				@Override
 				public void handle(ActionEvent event) {
-					ViewEvents view = new ViewEvents(user.getUser_email());
-					VendorController vController = new VendorController(view, email);
-					Main.redirect(view.getScene());
+					Main.toEventPageVendor(email);
 				}
 			});
 		}

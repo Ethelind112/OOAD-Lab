@@ -105,8 +105,6 @@ public class ViewEventDetails {
 		initEventDetail();
 		initDetailComponent();
 		eventDetailStyling();
-		
-		Main.redirect(eventDetailScene);
 	}
 	
 	public void setGuestMenu() {

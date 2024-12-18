@@ -225,8 +225,6 @@ public class ViewEvents {
 		
 		initInvitation();
 		invitation();
-		
-		Main.redirect(eventScene);
 	}
 	
 	public Scene getScene() {

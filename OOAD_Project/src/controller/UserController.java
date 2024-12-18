@@ -44,11 +44,11 @@ public class UserController {
 	//			redirect ke view berdasarkan role nya
 				if(message == "success") {
 					if(user.getUser_role().equalsIgnoreCase("Admin")) {
-						Main.toEventPage(user.getUser_email());
+						Main.toEventPageAdmin(user.getUser_email());
 					}else if(user.getUser_role().equalsIgnoreCase("Guest")){
 						Main.toInvitationPage(user.getUser_email());
 					}else if(user.getUser_role().equalsIgnoreCase("Event Organizer")) {
-						Main.toEventPage(user.getUser_email());
+						Main.toEventPageEO(user.getUser_email());
 					}else if(user.getUser_role().equalsIgnoreCase("Vendor")) {
 						Main.toInvitationPage(user.getUser_email());
 					}
@@ -89,11 +89,11 @@ public class UserController {
     //			redirect ke view berdasarkan role nya
 				if(message == "success") {
 					if(role.equalsIgnoreCase("Admin")) {
-						Main.toEventPage(email);
+						Main.toEventPageAdmin(user.getUser_email());
 					}else if(role.equalsIgnoreCase("Guest")) {
 						Main.toInvitationPage(email);
 					}else if(role.equalsIgnoreCase("Event Organizer")) {
-						Main.toEventPage(email);
+						Main.toEventPageEO(email);
 					}else if(role.equalsIgnoreCase("Vendor")) {
 						Main.toInvitationPage(email);
 					}
@@ -127,9 +127,7 @@ public class UserController {
 
 				@Override
 				public void handle(ActionEvent event) {
-					ViewEvents view = new ViewEvents(user.getUser_email());
-					GuestController gController = new GuestController(view, email);
-					Main.redirect(view.getScene());
+					Main.toEventPageGuest(email);
 				}
 			});
 		}else if(user.getUser_role().equalsIgnoreCase("admin")) {
@@ -139,21 +137,25 @@ public class UserController {
 
 				@Override
 				public void handle(ActionEvent event) {
-					ViewEvents view = new ViewEvents(user.getUser_email());
-					AdminController adminC = new AdminController(view, email);
-					Main.redirect(view.getScene());
+					Main.toEventPageAdmin(email);
 				}
 			});
 		}else if(user.getUser_role().equalsIgnoreCase("vendor")) {
 			changeProfileView.setVendorMenu();
 			
+			changeProfileView.setManageVendorMenu(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					Main.toManageVendorPage(email);
+				}
+			});
+			
 			changeProfileView.setEventMenu(new EventHandler<ActionEvent>() {
 
 				@Override
 				public void handle(ActionEvent event) {
-					ViewEvents view = new ViewEvents(user.getUser_email());
-					VendorController cController = new VendorController(view, email);
-					Main.redirect(view.getScene());
+					Main.toEventPageVendor(email);
 				}
 			});
 		}else {
@@ -163,8 +165,7 @@ public class UserController {
 
 				@Override
 				public void handle(ActionEvent event) {
-					ViewEvents view = new ViewEvents(user.getUser_email());
-					Main.redirect(view.getScene());
+					Main.toEventPageEO(email);
 				}
 			});
 		}

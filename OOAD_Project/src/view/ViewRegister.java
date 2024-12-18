@@ -219,8 +219,6 @@ public class ViewRegister {
 	public ViewRegister() {
 		initRegister();
 		register();
-		
-		Main.redirect(regisScene);
 	}
 	
 }

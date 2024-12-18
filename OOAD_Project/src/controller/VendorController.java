@@ -56,6 +56,14 @@ public class VendorController {
 			}
 			
 		});
+		
+		acceptedInvView.setManageVendorMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Main.toManageVendorPage(email);
+			}
+		});
 	}
 	
 	public void loadEventList() {
