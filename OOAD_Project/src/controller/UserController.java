@@ -130,6 +130,15 @@ public class UserController {
 					Main.toEventPageGuest(email);
 				}
 			});
+			
+//			set hal yang dilakukan saat click invitation menu button
+			changeProfileView.setInvitationMenu(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					Main.toInvitationPage(email);
+				}
+			});
 		}else if(user.getUser_role().equalsIgnoreCase("admin")) {
 			changeProfileView.setAdminMenu();
 			
@@ -138,6 +147,14 @@ public class UserController {
 				@Override
 				public void handle(ActionEvent event) {
 					Main.toEventPageAdmin(email);
+				}
+			});
+			
+			changeProfileView.setUserMenu(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					Main.toUserPage(email);
 				}
 			});
 		}else if(user.getUser_role().equalsIgnoreCase("vendor")) {
@@ -156,6 +173,15 @@ public class UserController {
 				@Override
 				public void handle(ActionEvent event) {
 					Main.toEventPageVendor(email);
+				}
+			});
+			
+//			set hal yang dilakukan saat click invitation menu button
+			changeProfileView.setInvitationMenu(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					Main.toInvitationPage(email);
 				}
 			});
 		}else {
@@ -177,15 +203,6 @@ public class UserController {
 			public void handle(ActionEvent event) {
 				String message = changeProfile(changeProfileView.getEmail(), changeProfileView.getUserName(), changeProfileView.getPassword(), changeProfileView.getNewPassword());
 				changeProfileView.setErrorMessage(message);
-			}
-		});
-		
-//		set hal yang dilakukan saat click invitation menu button
-		changeProfileView.setInvitationMenu(new EventHandler<ActionEvent>() {
-			
-			@Override
-			public void handle(ActionEvent event) {
-				Main.toInvitationPage(email);
 			}
 		});
 	}

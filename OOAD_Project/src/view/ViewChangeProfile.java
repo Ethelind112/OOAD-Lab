@@ -225,6 +225,10 @@ public class ViewChangeProfile {
 		iManageVendor.setOnAction(handler);
 	}
 	
+	public void setCreateEvent(EventHandler<ActionEvent> handler) {
+		iCreateEvent.setOnAction(handler);
+	}
+	
 	public String getEmail() {
 		return emailFieldUP.getText();
 	}
