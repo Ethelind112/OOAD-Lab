@@ -47,9 +47,9 @@ public class Main extends Application {
 		redirect(view.getScene());
 	}
 	
-	public static void toEventPageVendorFromManageVendor(String email) {
+	public static void toManageVendor(String email) {
 		ViewManageVendor view = new ViewManageVendor(email);
-		VendorController vController = new VendorController(view, email);
+		VendorController vcontroller = new VendorController(view, email);
 		redirect(view.getMGscene());
 	}
 	

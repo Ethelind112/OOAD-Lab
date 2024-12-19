@@ -57,6 +57,16 @@ public class EventController {
 			}
 		});
 		
+		//hal yang dilakukan saat click manage vendor menu button
+		eventDetView.setManageVendorMenu(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				Main.toManageVendor(email);
+			}
+		});
+		
 //		set hal yang dilakukan saat click event menu button
 		eventDetView.setEventMenu(new EventHandler<ActionEvent>() {
 

@@ -46,7 +46,7 @@ public class InvitationController {
 				
 				@Override
 				public void handle(ActionEvent event) {
-//					Main.toManageVendorPage(email);s
+					Main.toManageVendor(email);
 				}
 			});
 		}

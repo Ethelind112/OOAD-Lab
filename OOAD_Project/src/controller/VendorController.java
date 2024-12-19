@@ -61,7 +61,7 @@ public class VendorController {
 
 			@Override
 			public void handle(ActionEvent event) {
-				Main.toEventPageVendorFromManageVendor(user.getUser_email());
+				Main.toInvitationPage(email);
 			}
 		});
 
@@ -136,9 +136,9 @@ public class VendorController {
 	
 	//logic to clear and reload data for tableview
 	public void refreshTableData() {
-	    ObservableList<Products> productData = FXCollections.observableArrayList();
 	    ArrayList<Products> products = getProductData();
-	    productData.addAll(products);
+	    ObservableList<Products> productData = FXCollections.observableArrayList(products);
+
 	    managevendor.setpData(productData); // Update the ViewManageVendor table
 	}
 

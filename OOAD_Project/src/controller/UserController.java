@@ -183,6 +183,15 @@ public class UserController {
 					Main.toInvitationPage(email);
 				}
 			});
+			
+			changeProfileView.setManageVendorMenu(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+					// TODO Auto-generated method stub
+					Main.toManageVendor(email);
+				}
+			});
 		}else {
 			changeProfileView.setEventOrganizerMenu();
 			
