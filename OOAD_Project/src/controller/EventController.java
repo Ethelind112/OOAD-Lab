@@ -42,6 +42,15 @@ public class EventController {
 			});
 		}else if(user.getUser_role().equalsIgnoreCase("admin")) {
 			eventDetView.setAdminMenu();
+			
+			eventDetView.setUserMenu(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					// TODO Auto-generated method stub
+					Main.toUserPage(email);
+				}
+			});
 		}else if(user.getUser_role().equalsIgnoreCase("vendor")) {
 			eventDetView.setVendorMenu();
 //			System.out.println("Role: " + user.getUser_role());

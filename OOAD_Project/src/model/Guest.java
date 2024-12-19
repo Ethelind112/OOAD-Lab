@@ -87,4 +87,26 @@ public class Guest extends User {
 		return null;
 	}
 
+	public User getGuestByTransactionId(String event_id) {
+		String readDateQuery = "SELECT g.* FROM user g JOIN transactions t ON g.id = t.user_id WHERE t.id = ? AND g.role = ?";
+		
+		PreparedStatement ps = connect.prepareStatement(readDateQuery);
+		ResultSet readData = null;
+		
+		try {
+			ps.setString(1, event_id);
+			ps.setString(2, "Guest");
+			readData = ps.executeQuery();
+			
+//			bila ditemukan, buat user model baru untuk di return
+			if(readData != null && readData.next())
+				return new User(readData.getString("user_id"), readData.getString("user_email"), readData.getString("user_name"), readData.getString("user_password"), readData.getString("user_role"));
+		} catch (SQLException e) {
+			return null;
+		}
+		
+//		bila tidak ditemukan maka return null
+		return null;
+	}
+
 }

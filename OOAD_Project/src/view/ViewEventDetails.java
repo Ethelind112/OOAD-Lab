@@ -105,7 +105,7 @@ public class ViewEventDetails {
 		event = new Menu("Events");
 		
 		iUsers = new MenuItem("Users");
-		iEvent = new MenuItem("Accepted Events");
+		iEvent = new MenuItem("Events");
 		
 		users.getItems().addAll(iUsers);
 		event.getItems().addAll(iEvent);
@@ -153,6 +153,10 @@ public class ViewEventDetails {
 	
 	public Scene getScene() {
 		return eventDetailScene;
+	}
+	
+	public void setUserMenu(EventHandler<ActionEvent> handler) {
+		iUsers.setOnAction(handler);
 	}
 	
 	public void setInvitationMenu(EventHandler<ActionEvent> handler) {

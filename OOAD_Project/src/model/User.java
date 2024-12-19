@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import model.User;
 import util.Connect;
@@ -246,6 +247,50 @@ public class User {
 //		bila tidak ditemukan maka return null
 		return null;
 	}
+	
+	public String deleteUser(String userID) {
+		String query = "DELETE FROM user WHERE user_id = ?";
+		PreparedStatement ps = connect.prepareStatement(query);
+		
+		try {
+			ps.setString(1, userID);
+			ps.executeUpdate();
+			return "User succesfully deleted!";
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return "Cannot delete user!";
+		}
+	}
+	
+	public ArrayList<User> viewUsers(){
+		ArrayList<User> users = new ArrayList<>();
+		String query = "SELECT * FROM user";
+		
+		try (PreparedStatement ps = connect.prepareStatement(query);
+		         ResultSet readEventData = ps.executeQuery()) {
+		        
+		        // Loop untuk memasukkan semua data event ke dalam list
+		        while (readEventData.next()) {
+		            users.add(new User(
+		                readEventData.getString("user_id"), 
+		                readEventData.getString("user_email"), 
+		                readEventData.getString("user_name"), 
+		                readEventData.getString("user_password"), 
+		                readEventData.getString("user_role")
+		            ));
+		        }
+		        
+		        return users;
+		        
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		    
+		    // Jika tidak ada event atau terjadi error, kembalikan null
+		    return null;
+	}
 
 	public String getUser_id() {
 		return user_id;
@@ -286,6 +331,8 @@ public class User {
 	public void setUser_role(String user_role) {
 		this.user_role = user_role;
 	}
+
+	
 	
 	
 

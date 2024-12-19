@@ -1,3 +1,4 @@
+
 package view;
 
 import java.util.ArrayList;
@@ -40,7 +41,8 @@ import model.User;
 public class ViewEvents {
 	Scene eventScene;
 	BorderPane eventPage;
-	VBox eventContainer, delVB;
+	VBox eventContainer;
+	HBox btnHB;
 	Label eventTitle, eventDescription, errorM;
 	TableView<Event> eventTable;
 	ObservableList<Event> eventData;
@@ -50,7 +52,7 @@ public class ViewEvents {
 	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor, iCreateEvent;
 	
 	TableRow<Event> row;
-	TableColumn<Event, Void> transactionColumn;
+//	TableColumn<Event, Void> transactionColumn;
 	
 	Button delBtn, transBtn;
 	
@@ -69,15 +71,15 @@ public class ViewEvents {
 		
 		iUpdateProfile = new MenuItem("Update Profile");
 		
-		delVB = new VBox();
-		delVB.setVisible(false);
+		btnHB = new HBox(200);
+		btnHB.setVisible(false);
 		delBtn = new Button("Delete Event");
 		delBtn.setVisible(false);
+		transBtn = new Button("Event Detail");
+		transBtn.setVisible(false);
 		
 		errorM = new Label();
-	
-		transactionColumn = new TableColumn<>("Transaction");
-		transactionColumn.setVisible(false);
+		errorM.setVisible(false);
 	}
 	
 	public void setTable() {
@@ -133,7 +135,7 @@ public class ViewEvents {
 		eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn);
 //		eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn, transactionColumn);
 		
-		delVB.getChildren().add(delBtn);
+		btnHB.getChildren().addAll(delBtn, transBtn);
 		eventData = FXCollections.observableArrayList();
 		eventTable.setItems(eventData);
 	}
@@ -142,7 +144,7 @@ public class ViewEvents {
 		
 		setTable();
 		
-		eventContainer.getChildren().addAll(eventTitle, eventDescription, eventTable, delBtn);
+		eventContainer.getChildren().addAll(eventTitle, eventDescription, eventTable, btnHB, errorM);
 		eventPage.setTop(menubar);
 		eventPage.setCenter(eventContainer);
 	}
@@ -159,15 +161,21 @@ public class ViewEvents {
 		eventContainer.setMargin(eventDescription, new Insets(0,0,50,0));
 		eventContainer.setAlignment(Pos.TOP_CENTER);
 		
-		delVB.setAlignment(Pos.CENTER);
-		delVB.setPadding(new Insets(10, 0, 0, 0));
-		delVB.setMargin(delBtn, new Insets(10,0,0,0));
+		btnHB.setAlignment(Pos.CENTER);
+		btnHB.setPadding(new Insets(10, 0, 0, 0));
+//		btnHB.setMargin(delBtn, new Insets(10,0,0,20));
 		
 		delBtn.setPadding(new Insets(10, 0, 10, 0));
 		delBtn.setMinWidth(150);
 		delBtn.setTextFill(Color.WHITE);
 		delBtn.setBackground(new Background(new BackgroundFill(Color.web("#b20000"), CornerRadii.EMPTY, null)));
 		delBtn.setFont(Font.font(15));
+		
+		transBtn.setPadding(new Insets(10, 0, 10, 0));
+		transBtn.setMinWidth(150);
+		transBtn.setTextFill(Color.WHITE);
+		transBtn.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
+		transBtn.setFont(Font.font(15));
 		
 		errorM.setTextFill(Color.RED);
 	}
@@ -205,9 +213,11 @@ public class ViewEvents {
 		
 		menubar.getMenus().addAll(event, users, updateProfile);
 		
-		delVB.setVisible(true);
+		btnHB.setVisible(true);
 		delBtn.setVisible(true);
-		transactionColumn.setVisible(true);
+		transBtn.setVisible(true);
+		
+		errorM.setVisible(true);
 	}
 	
 	public void setVendorMenu() {
@@ -250,7 +260,7 @@ public class ViewEvents {
 		delBtn.setOnAction(handler);
 	}
 	
-	public void setATransactionButton(Button transBtn, EventHandler<ActionEvent> handler) {
+	public void setATransactionButton(EventHandler<ActionEvent> handler) {
 		transBtn.setOnAction(handler);
 	}
 	

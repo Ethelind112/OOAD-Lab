@@ -9,7 +9,9 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import model.Admin;
 import model.Event;
+import model.Guest;
 import model.User;
+import model.Vendor;
 import view.Main;
 import view.ViewChangeProfile;
 import view.ViewEvents;
@@ -18,7 +20,6 @@ import view.ViewUser;
 
 public class AdminController {
 	
-	private static Admin admin = new Admin();
 	private ViewEvents eventView;
 	private ViewUser userView;
 	private ViewChangeProfile changeProfileView;
@@ -54,6 +55,27 @@ public class AdminController {
 			}
 		});
 		
+		eventView.setATransactionButton(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+//				mengambil data dari inputan
+				Event selectedEvent = eventView.getEventTable().getSelectionModel().getSelectedItem();
+				if(selectedEvent != null) {
+					Main.toEventDetailPage(email, selectedEvent.getEvent_id());
+					
+//					Guest guest = new Guest();
+//					guest.getGuestByTransactionId(selectedEvent.getEvent_id());
+//					
+//					Vendor vendor = new Vendor();
+//					vendor.getVendorByTransactionId(selectedEvent.getEvent_id());
+				}else {
+					eventView.setErrorMessage("Choose the event above!");
+				}
+			}
+		});
+
+		
 //		set hal yang dilakukan saat click delete untuk hapus event
 		eventView.setADeleteButton(new EventHandler<ActionEvent>() {
 
@@ -67,13 +89,13 @@ public class AdminController {
 					String eventId = selectedEvent.getEvent_id();
 					
 //					proses delete user menggunakan user class (mengikuti sequence diagram)
-					eventView.setErrorMessage(admin.deleteEvent(eventId));
+					eventView.setErrorMessage(selectedEvent.deleteEvent(eventId));
 					
 					loadEventList();
 					
 				}else {
 //					bila tidak ada yang diselect maka minta user untuk click invitationnya
-					eventView.setErrorMessage("Choose the user bellow");
+					eventView.setErrorMessage("Choose the event above!");
 				}
 			}
 		});
@@ -123,14 +145,14 @@ public class AdminController {
 					String userId = selectedUser.getUser_id();
 					
 //					proses delete user menggunakan user class (mengikuti sequence diagram)
-					userView.setErrorMessage(admin.deleteUser(userId));
+					userView.setErrorMessage(selectedUser.deleteUser(userId));
 					
 //					userView.setTable();
 					loadUserList();
 					
 				}else {
 //					bila tidak ada yang diselect maka minta user untuk click invitationnya
-					userView.setErrorMessage("Choose the user bellow");
+					userView.setErrorMessage("Choose the user above!");
 				}
 			}
 		});
@@ -177,20 +199,14 @@ public class AdminController {
 		userView.setUserList(userData);
 	}
 	
-	public void deleteEvent(String eventID) {
-		admin.deleteEvent(eventID);
-	}
-	
-	public void deleteUser(String userID) {
-		admin.deleteUser(userID);	
-	}
-	
 	public ArrayList<Event> viewAllEvents() {
-		return admin.viewAllEvents();
+		Event events = new Event();
+		return events.viewAllEvents();
 	}
 	
 	public ArrayList<User> viewUsers() {
-		return admin.viewUser();
+		User users = new User();
+		return users.viewUsers();
 	}
 
 }
