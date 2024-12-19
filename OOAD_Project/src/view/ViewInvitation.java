@@ -33,6 +33,8 @@ import model.Event;
 import model.Invitation;
 
 public class ViewInvitation {
+	String email;
+	
 	Scene invitationScene;
 	BorderPane invitationPage;
 	VBox invitationContainer;
@@ -164,6 +166,8 @@ public class ViewInvitation {
 	}
 	
 	public ViewInvitation(String email) {
+		this.email = email;
+		
 		initInvitation();
 		invitation();
 	}

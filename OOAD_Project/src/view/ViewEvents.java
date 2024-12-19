@@ -39,6 +39,9 @@ import model.Event;
 import model.User;
 
 public class ViewEvents {
+	
+	String email;
+	
 	Scene eventScene;
 	BorderPane eventPage;
 	VBox eventContainer;
@@ -309,6 +312,8 @@ public class ViewEvents {
 	}
 	
 	public ViewEvents(String email) {
+		this.email = email;
+		
 		initInvitation();
 		invitation();
 	}
