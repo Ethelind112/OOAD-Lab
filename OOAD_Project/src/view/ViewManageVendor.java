@@ -1,5 +1,7 @@
 package view;
 
+import java.util.ArrayList;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -37,6 +39,7 @@ public class ViewManageVendor {
 	Label MGtitle, MGdesc, MGem, newName, newDesc;
 	TextField nameTF, descTF;
 	TableView<Products> pTable;
+	ArrayList<Products> products;
 	Button editBtn, backBtn, addBtn;
 	HBox buttonHB;
 	ObservableList<Products> pData;
@@ -62,22 +65,24 @@ public class ViewManageVendor {
 	}
 	
 	public void setTable(){
-		pData = FXCollections.observableArrayList();
-		
-		TableColumn<Products,String> idColumn = new TableColumn<>("Id");
-		idColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("product_id"));
-		idColumn.setMinWidth(MGpage.getWidth()/3);
-		
-		TableColumn<Products,String> nameColumn = new TableColumn<>("Name");
-		nameColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("product_name"));
-		nameColumn.setMinWidth(MGpage.getWidth()/3);
-		
-		TableColumn<Products,String> descColumn = new TableColumn<>("Description");
-		descColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("product_description"));
-		descColumn.setMinWidth(MGpage.getWidth()/3);
-		
-		pTable.getColumns().addAll(idColumn, nameColumn, descColumn);
-		pTable.setItems(pData);
+		if(pData != null) {
+			pData = FXCollections.observableArrayList();
+			
+			TableColumn<Products,String> idColumn = new TableColumn<>("Id");
+			idColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("product_id"));
+			idColumn.setMinWidth(MGpage.getWidth()/3);
+			
+			TableColumn<Products,String> nameColumn = new TableColumn<>("Name");
+			nameColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("product_name"));
+			nameColumn.setMinWidth(MGpage.getWidth()/3);
+			
+			TableColumn<Products,String> descColumn = new TableColumn<>("Description");
+			descColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("product_description"));
+			descColumn.setMinWidth(MGpage.getWidth()/3);
+			
+			pTable.getColumns().addAll(idColumn, nameColumn, descColumn);
+			pTable.setItems(pData);
+		}
 	}
 	
 	public void initComponent() {
@@ -159,11 +164,20 @@ public class ViewManageVendor {
 	    addBtn.setOnAction(handler);
 	}
 	
-	public TableView<Products> getInvitationTable(){
+	public TextField getNameTF() {
+		return nameTF;
+	}
+
+	public TextField getDescTF() {
+		return descTF;
+	}
+
+	public TableView<Products> getProductTable(){
 		return pTable;
 	}
-	
-	public void setInvitationList(ObservableList<Products> products) {
-		pData.setAll(products);
-	}	
+
+	public void setpData(ObservableList<Products> pData) {
+		this.pData = pData;
+	}
+
 }
