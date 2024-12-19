@@ -28,6 +28,8 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -50,8 +52,9 @@ public class ViewEvents {
 	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor, iCreateEvent;
 	
 	TableRow<Event> row;
+	TableColumn<Event, Void> transactionColumn;
 	
-	Button delBtn;
+	Button delBtn, transBtn;
 	
 	public void initInvitation() {
 		
@@ -70,10 +73,13 @@ public class ViewEvents {
 		
 		delVB = new VBox();
 		delVB.setVisible(false);
-		delBtn = new Button("Delete");
+		delBtn = new Button("Delete Event");
 		delBtn.setVisible(false);
 		
 		errorM = new Label();
+	
+		transactionColumn = new TableColumn<>("Transaction");
+		transactionColumn.setVisible(false);
 	}
 	
 	public void setTable() {
@@ -103,14 +109,31 @@ public class ViewEvents {
 		organizerColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("organizer_id"));
 		organizerColumn.setMinWidth(eventContainer.getWidth()/6);
 		
-//		TableColumn<Event, Void> deleteColumn = new TableColumn<>("Action");
-//		deleteColumn.setCellFactory(col -> new TableCell<>(){
-//			Button delBtn = new Button();
-//		});
-//		deleteColumn.setMinWidth(eventContainer.getWidth()/6);
-		
+//		transactionColumn.setCellFactory(col -> new TableCell<>() {
+//			@Override
+//	        protected void updateItem(Void item, boolean empty) {
+//	            super.updateItem(item, empty);
+//
+//	            if (getTableRow() != null && getTableRow().getItem() != null) {
+//	                // Mendapatkan data pengguna dari baris terkait
+//	                Event currentUser = (Event) getTableRow().getItem();
+//
+//	                // Gunakan HBox untuk mengatur tombol agar mengisi penuh sel
+//	                HBox hbox = new HBox(transBtn);
+//	                hbox.setAlignment(Pos.CENTER); // Menyusun tombol di tengah
+//	                HBox.setHgrow(transBtn, Priority.ALWAYS); // Tombol mengisi seluruh kolom
+//
+//	                setGraphic(hbox); // Set graphic menjadi HBox yang berisi tombol
+//	            } else {
+//	                setGraphic(null);  // Jika baris kosong atau data pengguna tidak ada
+//	            }
+//	        }
+//	    });
+//		transactionColumn.setMinWidth(eventContainer.getWidth()/6);
+//		transactionColumn.setVisible(false);
 		
 		eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn);
+//		eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn, transactionColumn);
 		
 		delVB.getChildren().add(delBtn);
 		eventData = FXCollections.observableArrayList();
@@ -140,6 +163,7 @@ public class ViewEvents {
 		
 		delVB.setAlignment(Pos.CENTER);
 		delVB.setPadding(new Insets(10, 0, 0, 0));
+		delVB.setMargin(delBtn, new Insets(10,0,0,0));
 		
 		delBtn.setPadding(new Insets(10, 0, 10, 0));
 		delBtn.setMinWidth(150);
@@ -185,6 +209,7 @@ public class ViewEvents {
 		
 		delVB.setVisible(true);
 		delBtn.setVisible(true);
+		transactionColumn.setVisible(true);
 	}
 	
 	public void setVendorMenu() {
@@ -225,6 +250,10 @@ public class ViewEvents {
 	
 	public void setADeleteButton(EventHandler<ActionEvent> handler) {
 		delBtn.setOnAction(handler);
+	}
+	
+	public void setATransactionButton(Button transBtn, EventHandler<ActionEvent> handler) {
+		transBtn.setOnAction(handler);
 	}
 	
 	public void setMDeleteButton(EventHandler<MouseEvent> handler) {

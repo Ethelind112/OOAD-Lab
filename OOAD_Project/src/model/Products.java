@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import util.Connect;
 
@@ -45,23 +46,27 @@ public class Products {
 	}
 	
 	//validating the inputted product name and description
-	public String ManageVendorInput(String name, String desc) {
-
-//		mendapatkan products dengan email dan name yang ada di parameter, digunakan untuk melakukan pengecekan keunikan
-		Products prodName = getProductsByName(name);
-	
-//		melakukan pengecekan bila user yang didapatkan dari username sudah terdaftar atau belum	
-		if(prodName != null) {
-			return "Product Name Is Already Used";
-		}
+	public String ManageVendorInput(String desc, String name) {
 		
-//		melakukan pengecekan password
-		if(desc.isEmpty()) {
-			return "Please Fill All The Field";
-		}else if(desc.length() > 200) {
-			return "Description are at most 200 characters long";
+		if(name.isEmpty()) {
+			return "Please input product's name";
 		}
+		else {
+//			mendapatkan products dengan email dan name yang ada di parameter, digunakan untuk melakukan pengecekan keunikan
+			Products prodName = getProductsByName(name);
 		
+//			melakukan pengecekan bila user yang didapatkan dari username sudah terdaftar atau belum	
+			if(prodName != null) {
+				return "Product Name Is Already Used";
+			}
+			
+//			melakukan pengecekan password
+			if(desc.isEmpty()) {
+				return "Please Fill All The Field";
+			}else if(desc.length() > 200) {
+				return "Description are at most 200 characters long";
+			}
+		}
 //		mengembalikan success message bila berhasil
 		return "success";
 	}
@@ -70,7 +75,7 @@ public class Products {
 	public String addProduct(String products_name, String products_desc) {
 		
 //		memanggil function untuk mengecek input kembali (detail penjelasan ada diatas functionnya)
-		String message = ManageVendorInput(products_name, products_desc);
+		String message = ManageVendorInput(products_desc, products_name);
 		
 //		bila gagal mengembalikan error message
 		if(!message.equals("success")) {
@@ -118,11 +123,12 @@ public class Products {
 	
 	
 	//fungsi edit data product di table saat mengklik button edit di ViewManageVendor
-	public String updateProductDetails(String newName, String newDescription) {
+	public String updateProductDetails(String id, String newName, String newDescription) {
         String updateQuery = "UPDATE products SET product_name = ?, product_description = ? WHERE product_id = ?";
         try (PreparedStatement ps = connect.prepareStatement(updateQuery)) {
-            ps.setString(2, newName);
-            ps.setString(3, newDescription);
+            ps.setString(1, newName);
+            ps.setString(2, newDescription);
+            ps.setString(3, id);
             int rowsAffected = ps.executeUpdate();
             
             if (rowsAffected > 0) {
@@ -135,6 +141,27 @@ public class Products {
             return "Error updating product.";
         }
     }
+	
+	public ArrayList<Products> getProductData() {
+	    ArrayList<Products> productList = new ArrayList<>();
+	    String readDateQuery = "SELECT * FROM products"; 
+	    
+	    PreparedStatement ps = connect.prepareStatement(readDateQuery);
+		ResultSet readData = connect.execute(readDateQuery);
+
+	    try {
+	        while (readData != null && readData.next()) {
+	            String id = readData.getString("products_id");
+	            String name = readData.getString("products_name");
+	            String desc = readData.getString("products_desc");
+	            productList.add(new Products(id, name, desc));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return productList;
+	}
 	
 	public String getProducts_id() {
 		return products_id;

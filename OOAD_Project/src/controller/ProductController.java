@@ -1,70 +1,47 @@
 package controller;
 
+import java.util.ArrayList;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.Event;
 import model.Products;
 import view.Main;
-import view.ViewAddProducts;
-import view.ViewEditProduct;
 import view.ViewManageVendor;
 
 public class ProductController {
-	private ViewManageVendor managevendor;
-	private ViewAddProducts addproduct;
-	private ViewEditProduct editproduct;
 	private String email;
+	private Products product;
 	
 	public ProductController() {
-		
+		this.product = new Products();
 	}
 	
-	public ProductController(ViewManageVendor managevendor,ViewAddProducts addProduct, String email) {
-		this.managevendor = managevendor;
-		this.email = email;
-		
-		//ngatur logika click addbutton
-		managevendor.setAddButtonAction(new EventHandler<ActionEvent>(){
-			
-			@Override
-			public void handle(ActionEvent event) {
-//				Main.toAddProductPage(email);
-			}
-		});
-		
-//		//ngatur logika click editbutton
-//		managevendor.setEditButton(new EventHandler<ActionEvent>() {
-//
-//			@Override
-//			public void handle(ActionEvent event) {
-//				Products selectedProduct = managevendor.getInvitationTable().getSelectionModel().getSelectedItem();
-//				if(selectedProduct != null) {
-//					managevendor.setErrorMessage("");
-//					
-////					mengambil eventid yang diclick
-//					String eventID = selectedInvitation.getEvent_id();
-//					
-////					proses accept invitation menggunakan invitation class (mengikuti sequence diagram)
-//					invitation.acceptInvitation(eventID);
-//					
-//					invitationView.setTable();
-//					
-//				}else {
-////					bila tidak ada yang diselect maka minta user untuk click invitationnya
-//					invitationView.setErrorMessage("Choose the invitation bellow");
-//				}
-//				Main.toEditProduct(email);
-//			}
-//		});
-//		
-		//ngatur logika click backbutton
-		managevendor.setbackButton(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				Main.toEventPageVendor(email);
-			}
-		});
-	}
-
+	public String ManageVendorInput(String desc, String name) {
+		if (product == null) {
+			return "Product model is not initialized.";
+		}
+        return product.ManageVendorInput(desc, name);
+    }
+	
+	public String addProduct(String products_name, String products_desc) {
+		if (product == null) {
+			return "Product model is not initialized.";
+		}
+        return product.addProduct(products_name, products_desc);
+    }
+	
+	public String updateProductDetails(String id, String newName, String newDescription) {
+		if (product == null) {
+			return "Product model is not initialized.";
+		}
+        return product.updateProductDetails(id, newName, newDescription);
+    }
+	
+	public ArrayList<Products> getProductData(){
+		if (product == null) {
+			return new ArrayList<>();
+		}
+        return product.getProductData();
+    }
 }
