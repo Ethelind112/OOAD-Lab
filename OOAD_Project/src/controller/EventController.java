@@ -29,9 +29,15 @@ public class EventController {
 //		mengambil user dari email
 		User user = new User().getUserByEmail(email);
 		
-//		if(user.getUser_role().equalsIgnoreCase("guest")) {
-//			eventDetView.setGuestMenu();
-//		}
+		if(user.getUser_role().equalsIgnoreCase("guest")) {
+			eventDetView.setGuestMenu();
+		}else if(user.getUser_role().equalsIgnoreCase("admin")) {
+			eventDetView.setAdminMenu();
+		}else if(user.getUser_role().equalsIgnoreCase("vendor")) {
+			eventDetView.setVendorMenu();
+		}else if(user.getUser_role().equalsIgnoreCase("event organizer")) {
+			eventDetView.setEventOrganizerMenu();
+		}
 		
 //		set hal yang dilakukan saat click invitation menu button
 		eventDetView.setInvitationMenu(new EventHandler<ActionEvent>() {

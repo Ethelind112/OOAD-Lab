@@ -54,33 +54,11 @@ public class ViewEventDetails {
 		date = new HBox();
 		
 		menubar = new MenuBar();
-		invitation = new Menu("Invitations");
-		event = new Menu("Events");
 		updateProfile = new Menu("Update Profile");
-		
-		iInvitation = new MenuItem("Invitation");
-		iEvent = new MenuItem("Accepted Events");
 		iUpdateProfile = new MenuItem("Update Profile");
-		
-		String role = new UserController().getUser().getUser_role();
-		if (role.equalsIgnoreCase("Vendor")) {
-			manageVendor = new Menu("Manage Vendor");
-			iManageVendor = new MenuItem("Manage Vendor");
-		}
 	}
 	
 	public void initDetailComponent() {
-		invitation.getItems().addAll(iInvitation);
-		event.getItems().addAll(iEvent);
-		updateProfile.getItems().addAll(iUpdateProfile);
-		
-		if(iManageVendor != null) {
-			manageVendor.getItems().addAll(iManageVendor);
-			menubar.getMenus().addAll(invitation, event, updateProfile, manageVendor);
-		}
-		
-		menubar.getMenus().addAll(invitation, event, updateProfile);
-		
 		location.getChildren().addAll(locationLbl, eventLocation);
 		date.getChildren().addAll(dateLbl, eventDate);
 		eventDetailContainer.getChildren().addAll(eventName, eventDescription, date, location);
