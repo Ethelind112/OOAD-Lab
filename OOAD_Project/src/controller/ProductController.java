@@ -28,35 +28,35 @@ public class ProductController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				Main.toAddProductPage(email);
+//				Main.toAddProductPage(email);
 			}
 		});
 		
 //		//ngatur logika click editbutton
-		managevendor.setEditButton(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				Products selectedProduct = managevendor.getInvitationTable().getSelectionModel().getSelectedItem();
-				if(selectedProduct != null) {
-					managevendor.setErrorMessage("");
-					
-//					mengambil eventid yang diclick
-					String eventID = selectedInvitation.getEvent_id();
-					
-//					proses accept invitation menggunakan invitation class (mengikuti sequence diagram)
-					invitation.acceptInvitation(eventID);
-					
-					invitationView.setTable();
-					
-				}else {
-//					bila tidak ada yang diselect maka minta user untuk click invitationnya
-					invitationView.setErrorMessage("Choose the invitation bellow");
-				}
-				Main.toEditProduct(email);
-			}
-		});
-		
+//		managevendor.setEditButton(new EventHandler<ActionEvent>() {
+//
+//			@Override
+//			public void handle(ActionEvent event) {
+//				Products selectedProduct = managevendor.getInvitationTable().getSelectionModel().getSelectedItem();
+//				if(selectedProduct != null) {
+//					managevendor.setErrorMessage("");
+//					
+////					mengambil eventid yang diclick
+//					String eventID = selectedInvitation.getEvent_id();
+//					
+////					proses accept invitation menggunakan invitation class (mengikuti sequence diagram)
+//					invitation.acceptInvitation(eventID);
+//					
+//					invitationView.setTable();
+//					
+//				}else {
+////					bila tidak ada yang diselect maka minta user untuk click invitationnya
+//					invitationView.setErrorMessage("Choose the invitation bellow");
+//				}
+//				Main.toEditProduct(email);
+//			}
+//		});
+//		
 		//ngatur logika click backbutton
 		managevendor.setbackButton(new EventHandler<ActionEvent>() {
 

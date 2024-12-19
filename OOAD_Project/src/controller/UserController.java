@@ -163,7 +163,7 @@ public class UserController {
 				
 				@Override
 				public void handle(ActionEvent event) {
-					Main.toManageVendorPage(email);
+//					Main.toManageVendorPage(email);
 				}
 			});
 			

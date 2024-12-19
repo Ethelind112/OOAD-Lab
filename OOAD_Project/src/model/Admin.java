@@ -3,6 +3,7 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import controller.AdminController;
@@ -21,29 +22,34 @@ public class Admin extends User{
 		// TODO Auto-generated constructor stub
 	}
 
-	public void deleteEvent(String eventID) {
+	public String deleteEvent(String eventID) {
 		String query = "DELETE FROM event WHERE event_id = ?";
 		PreparedStatement ps = connect.prepareStatement(query);
 		
 		try {
 			ps.setString(1, eventID);
 			ps.executeUpdate();
+			return "Event succesfully deleted!";
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return "Cannot delete event!";
 		}
 	}
 	
-	public void deleteUser(String userID) {
+	public String deleteUser(String userID) {
 		String query = "DELETE FROM user WHERE user_id = ?";
 		PreparedStatement ps = connect.prepareStatement(query);
 		
 		try {
 			ps.setString(1, userID);
 			ps.executeUpdate();
+			return "User succesfully deleted!";
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
+			return "Cannot delete user!";
 		}
 	}
 	

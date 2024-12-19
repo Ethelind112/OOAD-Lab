@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -68,8 +69,9 @@ public class ViewEvents {
 		iUpdateProfile = new MenuItem("Update Profile");
 		
 		delVB = new VBox();
+		delVB.setVisible(false);
 		delBtn = new Button("Delete");
-		delBtn.setDisable(true);
+		delBtn.setVisible(false);
 		
 		errorM = new Label();
 	}
@@ -100,6 +102,13 @@ public class ViewEvents {
 		TableColumn<Event,String> organizerColumn = new TableColumn<>("Organizer");
 		organizerColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("organizer_id"));
 		organizerColumn.setMinWidth(eventContainer.getWidth()/6);
+		
+//		TableColumn<Event, Void> deleteColumn = new TableColumn<>("Action");
+//		deleteColumn.setCellFactory(col -> new TableCell<>(){
+//			Button delBtn = new Button();
+//		});
+//		deleteColumn.setMinWidth(eventContainer.getWidth()/6);
+		
 		
 		eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn);
 		
@@ -174,7 +183,8 @@ public class ViewEvents {
 		
 		menubar.getMenus().addAll(event, users, updateProfile);
 		
-		delBtn.setDisable(false);
+		delVB.setVisible(true);
+		delBtn.setVisible(true);
 	}
 	
 	public void setVendorMenu() {
@@ -230,7 +240,6 @@ public class ViewEvents {
 	}
 	
 	public void setEventDetailButton(EventHandler<MouseEvent> handler) {
-		
 		eventTable.setRowFactory((TableView<Event> e) -> {
 			row = new TableRow<>();
 			row.setOnMouseClicked(handler);

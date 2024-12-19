@@ -77,7 +77,6 @@ public class ViewUser {
 	}
 	
 	public void setTable() {
-		AdminController adminC = new AdminController();
 		
 		TableColumn<User,String> idColumn = new TableColumn<>("Id");
 		idColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_id"));
@@ -146,13 +145,13 @@ public class ViewUser {
 		userStyling();
 	}
 	
-//	public void setMDeleteButton(EventHandler<MouseEvent> handler) {
-//		userTable.setRowFactory((TableView<User> e) -> {
-//			row = new TableRow<>();
-//			row.setOnMouseClicked(handler);
-//			return row;
-//		});	
-//	}
+	public void setMDeleteButton(EventHandler<MouseEvent> handler) {
+		userTable.setRowFactory((TableView<User> e) -> {
+			row = new TableRow<>();
+			row.setOnMouseClicked(handler);
+			return row;
+		});	
+	}
 	
 	public void setADeleteButton(EventHandler<ActionEvent> handler) {
 		delBtn.setOnAction(handler);

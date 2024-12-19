@@ -62,13 +62,12 @@ public class AdminController {
 //				mengambil data dari inputan
 				Event selectedEvent = eventView.getEventTable().getSelectionModel().getSelectedItem();
 				if(selectedEvent != null) {
-					userView.setErrorMessage("");
 					
 //					mengambil userid yang diclick
 					String eventId = selectedEvent.getEvent_id();
 					
 //					proses delete user menggunakan user class (mengikuti sequence diagram)
-					admin.deleteEvent(eventId);
+					eventView.setErrorMessage(admin.deleteEvent(eventId));
 					
 					eventView.setTable();
 					
@@ -80,14 +79,14 @@ public class AdminController {
 		});
 		
 //		set hal yang dilakukan saat click event untuk redirect ke event detail
-		eventView.setEventDetailButton(new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				Event selectedEvent = eventView.getEventTable().getSelectionModel().getSelectedItem();
-				Main.toEventDetailPage(email, selectedEvent.getEvent_id());
-			}
-		});
+//		eventView.setEventDetailButton(new EventHandler<MouseEvent>() {
+//
+//			@Override
+//			public void handle(MouseEvent event) {
+//				Event selectedEvent = eventView.getEventTable().getSelectionModel().getSelectedItem();
+//				Main.toEventDetailPage(email, selectedEvent.getEvent_id());
+//			}
+//		});
 	}
 	
 	public AdminController(ViewUser userView, String email) {
@@ -120,15 +119,14 @@ public class AdminController {
 	//			mengambil data dari inputan
 				User selectedUser = userView.getUserTable().getSelectionModel().getSelectedItem();
 				if(selectedUser != null) {
-					userView.setErrorMessage("");
-					
 //					mengambil userid yang diclick
 					String userId = selectedUser.getUser_id();
 					
 //					proses delete user menggunakan user class (mengikuti sequence diagram)
-					admin.deleteUser(userId);
+					userView.setErrorMessage(admin.deleteUser(userId));
 					
-					userView.setTable();
+//					userView.setTable();
+					loadUserList();
 					
 				}else {
 //					bila tidak ada yang diselect maka minta user untuk click invitationnya
