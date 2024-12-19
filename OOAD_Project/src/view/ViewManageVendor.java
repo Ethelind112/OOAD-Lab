@@ -2,6 +2,7 @@ package view;
 
 import java.util.ArrayList;
 
+import controller.VendorController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -65,24 +66,23 @@ public class ViewManageVendor {
 	}
 	
 	public void setTable(){
-		if(pData != null) {
 			pData = FXCollections.observableArrayList();
 			
 			TableColumn<Products,String> idColumn = new TableColumn<>("Id");
-			idColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("product_id"));
+			idColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("products_id"));
 			idColumn.setMinWidth(MGpage.getWidth()/3);
 			
 			TableColumn<Products,String> nameColumn = new TableColumn<>("Name");
-			nameColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("product_name"));
+			nameColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("products_name"));
 			nameColumn.setMinWidth(MGpage.getWidth()/3);
 			
 			TableColumn<Products,String> descColumn = new TableColumn<>("Description");
-			descColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("product_description"));
+			descColumn.setCellValueFactory(new PropertyValueFactory<Products, String>("products_description"));
 			descColumn.setMinWidth(MGpage.getWidth()/3);
 			
 			pTable.getColumns().addAll(idColumn, nameColumn, descColumn);
 			pTable.setItems(pData);
-		}
+
 	}
 	
 	public void initComponent() {
@@ -118,9 +118,11 @@ public class ViewManageVendor {
 		backBtn.setFont(Font.font(15));
 		
 		buttonHB.setSpacing(10);
+		buttonHB.setAlignment(Pos.CENTER);
 		
 		newName.setMinWidth(100);
 		newDesc.setMinWidth(100);
+		input.setAlignment(Pos.CENTER);
 		input.setVgap(20);
 		input.setHgap(20);
 		
@@ -143,6 +145,12 @@ public class ViewManageVendor {
 		product();
 		Main.redirect(MGscene);
 	}
+	
+	public void loadProductData() {
+        // Get product data from the controller
+        VendorController vendorController = new VendorController(this, email);
+        vendorController.refreshTableData(); // This method sets pData for the table
+    }
 
 	public Scene getMGscene() {
 		return MGscene;
@@ -177,7 +185,7 @@ public class ViewManageVendor {
 	}
 
 	public void setpData(ObservableList<Products> pData) {
-		this.pData = pData;
+	        this.pData = pData;
+	        pTable.setItems(pData); // Bind the table to the data
 	}
-
 }

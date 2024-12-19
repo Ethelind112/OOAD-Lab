@@ -50,11 +50,31 @@ public class VendorController {
 			@Override
 			public void handle(ActionEvent event) {
 				//run adding product to product
+				String name = managevendor.getNameTF().getText().trim();
+			    String desc = managevendor.getDescTF().getText().trim();
+			    
+			    //validasi isi data TextField name dan desc
+			    if (name.isEmpty() || desc.isEmpty()) 
+			    {
+			        managevendor.setErrorMessage("Name and description cannot be empty!");
+			        return;
+			    }
+			    
+			    //pemanggilan fungsi cek keunikan data yang diisi
 				String message = manageVendorInput(managevendor.getDescTF().getText(), managevendor.getNameTF().getText());
-				refreshTableData();
-				managevendor.setErrorMessage(message);
+				if (message.equals("success")) 
+				{
+			        addProducts(name, desc);
+			        refreshTableData();
+			        managevendor.setErrorMessage("Product added successfully.");
+			    } 
+				else 
+				{
+			        managevendor.setErrorMessage(message);
+			    }
 			}
 		});
+
 
 		//set on click logic for back btn in ViewManageVendor
 		managevendor.setbackButton(new EventHandler<ActionEvent>() {
@@ -72,20 +92,33 @@ public class VendorController {
 				//pas click, dia ngisi tf dengan data
 				//baru kita edit text
 				//nanti dia ambil text di tf baru panggil fungsi update
-				String id = managevendor.getProductTable().getSelectionModel().getSelectedItem().getProducts_id();
-				String tempName = managevendor.getProductTable().getSelectionModel().getSelectedItem().getProducts_name();
-				String tempDesc = managevendor.getProductTable().getSelectionModel().getSelectedItem().getProducts_description();
+				Products selectedProduct = managevendor.getProductTable().getSelectionModel().getSelectedItem();
+				
+				//validasi apakah product sudah di click
+				if (selectedProduct == null) {
+	                managevendor.setErrorMessage("Please select a product to edit!");
+	                return;
+	            }
+				
+				String newName = managevendor.getNameTF().getText().trim();
+			    String newDesc = managevendor.getDescTF().getText().trim();
+				
+				//cek apakah name dan description ada isi
+				if (newName.isEmpty() || newDesc.isEmpty()) {
+		                managevendor.setErrorMessage("Name and description cannot be empty!");
+		                return;
+		        }
 				
 				//cek keunikan input nama dan description
-				String inputCheck = manageVendorInput(tempDesc, tempName);
+				String message = manageVendorInput(newDesc, newName);
 				
-				if(inputCheck.equals("success")) {
-					String message = updateProductDetails(id, managevendor.getNameTF().getText(), managevendor.getDescTF().getText());
+				if(message.equals("success")) {
+					updateProductDetails(selectedProduct.getProducts_id(), managevendor.getNameTF().getText(), managevendor.getDescTF().getText());
 					refreshTableData();
 					managevendor.setErrorMessage(message);
 				}
 				else {
-					managevendor.setErrorMessage(inputCheck);
+					managevendor.setErrorMessage(message);
 				}
 			}
 		});
@@ -138,19 +171,19 @@ public class VendorController {
 	public void refreshTableData() {
 	    ArrayList<Products> products = getProductData();
 	    ObservableList<Products> productData = FXCollections.observableArrayList(products);
-
 	    managevendor.setpData(productData); // Update the ViewManageVendor table
 	}
 
 	
 	public ArrayList<Products> getProductData(){
-		this.productCont = new ProductController();
+		if (productCont == null) {
+            productCont = new ProductController();
+        }
 		return productCont.getProductData();
 	}
 //	
 	public void loadEventList() {
 		ArrayList<Event> invitation = viewAcceptedEvents(email);
-		
 		ObservableList<Event> eventData = FXCollections.observableArrayList(invitation);
 		acceptedInvView.setEventList(eventData);
 	}
@@ -164,20 +197,25 @@ public class VendorController {
 		Vendor vendor = new Vendor();
 		return vendor.viewAcceptedEvents(email);
 	}
-	
-	
+
 	public String addProducts(String name, String desc) {
-		this.productCont = new ProductController();
+		if (productCont == null) {
+            productCont = new ProductController();
+        }
 		return productCont.addProduct(name, desc);
 	}
 	
 	public String manageVendorInput(String desc, String name) {
-		this.productCont = new ProductController();
+		if (productCont == null) {
+            productCont = new ProductController();
+        }
 		return productCont.ManageVendorInput(desc, name);
 	}
 	
 	public String updateProductDetails(String id, String newName, String newDescription) {
-		this.productCont = new ProductController();
+		if (productCont == null) {
+            productCont = new ProductController();
+        }
 		return productCont.updateProductDetails(id, newName, newDescription);
 	}
 	

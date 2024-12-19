@@ -35,6 +35,16 @@ public class EventController {
 			eventDetView.setAdminMenu();
 		}else if(user.getUser_role().equalsIgnoreCase("vendor")) {
 			eventDetView.setVendorMenu();
+//			System.out.println("Role: " + user.getUser_role());
+					
+//			//hal yang dilakukan saat click manage vendor menu button
+//			eventDetView.setManageVendorMenu(new EventHandler<ActionEvent>() {
+//				@Override
+//				public void handle(ActionEvent event) {
+//					Main.toManageVendor(email);
+//				}
+//			});
+			
 		}else if(user.getUser_role().equalsIgnoreCase("event organizer")) {
 			eventDetView.setEventOrganizerMenu();
 		}
@@ -54,16 +64,6 @@ public class EventController {
 			@Override
 			public void handle(ActionEvent event) {
 				Main.toChangeProfilePage(email);
-			}
-		});
-		
-		//hal yang dilakukan saat click manage vendor menu button
-		eventDetView.setManageVendorMenu(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
-				Main.toManageVendor(email);
 			}
 		});
 		

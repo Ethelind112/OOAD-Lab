@@ -151,9 +151,9 @@ public class Products {
 
 	    try {
 	        while (readData != null && readData.next()) {
-	            String id = readData.getString("productID");
-	            String name = readData.getString("name");
-	            String desc = readData.getString("description");
+	            String id = readData.getString("products_id");
+	            String name = readData.getString("products_name");
+	            String desc = readData.getString("products_desc");
 	            productList.add(new Products(id, name, desc));
 	        }
 	    } catch (SQLException e) {
