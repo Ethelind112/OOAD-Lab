@@ -31,22 +31,31 @@ public class EventController {
 		
 		if(user.getUser_role().equalsIgnoreCase("guest")) {
 			eventDetView.setGuestMenu();
+			
+//			set hal yang dilakukan saat click invitation menu button
+			eventDetView.setInvitationMenu(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					Main.toInvitationPage(email);
+				}
+			});
 		}else if(user.getUser_role().equalsIgnoreCase("admin")) {
 			eventDetView.setAdminMenu();
 		}else if(user.getUser_role().equalsIgnoreCase("vendor")) {
 			eventDetView.setVendorMenu();
+			
+//			set hal yang dilakukan saat click invitation menu button
+			eventDetView.setInvitationMenu(new EventHandler<ActionEvent>() {
+				
+				@Override
+				public void handle(ActionEvent event) {
+					Main.toInvitationPage(email);
+				}
+			});
 		}else if(user.getUser_role().equalsIgnoreCase("event organizer")) {
 			eventDetView.setEventOrganizerMenu();
 		}
-		
-//		set hal yang dilakukan saat click invitation menu button
-		eventDetView.setInvitationMenu(new EventHandler<ActionEvent>() {
-			
-			@Override
-			public void handle(ActionEvent event) {
-				Main.toInvitationPage(email);
-			}
-		});
 		
 //		set hal yang dilakukan saat click change profile menu button
 		eventDetView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
