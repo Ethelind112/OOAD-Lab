@@ -69,7 +69,7 @@ public class AdminController {
 //					proses delete user menggunakan user class (mengikuti sequence diagram)
 					eventView.setErrorMessage(admin.deleteEvent(eventId));
 					
-					eventView.setTable();
+					loadEventList();
 					
 				}else {
 //					bila tidak ada yang diselect maka minta user untuk click invitationnya
