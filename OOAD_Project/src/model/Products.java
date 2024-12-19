@@ -10,7 +10,7 @@ import util.Connect;
 
 public class Products {
 
-	private String vendor_id,products_id, products_name, products_description;
+	private String products_id, products_name, products_desc;
 	private Connect connect = Connect.getInstance();
 	
 	public Products() {
@@ -20,7 +20,7 @@ public class Products {
 	public Products(String products_id, String products_name, String products_description) {
 		this.products_id = products_id;
 		this.products_name = products_name;
-		this.products_description = products_description;
+		this.products_desc = products_description;
 	}
 	
 	//get the product information through products_name
@@ -53,14 +53,17 @@ public class Products {
 		}
 		else {
 //			mendapatkan products dengan email dan name yang ada di parameter, digunakan untuk melakukan pengecekan keunikan
-			Products prodName = getProductsByName(name);
+			Products product = getProductsByName(name);
 		
 //			melakukan pengecekan bila user yang didapatkan dari username sudah terdaftar atau belum	
-			if(prodName != null) {
-				return "Product Name Is Already Used";
+			if(product != null) {
+				//Memperbolehkan penambahan barang dengan nama sama tapi beda description
+				if(product.getProducts_name().equalsIgnoreCase(name) && product.getProducts_description().equalsIgnoreCase(desc)) {
+					return "There exist such products already";
+				}
 			}
 			
-//			melakukan pengecekan password
+//			melakukan pengecekan description
 			if(desc.isEmpty()) {
 				return "Please Fill All The Field";
 			}else if(desc.length() > 200) {
@@ -124,22 +127,17 @@ public class Products {
 	
 	//fungsi edit data product di table saat mengklik button edit di ViewManageVendor
 	public String updateProductDetails(String id, String newName, String newDescription) {
-        String updateQuery = "UPDATE products SET product_name = ?, product_description = ? WHERE product_id = ?";
+        String updateQuery = "UPDATE products SET products_name = ?, products_desc = ? WHERE products_id = ?";
         try (PreparedStatement ps = connect.prepareStatement(updateQuery)) {
             ps.setString(1, newName);
             ps.setString(2, newDescription);
             ps.setString(3, id);
-            int rowsAffected = ps.executeUpdate();
-            
-            if (rowsAffected > 0) {
-                return "Product updated successfully.";
-            } else {
-                return "Product update failed.";
-            }
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             return "Error updating product.";
         }
+        return "success";
     }
 	
 	public ArrayList<Products> getProductData() {
@@ -180,10 +178,10 @@ public class Products {
 	}
 
 	public String getProducts_description() {
-		return products_description;
+		return products_desc;
 	}
 
 	public void setProducts_description(String products_description) {
-		this.products_description = products_description;
+		this.products_desc = products_description;
 	}
 }

@@ -145,12 +145,6 @@ public class ViewManageVendor {
 		product();
 		Main.redirect(MGscene);
 	}
-	
-	public void loadProductData() {
-        // Get product data from the controller
-        VendorController vendorController = new VendorController(this, email);
-        vendorController.refreshTableData(); // This method sets pData for the table
-    }
 
 	public Scene getMGscene() {
 		return MGscene;
@@ -182,6 +176,11 @@ public class ViewManageVendor {
 
 	public TableView<Products> getProductTable(){
 		return pTable;
+	}
+	
+	public void updateTable(ArrayList<Products> updatedProducts) {
+	    ObservableList<Products> updatedData = FXCollections.observableArrayList(updatedProducts);
+	    pTable.setItems(updatedData); // This updates the TableView with the new data
 	}
 
 	public void setpData(ObservableList<Products> pData) {

@@ -36,6 +36,8 @@ public class VendorController {
 		this.email = email;
 		User user = new User().getUserByEmail(email);
 		
+		refreshTableData();
+		
 		//mengatur logika supaya nameTF dan descTF bisa dipenuhin oleh data selected item onclick
 		managevendor.getProductTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->{
 			if(newSelection != null) {
@@ -113,7 +115,7 @@ public class VendorController {
 				String message = manageVendorInput(newDesc, newName);
 				
 				if(message.equals("success")) {
-					updateProductDetails(selectedProduct.getProducts_id(), managevendor.getNameTF().getText(), managevendor.getDescTF().getText());
+					updateProductDetails(selectedProduct.getProducts_id(), newName, newDesc);
 					refreshTableData();
 					managevendor.setErrorMessage(message);
 				}
@@ -169,9 +171,10 @@ public class VendorController {
 	
 	//logic to clear and reload data for tableview
 	public void refreshTableData() {
-	    ArrayList<Products> products = getProductData();
-	    ObservableList<Products> productData = FXCollections.observableArrayList(products);
-	    managevendor.setpData(productData); // Update the ViewManageVendor table
+	    ArrayList<Products> updatedProducts = new Products().getProductData();
+//	    ObservableList<Products> productData = FXCollections.observableArrayList(products);
+//	    managevendor.setpData(productData); // Update the ViewManageVendor table
+	    managevendor.updateTable(updatedProducts);
 	}
 
 	
@@ -202,7 +205,15 @@ public class VendorController {
 		if (productCont == null) {
             productCont = new ProductController();
         }
-		return productCont.addProduct(name, desc);
+		//pemanggilan metode addproduct di product Controller
+		String result = productCont.addProduct(name, desc);
+		
+		//validasi hasil fungsi diatas
+		if ("success".equals(result))
+        {
+            refreshTableData(); // Ensure the table is refreshed after adding a product
+        }
+		return result;
 	}
 	
 	public String manageVendorInput(String desc, String name) {

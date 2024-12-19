@@ -28,7 +28,13 @@ public class ProductController {
 		if (product == null) {
 			return "Product model is not initialized.";
 		}
-        return product.addProduct(products_name, products_desc);
+		//add product to database
+		String result = product.addProduct(products_name, products_desc);
+		
+		if(!result.equals("success")) {
+			return "Failed to add product into database";
+		}
+		return result;
     }
 	
 	public String updateProductDetails(String id, String newName, String newDescription) {
