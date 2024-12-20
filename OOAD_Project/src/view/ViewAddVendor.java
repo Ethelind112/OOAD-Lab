@@ -1,75 +1,60 @@
-package view;
-
 import controller.EventOrganizerController;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import model.Vendor;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+public class ViewAddVendor extends Application {
 
-public class ViewAddVendor extends JPanel {
+    private ViewEvents view;
+	private String email;
+	private EventOrganizerController eventOrganizerController = new EventOrganizerController(view, email);
 
-    private JTextField eventIDField;
-    private JTextField vendorIDField;
-    private JTextField vendorEmailField;
-    private JTextField vendorNameField;
-    private JTextField vendorPasswordField;
-    private JLabel resultLabel;
-    private EventOrganizerController controller;
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Add Vendor to Event");
 
-    public ViewAddVendor(EventOrganizerController controller) {
-        this.controller = controller;
-        setLayout(new BorderLayout());
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setVgap(10);
+        grid.setHgap(10);
 
-        JPanel formPanel = new JPanel(new GridLayout(6, 2, 5, 5));
+        Label eventIdLabel = new Label("Event ID:");
+        TextField eventIdField = new TextField();
 
-        JLabel instructions = new JLabel("Enter the event and vendor details to add a vendor to the event.");
-        add(instructions, BorderLayout.NORTH);
+        Label vendorIdLabel = new Label("Vendor ID:");
+        TextField vendorIdField = new TextField();
 
-        formPanel.add(new JLabel("Event ID:"));
-        eventIDField = new JTextField();
-        formPanel.add(eventIDField);
+        Button addButton = new Button("Add Vendor");
+        Label resultLabel = new Label();
 
-        formPanel.add(new JLabel("Vendor ID:"));
-        vendorIDField = new JTextField();
-        formPanel.add(vendorIDField);
+        grid.add(eventIdLabel, 0, 0);
+        grid.add(eventIdField, 1, 0);
+        grid.add(vendorIdLabel, 0, 1);
+        grid.add(vendorIdField, 1, 1);
+        grid.add(addButton, 1, 2);
+        grid.add(resultLabel, 1, 3);
 
-        formPanel.add(new JLabel("Vendor Email:"));
-        vendorEmailField = new JTextField();
-        formPanel.add(vendorEmailField);
+        addButton.setOnAction(e -> {
+            String eventId = eventIdField.getText();
+            String vendorId = vendorIdField.getText();
 
-        formPanel.add(new JLabel("Vendor Name:"));
-        vendorNameField = new JTextField();
-        formPanel.add(vendorNameField);
+            Vendor vendor = new Vendor();
+            vendor.setUser_id(vendorId);
 
-        formPanel.add(new JLabel("Vendor Password:"));
-        vendorPasswordField = new JTextField();
-        formPanel.add(vendorPasswordField);
-
-        add(formPanel, BorderLayout.CENTER);
-
-        JButton addButton = new JButton("Add Vendor to Event");
-        resultLabel = new JLabel("");
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String eventID = eventIDField.getText().trim();
-                String vID = vendorIDField.getText().trim();
-                String vEmail = vendorEmailField.getText().trim();
-                String vName = vendorNameField.getText().trim();
-                String vPassword = vendorPasswordField.getText().trim();
-
-                Vendor vendor = new Vendor();
-                String result = controller.addVendor(eventID, vendor);
-                resultLabel.setText(result);
-            }
+            String result = eventOrganizerController.addVendor(eventId, vendor);
+            resultLabel.setText(result);
         });
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(addButton, BorderLayout.WEST);
-        bottomPanel.add(resultLabel, BorderLayout.CENTER);
+        Scene scene = new Scene(grid, 400, 300);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
-        add(bottomPanel, BorderLayout.SOUTH);
+    public static void main(String[] args) {
+        launch(args);
     }
 }
