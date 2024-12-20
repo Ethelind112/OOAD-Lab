@@ -1,146 +1,168 @@
 package view;
 
-import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import controller.EventOrganizerController;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import model.Event;
 
-import java.util.ArrayList;
+public class ViewEventDetails {
 
-import controller.EventOrganizerController;
-
-public class ViewEventDetails extends Application {
-
-    private ViewEvents view;
     private String email;
-    private EventOrganizerController eventOrganizerController = new EventOrganizerController(view, email);
-    private ObservableList<Event> eventItems;
+    private EventOrganizerController eventOrganizerController;
+    private Event selectedEvent;
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("View Event Details");
-        VBox root = new VBox(10);
-        root.setPadding(new Insets(10));
+    private Scene eventDetailsScene;
+    private BorderPane mainLayout;
+    private VBox container;
+    private GridPane detailsGrid;
 
-        Label eventListLabel = new Label("Organized Events:");
-        ListView<Event> eventListView = new ListView<>();
-        eventItems = FXCollections.observableArrayList();
-        ArrayList<Event> events = eventOrganizerController.viewOrganizedEvents();
-        eventItems.addAll(events);
+    private Label pageTitle;
+    private Label eventNameLbl, eventDateLbl, eventLocationLbl, eventDescLbl;
+    private TextField eventNameField, eventDateField, eventLocationField;
+    private TextArea eventDescArea;
+    private Label errorMessage;
 
-        eventListView.setCellFactory(lv -> new ListCell<Event>() {
-            private TextField editField = new TextField();
-            private Button editButton = new Button("Edit");
-            private HBox content = new HBox(10);
-            private Label eventLabel = new Label();
+    private Button addVendorBtn, addGuestBtn, saveChangesBtn;
 
-            {
-                content.setAlignment(Pos.CENTER_LEFT);
-                editButton.setOnAction(event -> {
-                    Event item = getItem();
-                    if (item != null) {
-                        if (content.getChildren().contains(editButton)) {
-                            editField.setText(item.getEvent_name());
-                            content.getChildren().clear();
-                            Button saveButton = new Button("Save");
-                            Button cancelButton = new Button("Cancel");
-                            
-                            saveButton.setOnAction(e -> {
-                                String newName = editField.getText();
-                                String result = eventOrganizerController.editEventName(item.getEvent_id(), newName);
-                                if (result.contains("successfully")) {
-                                    item.setEvent_name(newName);
-                                    updateItem(item, false);
-                                }
-                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setContentText(result);
-                                alert.showAndWait();
-                            });
-                            
-                            cancelButton.setOnAction(e -> {
-                                updateItem(item, false);
-                            });
-                            
-                            content.getChildren().addAll(editField, saveButton, cancelButton);
-                            HBox.setHgrow(editField, Priority.ALWAYS);
-                        }
-                    }
-                });
-            }
+    public ViewEventDetails(String email) {
+        this.email = email;
 
-            @Override
-            protected void updateItem(Event item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null);
-                } else {
-                    eventLabel.setText(item.getEvent_id() + " - " + item.getEvent_name());
-                    if (!content.getChildren().contains(editField)) {
-                        content.getChildren().clear();
-                        content.getChildren().addAll(eventLabel, editButton);
-                    }
-                    setGraphic(content);
-                }
-            }
-        });
-        
-        eventListView.setItems(eventItems);
-
-        Label eventDetailsLabel = new Label("Event Details:");
-        TextArea eventDetailsArea = new TextArea();
-        eventDetailsArea.setEditable(false);
-
-        eventListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                String details = eventOrganizerController.viewOrganizedTransactionDetails(newValue.getEvent_id());
-                eventDetailsArea.setText(details);
-            }
-        });
-
-        Button addVendorButton = new Button("Add Vendor");
-        addVendorButton.setOnAction(e -> {
-            ViewAddVendor viewAddVendor = new ViewAddVendor();
-            try {
-                viewAddVendor.start(new Stage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        Button addGuestButton = new Button("Add Guest");
-        addGuestButton.setOnAction(e -> {
-            ViewAddGuest viewAddGuest = new ViewAddGuest();
-            try {
-                viewAddGuest.start(new Stage());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        root.getChildren().addAll(
-            eventListLabel, 
-            eventListView, 
-            eventDetailsLabel, 
-            eventDetailsArea, 
-            addVendorButton, 
-            addGuestButton
-        );
-
-        Scene scene = new Scene(root, 600, 500);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        initUI();
+        createLayout();
+        styleUI();
+        populateEventDetails();
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    private void initUI() {
+        mainLayout = new BorderPane();
+        eventDetailsScene = new Scene(mainLayout, 600, 500);
+
+        container = new VBox();
+        detailsGrid = new GridPane();
+
+        pageTitle = new Label("Event Details");
+
+        eventNameLbl = new Label("Event Name:");
+        eventDateLbl = new Label("Event Date:");
+        eventLocationLbl = new Label("Event Location:");
+        eventDescLbl = new Label("Event Description:");
+
+        eventNameField = new TextField();
+        eventDateField = new TextField();
+        eventLocationField = new TextField();
+        eventDescArea = new TextArea();
+        
+        errorMessage = new Label();
+
+        addVendorBtn = new Button("Add Vendor");
+        addGuestBtn = new Button("Add Guest");
+        saveChangesBtn = new Button("Save Changes");
+    }
+
+    private void createLayout() {
+        detailsGrid.add(eventNameLbl, 0, 0);
+        detailsGrid.add(eventNameField, 1, 0);
+
+        detailsGrid.add(eventDateLbl, 0, 1);
+        detailsGrid.add(eventDateField, 1, 1);
+
+        detailsGrid.add(eventLocationLbl, 0, 2);
+        detailsGrid.add(eventLocationField, 1, 2);
+
+        detailsGrid.add(eventDescLbl, 0, 3);
+        detailsGrid.add(eventDescArea, 1, 3);
+
+        container.getChildren().addAll(pageTitle, detailsGrid, errorMessage);
+
+        HBox buttonBox = new HBox(20, addVendorBtn, addGuestBtn, saveChangesBtn);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        mainLayout.setCenter(container);
+        mainLayout.setBottom(buttonBox);
+    }
+
+    private void styleUI() {
+        mainLayout.setStyle("-fx-background-color: #f5f5f5;");
+
+        container.setAlignment(Pos.CENTER);
+        container.setMaxWidth(500);
+        container.setSpacing(20);
+        container.setPadding(new Insets(20));
+
+        detailsGrid.setAlignment(Pos.CENTER);
+        detailsGrid.setHgap(20);
+        detailsGrid.setVgap(15);
+
+        pageTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+        errorMessage.setTextFill(Color.RED);
+
+        eventNameField.setMinWidth(250);
+        eventDateField.setMinWidth(250);
+        eventLocationField.setMinWidth(250);
+        eventDescArea.setMinWidth(250);
+        eventDescArea.setMinHeight(100);
+
+        addVendorBtn.setStyle("-fx-background-color: #133E87; -fx-text-fill: white; -fx-font-size: 15;");
+        addGuestBtn.setStyle("-fx-background-color: #133E87; -fx-text-fill: white; -fx-font-size: 15;");
+        saveChangesBtn.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 15;");
+    }
+
+    private void populateEventDetails() {
+        if (selectedEvent != null) {
+            eventNameField.setText(selectedEvent.getEvent_name());
+            eventDateField.setText(selectedEvent.getEvent_date());
+            eventLocationField.setText(selectedEvent.getEvent_location());
+            eventDescArea.setText(selectedEvent.getEvent_description());
+        }
+    }
+
+    public Scene getScene() {
+        return eventDetailsScene;
+    }
+
+    public void show(Stage stage) {
+        stage.setScene(getScene());
+        stage.show();
+    }
+
+    public void setAddVendorHandler(EventHandler<ActionEvent> handler) {
+        addVendorBtn.setOnAction(handler);
+    }
+
+    public void setAddGuestHandler(EventHandler<ActionEvent> handler) {
+        addGuestBtn.setOnAction(handler);
+    }
+
+    public void setSaveChangesHandler(EventHandler<ActionEvent> handler) {
+        saveChangesBtn.setOnAction(handler);
+    }
+
+    public void setErrorMessage(String message) {
+        errorMessage.setText(message);
+    }
+
+    public String getEventName() {
+        return eventNameField.getText();
+    }
+
+    public String getEventDate() {
+        return eventDateField.getText();
+    }
+
+    public String getEventLocation() {
+        return eventLocationField.getText();
+    }
+
+    public String getEventDescription() {
+        return eventDescArea.getText();
     }
 }
