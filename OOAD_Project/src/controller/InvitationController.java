@@ -108,6 +108,10 @@ public class InvitationController {
 
 	}
 	
+	public void acceptInvitation(String eventID) {
+		invitation.acceptInvitation(eventID);
+	}
+	
 //	untuk mengeload data invitation ke dalam tabel di view
 	public void loadInvitationList() {
 		ArrayList<Event> invitation = getInvitations(this.email);

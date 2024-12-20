@@ -117,7 +117,7 @@ public class Products {
 	
 	
 	//fungsi edit data product di table saat mengklik button edit di ViewManageVendor
-	public String updateProductDetails(String id, String newName, String newDescription) {
+	public String manageVendorE(String id, String newName, String newDescription) {
         String updateQuery = "UPDATE products SET products_name = ?, products_desc = ? WHERE products_id = ?";
         try (PreparedStatement ps = connect.prepareStatement(updateQuery)) {
             ps.setString(1, newName);

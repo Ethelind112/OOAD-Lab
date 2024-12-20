@@ -41,7 +41,7 @@ public class ProductController {
 		if (product == null) {
 			return "Product model is not initialized.";
 		}
-        return product.updateProductDetails(id, newName, newDescription);
+        return product.manageVendorE(id, newName, newDescription);
     }
 	
 	public ArrayList<Products> getProductData(){

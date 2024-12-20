@@ -38,7 +38,7 @@ public class UserController {
 				String email = loginView.getEmailInput();
 				String pass = loginView.getPasswordInput();
 				
-	//			proses login di controller
+	//			proses login
 				String message = login(email, pass);
 
 	//			redirect ke view berdasarkan role nya
@@ -214,38 +214,6 @@ public class UserController {
 			}
 		});
 	}
-	
-////	controller untuk handle view user (set hal yang perlu dilakukan saat click button)
-//	public UserController(ViewUser userView, String email) {
-//		this.userView = userView;
-//		this.email = email;
-//		
-////		set hal yang dilakukan pada saat click login button
-//		userView.setADeleteButton(new EventHandler<ActionEvent>() {
-//			
-//			@Override
-//			public void handle(ActionEvent event) {
-//	//			mengambil data dari inputan
-//				User selectedUser = userView.getUserTable().getSelectionModel().getSelectedItem();
-//				if(selectedUser != null) {
-//					userView.setErrorMessage("");
-//					
-////					mengambil userid yang diclick
-//					String userId = selectedUser.getUser_id();
-//					
-////					proses delete user menggunakan user class (mengikuti sequence diagram)
-//					AdminController adminC = new AdminController();
-//					adminC.deleteUser(userId);
-//					
-//					userView.setTable();
-//					
-//				}else {
-////					bila tidak ada yang diselect maka minta admin untuk click user
-//					userView.setErrorMessage("Choose the user bellow");
-//				}
-//			}
-//		});
-//	}
 	
 	public User getUser() {
 		return user;

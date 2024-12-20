@@ -117,7 +117,7 @@ public class VendorController {
 				String message = manageVendorInput(newDesc, newName);
 				
 				if(message.equals("success")) {
-					updateProductDetails(selectedProduct.getProducts_id(), newName, newDesc);
+					ManageVendorE(selectedProduct.getProducts_id(), newName, newDesc);
 					refreshTableData();
 					managevendor.setErrorMessage(message);
 				}
@@ -241,8 +241,8 @@ public class VendorController {
 		return products.ManageVendorInput(desc, name);
 	}
 	
-	public String updateProductDetails(String id, String newName, String newDescription) {
-		return products.updateProductDetails(id, newName, newDescription);
+	public String ManageVendorE(String id, String newName, String newDescription) {
+		return products.manageVendorE(id, newName, newDescription);
 	}
 	
 }
