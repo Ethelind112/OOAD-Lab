@@ -17,6 +17,7 @@ import model.User;
 import model.Vendor;
 import view.Main;
 import view.ViewChangeProfile;
+import view.ViewEventDetails;
 import view.ViewEvents;
 import view.ViewLogin;
 import view.ViewUser;
@@ -26,6 +27,7 @@ public class AdminController {
 	private ViewEvents eventView;
 	private ViewUser userView;
 	private ViewChangeProfile changeProfileView;
+	private ViewEventDetails eventDetView;
 	private String email;
 
 	public AdminController() {
@@ -65,13 +67,8 @@ public class AdminController {
 //				mengambil data dari inputan
 				Event selectedEvent = eventView.getEventTable().getSelectionModel().getSelectedItem();
 				if(selectedEvent != null) {
+					// INI DIGANTI GAAAAA
 					Main.toEventDetailPage(email, selectedEvent.getEvent_id());
-					
-//					Guest guest = new Guest();
-//					guest.getGuestByTransactionId(selectedEvent.getEvent_id());
-//					
-//					Vendor vendor = new Vendor();
-//					vendor.getVendorByTransactionId(selectedEvent.getEvent_id());
 				}else {
 					eventView.setErrorMessage("Choose the event above!");
 				}
@@ -186,6 +183,51 @@ public class AdminController {
 		});
 	}
 	
+//	public AdminController(ViewEventDetails eventDetView, String email, String eventid) {
+//		this.eventDetView = eventDetView;
+//		this.email = email;
+//		
+//		eventDetView.setAdminMenu();
+//		
+//		loadGuestList(eventid);
+//		loadVendorList(eventid);
+//		
+//		userView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
+//			
+//			@Override
+//			public void handle(ActionEvent event) {
+//				Main.toChangeProfilePage(email);
+//			}
+//		});
+//		
+//		eventDetView.setEventMenu(new EventHandler<ActionEvent>() {
+//			
+//			@Override
+//			public void handle(ActionEvent event) {
+//				Main.toEventPageAdmin(email);
+//			}
+//		});
+//		
+//		eventDetView.setUserMenu(new EventHandler<ActionEvent>() {
+//			
+//			@Override
+//			public void handle(ActionEvent event) {
+////				AdminController adminC = new AdminController(userView, email);
+//				Main.toUserPage(email);
+//			}
+//		});
+//		
+//		Event currEvent = new Event();
+//		currEvent.viewEventDetails(eventid);
+//		
+////		mengeset semua elemen berdasarkan data yang ditemukan
+//		eventDetView.setEventName(currEvent.getEvent_name());
+//		eventDetView.setEventDesc(currEvent.getEvent_description());
+//		eventDetView.setEventDate(currEvent.getEvent_date());
+//		eventDetView.setEventLoc(currEvent.getEvent_location());
+//		
+//	}
+	
 	public void loadEventList() {
 		ArrayList<Event> events = viewAllEvents();
 		
@@ -224,5 +266,23 @@ public class AdminController {
 	public ArrayList<User> getVendorByTransactionId(String event_id) {
 		Vendor vendor = new Vendor();
 		return vendor.getVendorByTransactionId(event_id);
+	}
+	
+	public void loadGuestList(String id) {
+		Guest guest = new Guest();
+		ArrayList<User> users = guest.getGuestByTransactionId(id);
+		
+		ObservableList<User> userData = FXCollections.observableArrayList(users);
+		
+		eventDetView.setGuestList(userData);
+	}
+	
+	public void loadVendorList(String id) {
+		Vendor vendor = new Vendor();
+		ArrayList<User> users = vendor.getVendorByTransactionId(id);
+		
+		ObservableList<User> userData = FXCollections.observableArrayList(users);
+		
+		eventDetView.setVendorList(userData);
 	}
 }
