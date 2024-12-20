@@ -193,7 +193,7 @@ public class AdminController {
 		});
 		
 		Event currEvent = new Event();
-		currEvent.viewEventDetails(eventid);
+		currEvent = currEvent.viewEventDetails(eventid);
 		
 //		mengeset semua elemen berdasarkan data yang ditemukan
 		eventDetView.setEventName(currEvent.getEvent_name());
