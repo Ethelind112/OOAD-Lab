@@ -20,7 +20,7 @@ public class EventOrganizer extends User {
 		this.connect = connect;
 	}
     
-    public String createEvent(String eventName, String eventDate, String eventLocation, String eventDescription) {
+    public String createEvent(String eventName, String eventDate, String eventLocation, String eventDescription, String organizerId) {
         String readQuery = "SELECT COUNT(*) as total FROM event";
         String insertQuery = "INSERT INTO event (event_id, event_name, event_date, event_location, event_description, organizer_id) VALUES (?, ?, ?, ?, ?, ?)";
         
@@ -40,11 +40,12 @@ public class EventOrganizer extends User {
             ps2.setString(3, eventDate);
             ps2.setString(4, eventLocation);
             ps2.setString(5, eventDescription);
-            ps2.setString(6, this.getUser_id());
+            ps2.setString(6, organizerId);
+            System.out.println("Insert Query: " + ps2.toString()); 
             int rowsInserted = ps2.executeUpdate();
 
             if (rowsInserted > 0) {
-                System.out.println("Event added successfully: " + eventID);
+                System.out.println("Event added successfully: " + eventID + " by organizer: " + organizerId);
                 return "Event created successfully with ID: " + eventID;
             } else {
                 System.out.println("Failed to add event.");
@@ -144,13 +145,12 @@ public class EventOrganizer extends User {
         
         try {
             PreparedStatement ps = connect.prepareStatement(query);
-            ps.setString(1, this.getUser_id());
-            ResultSet rs = ps.executeQuery();
-            
+            ps.setString(1, this.getUser_id()); 
             System.out.println("Fetching events for organizer: " + this.getUser_id());
 
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                System.out.println("Event fetched: " + rs.getString("event_name"));
+                System.out.println("Event fetched: " + rs.getString("event_name")); // Debug
                 events.add(new Event(
                     rs.getString("event_id"),
                     rs.getString("event_name"),
