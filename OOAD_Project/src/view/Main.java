@@ -33,8 +33,6 @@ public class Main extends Application {
 	}
 
 	public static void toEventPageGuest(String email) {
-		UserController uController = new UserController();
-		
 		ViewEvents view = new ViewEvents(email);
 		GuestController gController = new GuestController(view, email);
 		redirect(view.getScene());
@@ -71,7 +69,7 @@ public class Main extends Application {
 	}
 	
 	public static void toEventDetailPage(String email, String eventID) {
-		ViewEventDetails view = new ViewEventDetails(email);
+		ViewEventDetails view = new ViewEventDetails();
 		EventController eController = new EventController(view, email, eventID);
 		redirect(view.getScene());
 	}

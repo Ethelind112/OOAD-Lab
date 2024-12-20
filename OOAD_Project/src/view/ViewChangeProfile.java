@@ -32,7 +32,7 @@ public class ViewChangeProfile {
 	PasswordField passFieldUP, newPassFieldUP;
 	
 	MenuBar menubar;
-	Menu invitation, event, updateProfile, users, manageVendor, createEvent;
+	Menu invitation, event, updateProfile, users, manageVendor;
 	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor, iCreateEvent;
 	
 	public void initUpdateProfile() {
@@ -177,20 +177,14 @@ public class ViewChangeProfile {
 	}
 	
 	public void setEventOrganizerMenu() {
-		invitation = new Menu("Invitations");
 		event = new Menu("Events");
-		createEvent = new Menu("Create Event");
 		
-		iInvitation = new MenuItem("Invitation");
 		iEvent = new MenuItem("Accepted Events");
-		iCreateEvent = new MenuItem("Create Event");
 		
-		invitation.getItems().addAll(iInvitation);
 		event.getItems().addAll(iEvent);
-		createEvent.getItems().addAll(iCreateEvent);
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
-		menubar.getMenus().addAll(invitation, event, createEvent, updateProfile);
+		menubar.getMenus().addAll(event, updateProfile);
 
 	}
 	

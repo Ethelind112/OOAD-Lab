@@ -2,6 +2,7 @@ package view;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -52,9 +53,9 @@ public class ViewCreateEvent {
         scene = new Scene(layout, 600, 500);
     }
 
-    public void setCreateButton(EventHandler<MouseEvent> handler) {
+    public void setCreateButton(EventHandler<ActionEvent> handler) {
         Button createButton = new Button("Create Event");
-        createButton.setOnMouseClicked(handler);
+        createButton.setOnAction(handler);
 
         ((VBox) scene.getRoot()).getChildren().add(createButton); 
     }
@@ -131,5 +132,9 @@ public class ViewCreateEvent {
         stage.setTitle("Create Event");
         stage.setScene(scene);
         stage.show();
+    }
+    
+    public TableView<Event> getEventTable(){
+    	return eventTable;
     }
 }

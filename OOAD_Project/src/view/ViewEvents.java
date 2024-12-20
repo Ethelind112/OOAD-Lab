@@ -2,11 +2,6 @@ package view;
 
 import java.util.ArrayList;
 
-import controller.EventController;
-import controller.EventOrganizerController;
-import controller.GuestController;
-import controller.InvitationController;
-import controller.UserController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -56,8 +51,8 @@ public class ViewEvents {
 	ObservableList<Event> eventData;
 	
 	MenuBar menubar;
-	Menu invitation, event, updateProfile, users, manageVendor, createEvent;
-	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor, iCreateEvent;
+	Menu invitation, event, updateProfile, users, manageVendor;
+	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor;
 	
 	TableRow<Event> row;
 	
@@ -67,7 +62,6 @@ public class ViewEvents {
 	
 	private Stage primaryStage;
 	private String organizerId;
-	private EventOrganizerController controller;
 	
 	public void initInvitation() {
 		
@@ -83,6 +77,9 @@ public class ViewEvents {
 		updateProfile = new Menu("Update Profile");
 		
 		iUpdateProfile = new MenuItem("Update Profile");
+		
+		createEventBtn = new Button("Create New Event");
+		createEventBtn.setVisible(false);
 		
 		btnHB = new HBox(200);
 		btnHB.setVisible(false);
@@ -158,8 +155,6 @@ public class ViewEvents {
 	
 	public void initInvitationComponent() {
 	    setTable();
-
-	    createEventBtn = new Button("Create New Event");
 
 	    eventContainer.getChildren().addAll(eventTitle, eventDescription, eventTable, createEventBtn, btnHB, errorM);
 	    
@@ -256,20 +251,14 @@ public class ViewEvents {
 	}
 	
 	public void setEventOrganizerMenu() {
-		invitation = new Menu("Invitations");
 		event = new Menu("Events");
-		createEvent = new Menu("Create Event");
 		
-		iInvitation = new MenuItem("Invitation");
 		iEvent = new MenuItem("Accepted Events");
-		iCreateEvent = new MenuItem("Create Event");
 		
-		invitation.getItems().addAll(iInvitation);
 		event.getItems().addAll(iEvent);
-		createEvent.getItems().addAll(iCreateEvent);
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
-		menubar.getMenus().addAll(invitation, event, createEvent, updateProfile);
+		menubar.getMenus().addAll(event, updateProfile);
 	}
 	
 	public void setADeleteButton(EventHandler<ActionEvent> handler) {
@@ -281,7 +270,6 @@ public class ViewEvents {
 	}
 	
     public void eventOrganizerButton() {
-        createEventBtn = new Button("Create Event");
         btnHB.setVisible(true);
         delBtn.setVisible(true);
         transBtn.setVisible(true);
@@ -289,7 +277,8 @@ public class ViewEvents {
     }
     
 	public void setCreateEventButton(EventHandler<ActionEvent> handler) {
-		createEventBtn.setOnAction(handler);
+		
+		 createEventBtn.setOnAction(handler);
 	}
 	
 	public void setMDeleteButton(EventHandler<MouseEvent> handler) {
@@ -335,63 +324,20 @@ public class ViewEvents {
 	}
 	
 	public TableView<Event> getEventTable(){
-	    return getEventTable();
-	}
-
-	public void refreshEventTable() {
-	    Event eventModel = new Event();
-	    ArrayList<Event> events = eventModel.fetchEvents(organizerId); 
-
-	    if (events != null && !events.isEmpty()) {
-	        ObservableList<Event> eventList = FXCollections.observableArrayList(events);
-	        eventData.setAll(eventList);
-	        eventTable.setItems(eventData);
-	    } else {
-	        errorM.setText("No events found or failed to load data.");
-	    }
+	    return eventTable;
 	}
 	
 	public ViewEvents(String email) {
 		this.email = email;
 		initInvitation();
 		invitation();
-		setupCreateEventButton();
-		refreshEventTable();
 	}
 	
-	private void setupCreateEventButton() {
+	public void setupCreateEventButton() {
+		createEventBtn.setVisible(true);
 	    createEventBtn.setText("Create a New Event");
 	    createEventBtn.setStyle("-fx-background-color: #3c763d; -fx-text-fill: #ffffff; -fx-padding: 10px;");
 
-	    createEventBtn.setOnAction(e -> {
-	        ViewCreateEvent viewCreateEvent = new ViewCreateEvent();
-	        Stage stage = new Stage();
-
-	        viewCreateEvent.setCreateButton(event -> {
-	            String eventName = viewCreateEvent.getEventName();
-	            String eventDate = viewCreateEvent.getEventDate();
-	            String eventLocation = viewCreateEvent.getEventLocation();
-	            String eventDescription = viewCreateEvent.getEventDescription();
-
-	            if (eventName.isEmpty() || eventDate.isEmpty() || eventLocation.isEmpty() || eventDescription.isEmpty()) {
-	                viewCreateEvent.setErrorMessage("All fields must be filled!");
-	                return;
-	            }
-
-	            EventOrganizerController controller = new EventOrganizerController(null, email);
-	            String result = controller.createEvent(eventName, eventDate, eventLocation, eventDescription, organizerId);
-
-	            if (result.startsWith("Event created")) {
-	                refreshEventTable();
-	                stage.close();
-	            } else {
-	                viewCreateEvent.setErrorMessage(result);
-	            }
-	        });
-
-	        stage.setScene(viewCreateEvent.getScene());
-	        stage.show();
-	    });
 	}
 	
 	public void setOrganizerId(String organizerId) {
@@ -400,10 +346,6 @@ public class ViewEvents {
 
 	public void setPrimaryStage(Stage primaryStage) {
 	    this.primaryStage = primaryStage;
-	}
-
-	public void setController(EventOrganizerController controller) {
-	    this.controller = controller;
 	}
 
 	public Scene getScene() {

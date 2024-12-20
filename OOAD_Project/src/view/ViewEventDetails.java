@@ -20,6 +20,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
@@ -43,11 +44,17 @@ public class ViewEventDetails {
 	HBox location, date;
 	
 	MenuBar menubar;
-	Menu invitation, event, updateProfile, users, manageVendor, createEvent;
-	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor, iCreateEvent;
+	Menu invitation, event, updateProfile, users, manageVendor;
+	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor;
 	
 	TableView<User> guestTable, vendorTable;
 	ObservableList<User> guestData, vendorData;
+	
+	private Label pageTitle;
+    private Label eventNameLbl, eventDateLbl, eventLocationLbl, eventDescLbl;
+    private TextField eventNameField, eventDateField, eventLocationField;
+    private TextArea eventDescArea;
+    private Label errorMessage;
 	
 	public void initEventDetail() {
 		eventDetailContainer = new VBox();
@@ -138,7 +145,7 @@ public class ViewEventDetails {
 		guestC.getChildren().addAll(guestLbl, guestTable);
 	}
 	
-public void setVendorTable() {
+	public void setVendorTable() {
 		
 		TableColumn<User,String> idColumn = new TableColumn<>("Id");
 		idColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_id"));
@@ -206,11 +213,20 @@ public void setVendorTable() {
 		
 		menubar.getMenus().addAll(invitation, event, manageVendor, updateProfile);
 
-    private Label pageTitle;
-    private Label eventNameLbl, eventDateLbl, eventLocationLbl, eventDescLbl;
-    private TextField eventNameField, eventDateField, eventLocationField;
-    private TextArea eventDescArea;
-    private Label errorMessage;
+	}
+	
+	public void setEventOrganizerMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, updateProfile);
 
 	}
 	
