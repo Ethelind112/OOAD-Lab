@@ -86,7 +86,7 @@ public class Admin extends User{
 			    return null;
 	}
 	
-	public ArrayList<User> viewUsers(){
+	public ArrayList<User> getAllUsers(){
 		ArrayList<User> users = new ArrayList<>();
 		String query = "SELECT * FROM user";
 		
