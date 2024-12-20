@@ -11,11 +11,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 public class ViewCreateEvent {
-    private String organizerId;
     
     Scene createEventScene;
     VBox ceContainer, middleContainer;
@@ -23,9 +24,11 @@ public class ViewCreateEvent {
     Label ceTitle, ceEM;
     GridPane ceFill;
     Button createBtn;
+    String email;
     
     Label eventNameLbl, eventDateLbl, eventLocationLbl, eventDescLbl;
     TextField eventNameField, eventDateField, eventLocationField, eventDescField;
+	Stage primaryStage;
     
     public void initCreateEvent() {
         cePage = new BorderPane();
@@ -105,18 +108,20 @@ public class ViewCreateEvent {
         createBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
         createBtn.setFont(Font.font(15));
         
-        ceEM.setTextFill(javafx.scene.paint.Color.RED);
+        ceEM.setTextFill(Color.RED);
         
         ceContainer.setMargin(createBtn, new Insets(30, 0, 50, 0));
     }
+    
+    
     
     public void createEvent() {
         initCreateEventComponent();
         createEventStyling();
     }
     
-    public ViewCreateEvent(String organizerId) {
-        this.organizerId = organizerId;
+    public ViewCreateEvent(String email) {
+        this.email = email;
         initCreateEvent();
         createEvent();
     }
