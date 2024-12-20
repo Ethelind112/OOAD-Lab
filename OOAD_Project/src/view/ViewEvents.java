@@ -1,137 +1,398 @@
+
 package view;
 
+import java.util.ArrayList;
+
+import controller.EventController;
+import controller.EventOrganizerController;
+import controller.GuestController;
+import controller.InvitationController;
+import controller.UserController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import model.Event;
+import model.User;
 
 public class ViewEvents {
-    private String organizerId;
+	
+	String email;
+	
+	Scene eventScene;
+	BorderPane eventPage;
+	VBox eventContainer;
+	HBox btnHB;
+	Label eventTitle, eventDescription, errorM;
+	TableView<Event> eventTable;
+	ObservableList<Event> eventData;
+	
+	MenuBar menubar;
+	Menu invitation, event, updateProfile, users, manageVendor, createEvent;
+	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor, iCreateEvent;
+	
+	TableRow<Event> row;
+	
+	Button delBtn, transBtn;
+	
+	Button createEventBtn;
+	
+	private Stage primaryStage;
+	private String organizerId;
+	private EventOrganizerController controller;
+	
+	public void initInvitation() {
+		
+		eventPage = new BorderPane();
+		eventContainer = new VBox();
+		eventScene = new Scene(eventPage, 1000, 700);
+		eventTitle = new Label("Events");
+		eventDescription = new Label("This is your event list, select the event from the table bellow to view the details");
+		eventTable = new TableView<>();
+		
+		menubar = new MenuBar();
+		
+		updateProfile = new Menu("Update Profile");
+		
+		iUpdateProfile = new MenuItem("Update Profile");
+		
+		btnHB = new HBox(200);
+		btnHB.setVisible(false);
+		delBtn = new Button("Delete Event");
+		delBtn.setVisible(false);
+		transBtn = new Button("Event Detail");
+		transBtn.setVisible(false);
+		
+		errorM = new Label();
+		errorM.setVisible(false);
+	}
+	
+	public void setTable() {
+		
+		
+		TableColumn<Event,String> idColumn = new TableColumn<>("Id");
+		idColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("event_id"));
+		idColumn.setMinWidth(eventContainer.getWidth()/6);
+		
+		TableColumn<Event,String> nameColumn = new TableColumn<>("Name");
+		nameColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("event_name"));
+		nameColumn.setMinWidth(eventContainer.getWidth()/6);
+		
+		TableColumn<Event,String> dateColumn = new TableColumn<>("Date");
+		dateColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("event_date"));
+		dateColumn.setMinWidth(eventContainer.getWidth()/6);
+		
+		TableColumn<Event,String> locationColumn = new TableColumn<>("Location");
+		locationColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("event_location"));
+		locationColumn.setMinWidth(eventContainer.getWidth()/6);
+		
+		TableColumn<Event,String> descriptionColumn = new TableColumn<>("Description");
+		descriptionColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("event_description"));
+		descriptionColumn.setMinWidth(eventContainer.getWidth()/6);
+		
+		TableColumn<Event,String> organizerColumn = new TableColumn<>("Organizer");
+		organizerColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("organizer_id"));
+		organizerColumn.setMinWidth(eventContainer.getWidth()/6);
+		
+//		transactionColumn.setCellFactory(col -> new TableCell<>() {
+//			@Override
+//	        protected void updateItem(Void item, boolean empty) {
+//	            super.updateItem(item, empty);
+//
+//	            if (getTableRow() != null && getTableRow().getItem() != null) {
+//	                // Mendapatkan data pengguna dari baris terkait
+//	                Event currentUser = (Event) getTableRow().getItem();
+//
+//	                // Gunakan HBox untuk mengatur tombol agar mengisi penuh sel
+//	                HBox hbox = new HBox(transBtn);
+//	                hbox.setAlignment(Pos.CENTER); // Menyusun tombol di tengah
+//	                HBox.setHgrow(transBtn, Priority.ALWAYS); // Tombol mengisi seluruh kolom
+//
+//	                setGraphic(hbox); // Set graphic menjadi HBox yang berisi tombol
+//	            } else {
+//	                setGraphic(null);  // Jika baris kosong atau data pengguna tidak ada
+//	            }
+//	        }
+//	    });
+//		transactionColumn.setMinWidth(eventContainer.getWidth()/6);
+//		transactionColumn.setVisible(false);
+		
+		eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn);
+		
+		btnHB.getChildren().addAll(delBtn, transBtn);
+		eventData = FXCollections.observableArrayList();
+		eventTable.setItems(eventData);
+	}
+	
+	public void initInvitationComponent() {
+	    setTable();
 
-    Scene eventsScene;
-    VBox evContainer, middleContainer;
-    BorderPane evPage;
-    Label evTitle;
-    Button createEventBtn;
+	    createEventBtn = new Button("Create New Event");
 
-    TableView<Event> eventTable;
-    TableColumn<Event, String> eventIdCol;
-    TableColumn<Event, String> eventNameCol;
-    TableColumn<Event, String> eventDateCol;
-    TableColumn<Event, String> eventLocationCol;
-    TableColumn<Event, Void> actionCol; 
+	    eventContainer.getChildren().addAll(eventTitle, eventDescription, eventTable, createEventBtn, btnHB, errorM);
+	    
+	    VBox.setMargin(createEventBtn, new Insets(20, 0, 0, 0));
+	    
+	    eventPage.setTop(menubar);
+	    eventPage.setCenter(eventContainer);
+	}
+	
+	public void invitationStyling(){
+		eventPage.setStyle("-fx-background-color: white;");
+	
+		eventContainer.setMaxWidth(900);
+		
+		menubar.setPadding(new Insets(10, 10, 10, 10));
+		
+		eventTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+		eventContainer.setMargin(eventTitle, new Insets(50,0,10,0));
+		eventContainer.setMargin(eventDescription, new Insets(0,0,50,0));
+		eventContainer.setAlignment(Pos.TOP_CENTER);
+		
+		btnHB.setAlignment(Pos.CENTER);
+		btnHB.setPadding(new Insets(10, 0, 0, 0));
+		
+		delBtn.setPadding(new Insets(10, 0, 10, 0));
+		delBtn.setMinWidth(150);
+		delBtn.setTextFill(Color.WHITE);
+		delBtn.setBackground(new Background(new BackgroundFill(Color.web("#b20000"), CornerRadii.EMPTY, null)));
+		delBtn.setFont(Font.font(15));
+		
+		transBtn.setPadding(new Insets(10, 0, 10, 0));
+		transBtn.setMinWidth(150);
+		transBtn.setTextFill(Color.WHITE);
+		transBtn.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
+		transBtn.setFont(Font.font(15));
+		
+		errorM.setTextFill(Color.RED);
+	}
+	
+	public void invitation() {
+		initInvitationComponent();
+		invitationStyling();
+	}
+	
+	public void setGuestMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, updateProfile);
 
-    public ViewEvents(String organizerId) {
-        this.organizerId = organizerId;
-        initEvents();
-        events();
-    }
+	}
+	
+	public void setAdminMenu() {
+		users = new Menu("Users");
+		event = new Menu("Events");
+		
+		iUsers = new MenuItem("Users");
+		iEvent = new MenuItem("Events");
+		
+		users.getItems().addAll(iUsers);
+		event.getItems().addAll(iEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(event, users, updateProfile);
+		
+		btnHB.setVisible(true);
+		delBtn.setVisible(true);
+		transBtn.setVisible(true);
+		
+		errorM.setVisible(true);
+	}
+	
+	public void setVendorMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		manageVendor = new Menu("Manage Vendor");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		iManageVendor = new MenuItem("Manage Vendor");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		manageVendor.getItems().addAll(iManageVendor);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, manageVendor, updateProfile);
 
-    public void initEvents() {
-        evPage = new BorderPane();
-        evContainer = new VBox();
-        middleContainer = new VBox();
-        eventsScene = new Scene(evPage, 1000, 700);
-        evTitle = new Label("Event Management");
+	}
+	
+	public void setEventOrganizerMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		createEvent = new Menu("Create Event");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		iCreateEvent = new MenuItem("Create Event");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		createEvent.getItems().addAll(iCreateEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, createEvent, updateProfile);
 
-        eventTable = new TableView<>();
-        eventIdCol = new TableColumn<>("Event ID");
-        eventNameCol = new TableColumn<>("Event Name");
-        eventDateCol = new TableColumn<>("Event Date");
-        eventLocationCol = new TableColumn<>("Event Location");
-
+	}
+	
+	public void setADeleteButton(EventHandler<ActionEvent> handler) {
+		delBtn.setOnAction(handler);
+	}
+	
+	public void setATransactionButton(EventHandler<ActionEvent> handler) {
+		transBtn.setOnAction(handler);
+	}
+	
+    public void eventOrganizerButton() {
         createEventBtn = new Button("Create Event");
+        btnHB.setVisible(true);
+        delBtn.setVisible(true);
+        transBtn.setVisible(true);
+        eventPage.setBottom(createEventBtn);
     }
+	
+	public void setCreateEventButton(EventHandler<ActionEvent> handler) {
+		createEventBtn.setOnAction(handler);
+	}
+	
+	public void setMDeleteButton(EventHandler<MouseEvent> handler) {
+		eventTable.setRowFactory((TableView<Event> e) -> {
+			row = new TableRow<>();
+			row.setOnMouseClicked(handler);
+			return row;
+		});	
+	}
+	
+	public void setErrorMessage(String message) {
+		errorM.setText(message);
+	}
+	
+	public void setEventDetailButton(EventHandler<MouseEvent> handler) {
+		eventTable.setRowFactory((TableView<Event> e) -> {
+			row = new TableRow<>();
+			row.setOnMouseClicked(handler);
+			return row;
+		});
+	}
+	
+	public void setChangeProfileMenu(EventHandler<ActionEvent> handler) {
+		iUpdateProfile.setOnAction(handler);
+	}
+	
+	public void setInvitationMenu(EventHandler<ActionEvent> handler) {
+		iInvitation.setOnAction(handler);
+	}
+	
+	public void setManageVendorMenu(EventHandler<ActionEvent> handler) {
+		iManageVendor.setOnAction(handler);
+	}
+	
+	public void setUserMenu(EventHandler<ActionEvent> handler) {
+		iUsers.setOnAction(handler);
+	}
+	
+	public void setEventList(ObservableList<Event> events) {
+		eventData.setAll(events);
+	}
+	
+	public TableView<Event> getEventTable(){
+	    return getEventTable();
+	}
+	
+	public void refreshEventTable() {
+	    EventOrganizerController controller = new EventOrganizerController(this, email);
+	    ArrayList<Event> events = controller.getOrganizedEvents();
+	    ObservableList<Event> eventList = FXCollections.observableArrayList(events);
+	    setEventList(eventList);
+	}
+	
+	public ViewEvents(String email) {
+		this.email = email;
+		initInvitation();
+		invitation();
+		setupCreateEventButton();
+		refreshEventTable();
+	}
+	
+	private void setupCreateEventButton() {
+	    createEventBtn.setText("Create a New Event");
+	    createEventBtn.setStyle("-fx-background-color: #3c763d; -fx-text-fill: #ffffff; -fx-padding: 10px;");
 
-    public void initEventsComponent() {
-        eventTable.getColumns().addAll(eventIdCol, eventNameCol, eventDateCol, eventLocationCol);
+	    createEventBtn.setOnAction(e -> {
+	        ViewCreateEvent viewCreateEvent = new ViewCreateEvent(email);
 
-        actionCol = new TableColumn<>("Action");
-        actionCol.setCellFactory(col -> {
-            return new TableCell<Event, Void>() {
-                private Button viewDetailsBtn = new Button("View Event Details");
+	        viewCreateEvent.setCreateButton(event -> {
+	            String eventName = viewCreateEvent.getEventName();
+	            String eventDate = viewCreateEvent.getEventDate();
+	            String eventLocation = viewCreateEvent.getEventLocation();
+	            String eventDescription = viewCreateEvent.getEventDescription();
 
-                {
-                    viewDetailsBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
-                    viewDetailsBtn.setPadding(new Insets(5, 10, 5, 10));
-                    viewDetailsBtn.setFont(Font.font(12));
+	            if (eventName.isEmpty() || eventDate.isEmpty() || eventLocation.isEmpty() || eventDescription.isEmpty()) {
+	                viewCreateEvent.setErrorMessage("All fields must be filled!");
+	                return;
+	            }
 
-                    viewDetailsBtn.setOnAction((ActionEvent event) -> {
-                        Event currentEvent = getTableView().getItems().get(getIndex());
-                        ViewEventDetails detailsView = new ViewEventDetails();
-                        Stage detailsStage = new Stage();
-                        try {
-                            detailsView.start(detailsStage);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    });
-                }
+	            EventOrganizerController controller = new EventOrganizerController(null, email);
+	            String result = controller.createEvent(eventName, eventDate, eventLocation, eventDescription);
 
-                @Override
-                protected void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        setGraphic(viewDetailsBtn);
-                    }
-                }
-            };
-        });
+	            if (result.startsWith("Event created")) {
+	                ViewEvents viewEvents = new ViewEvents(email);
+	                Main.redirect(viewEvents.getScene());
+	            } else {
+	                viewCreateEvent.setErrorMessage(result);
+	            }
+	        });
+	        Main.redirect(viewCreateEvent.getScene());
+	    });
+	}
 
-        eventTable.getColumns().add(actionCol);
+	
+	public void setOrganizerId(String organizerId) {
+	    this.organizerId = organizerId;
+	}
 
-        evContainer.getChildren().addAll(evTitle, eventTable, createEventBtn);
-        middleContainer.getChildren().add(evContainer);
-        evPage.setCenter(middleContainer);
-    }
+	public void setPrimaryStage(Stage primaryStage) {
+	    this.primaryStage = primaryStage;
+	}
 
-    public void eventsStyling() {
-        evPage.setStyle("-fx-background-color: #133E87;");
+	public void setController(EventOrganizerController controller) {
+	    this.controller = controller;
+	}
 
-        middleContainer.setAlignment(Pos.CENTER);
-        evContainer.setAlignment(Pos.CENTER);
-        evContainer.setMaxWidth(800);
-        evContainer.setStyle("-fx-background-color: white;");
-
-        evTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
-        evContainer.setMargin(evTitle, new Insets(50,0,30,0));
-
-        eventTable.setMinWidth(700);
-        eventTable.setMaxHeight(300);
-        evContainer.setMargin(eventTable, new Insets(0,0,30,0));
-
-        createEventBtn.setPadding(new Insets(10, 0, 10, 0));
-        createEventBtn.setMinWidth(100);
-        createEventBtn.setStyle("-fx-text-fill: white; -fx-background-color: #133E87;");
-        createEventBtn.setFont(Font.font(15));
-
-        evContainer.setMargin(createEventBtn, new Insets(30, 0, 50, 0));
-    }
-
-    public void events() {
-        initEventsComponent();
-        eventsStyling();
-    }
-
-    public void setCreateEventButton(EventHandler<ActionEvent> handler) {
-        createEventBtn.setOnAction(handler);
-    }
-
-    public Scene getScene() {
-        return eventsScene;
-    }
-
-    public TableView<Event> getEventTable() {
-        return eventTable;
-    }
+	public Scene getScene() {
+		return eventScene;
+	}
 }
