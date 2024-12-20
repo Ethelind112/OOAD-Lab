@@ -13,6 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+
 public class EventOrganizerController {
     
     private EventOrganizer eventOrganizer;

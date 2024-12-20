@@ -1,29 +1,210 @@
 package view;
 
-import controller.EventOrganizerController;
+import controller.EventController;
+import controller.GuestController;
+import controller.UserController;
+import controller.VendorController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import model.Event;
+import model.User;
 
 public class ViewEventDetails {
+	
+	private Scene eventDetailScene;
+	VBox eventDetailContainer, guestC, vendorC;
+	HBox allUserContainer;
+	BorderPane eventDetailPage;
+	Label eventName, eventDescription, eventDate, eventLocation, dateLbl, locationLbl, guestLbl, vendorLbl;
+	
+	HBox location, date;
+	
+	MenuBar menubar;
+	Menu invitation, event, updateProfile, users, manageVendor, createEvent;
+	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor, iCreateEvent;
+	
+	TableView<User> guestTable, vendorTable;
+	ObservableList<User> guestData, vendorData;
+	
+	public void initEventDetail() {
+		eventDetailContainer = new VBox();
+		guestC = new VBox();
+		vendorC = new VBox();
+		allUserContainer = new HBox(100);
+		
+		eventDetailPage = new BorderPane();
+		eventDetailScene = new Scene(eventDetailPage, 1000, 700);
+		eventName = new Label();
+		eventDescription = new Label();
+		eventDate = new Label();
+		eventLocation = new Label();
+		dateLbl = new Label("Date: ");
+		locationLbl = new Label("Location: ");
+		location = new HBox();
+		date = new HBox();
+		
+		menubar = new MenuBar();
+		updateProfile = new Menu("Update Profile");
+		iUpdateProfile = new MenuItem("Update Profile");
+		
+		guestTable = new TableView<>();
+		vendorTable = new TableView<>();
+		
+		guestLbl = new Label("Guest Attendee List");
+		vendorLbl = new Label("Vendor Attendee List");
+		
+		allUserContainer.setVisible(false);
+	}
+	
+	public void initDetailComponent() {
+		setGuestTable();
+		setVendorTable();
+		
+		location.getChildren().addAll(locationLbl, eventLocation);
+		date.getChildren().addAll(dateLbl, eventDate);
+//		eventDetailContainer.getChildren().addAll(eventName, eventDescription, date, location);
+		allUserContainer.getChildren().addAll(guestC, vendorC);
+		eventDetailContainer.getChildren().addAll(eventName, eventDescription, date, location, allUserContainer);
+		eventDetailPage.setTop(menubar);
+		eventDetailPage.setCenter(eventDetailContainer);
+	}
+	
+	public void eventDetailStyling() {
+		eventDetailPage.setStyle("-fx-background-color: white;");
+		eventDetailContainer.setMaxWidth(900);
+		menubar.setPadding(new Insets(10, 10, 10, 10));
+		
+		eventName.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
+		eventDetailContainer.setMargin(eventName, new Insets(50,0,10,0));
+		eventDetailContainer.setMargin(eventDescription, new Insets(0,0,20,0));
+		eventDetailContainer.setAlignment(Pos.TOP_CENTER);
+		location.setAlignment(Pos.TOP_CENTER);
+		date.setAlignment(Pos.TOP_CENTER);
+		
+		guestC.setMaxWidth(580);
+		vendorC.setMaxWidth(580);
+		guestC.setMargin(guestLbl, new Insets(20,0,0,0));
+		vendorC.setMargin(vendorLbl, new Insets(20,0,0,0));
+		allUserContainer.setAlignment(Pos.TOP_CENTER);
+	}
+	
+	public ViewEventDetails() {
+		initEventDetail();
+		initDetailComponent();
+		eventDetailStyling();
+	}
+	
+	public void setGuestTable() {
+		
+		TableColumn<User,String> idColumn = new TableColumn<>("Id");
+		idColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_id"));
+		idColumn.setMinWidth(guestC.getWidth()/8);
+		
+		TableColumn<User,String> emailColumn = new TableColumn<>("Email");
+		emailColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_email"));
+		emailColumn.setMinWidth(guestC.getWidth()/6);
+		
+		TableColumn<User,String> nameColumn = new TableColumn<>("Name");
+		nameColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_name"));
+		nameColumn.setMinWidth(guestC.getWidth()/8);
+		
+		guestTable.getColumns().addAll(idColumn, emailColumn, nameColumn);
+		guestData = FXCollections.observableArrayList();
+		guestTable.setItems(guestData);
+		
+		guestC.getChildren().addAll(guestLbl, guestTable);
+	}
+	
+public void setVendorTable() {
+		
+		TableColumn<User,String> idColumn = new TableColumn<>("Id");
+		idColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_id"));
+		idColumn.setMinWidth(vendorC.getWidth()/8);
+		
+		TableColumn<User,String> emailColumn = new TableColumn<>("Email");
+		emailColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_email"));
+		emailColumn.setMinWidth(vendorC.getWidth()/6);
+		
+		TableColumn<User,String> nameColumn = new TableColumn<>("Name");
+		nameColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_name"));
+		nameColumn.setMinWidth(vendorC.getWidth()/8);
+		
+		vendorTable.getColumns().addAll(idColumn, emailColumn, nameColumn);
+		vendorData = FXCollections.observableArrayList();
+		vendorTable.setItems(vendorData);
+		
+		vendorC.getChildren().addAll(vendorLbl, vendorTable);
+	}
+	
+	public void setGuestMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, updateProfile);
 
-    private String email;
-    private EventOrganizerController eventOrganizerController;
-    private Event selectedEvent;
-
-    private Scene eventDetailsScene;
-    private BorderPane mainLayout;
-    private VBox container;
-    private GridPane detailsGrid;
+	}
+	
+	public void setAdminMenu() {
+		users = new Menu("Users");
+		event = new Menu("Events");
+		
+		iUsers = new MenuItem("Users");
+		iEvent = new MenuItem("Events");
+		
+		users.getItems().addAll(iUsers);
+		event.getItems().addAll(iEvent);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(event, users, updateProfile);
+		
+		allUserContainer.setVisible(true);
+	}
+	
+	public void setVendorMenu() {
+		invitation = new Menu("Invitations");
+		event = new Menu("Events");
+		manageVendor = new Menu("Manage Vendor");
+		
+		iInvitation = new MenuItem("Invitation");
+		iEvent = new MenuItem("Accepted Events");
+		iManageVendor = new MenuItem("Manage Vendor");
+		
+		invitation.getItems().addAll(iInvitation);
+		event.getItems().addAll(iEvent);
+		manageVendor.getItems().addAll(iManageVendor);
+		updateProfile.getItems().addAll(iUpdateProfile);
+		
+		menubar.getMenus().addAll(invitation, event, manageVendor, updateProfile);
 
     private Label pageTitle;
     private Label eventNameLbl, eventDateLbl, eventLocationLbl, eventDescLbl;
@@ -31,138 +212,53 @@ public class ViewEventDetails {
     private TextArea eventDescArea;
     private Label errorMessage;
 
-    private Button addVendorBtn, addGuestBtn, saveChangesBtn;
-
-    public ViewEventDetails(String email) {
-        this.email = email;
-
-        initUI();
-        createLayout();
-        styleUI();
-        populateEventDetails();
-    }
-
-    private void initUI() {
-        mainLayout = new BorderPane();
-        eventDetailsScene = new Scene(mainLayout, 600, 500);
-
-        container = new VBox();
-        detailsGrid = new GridPane();
-
-        pageTitle = new Label("Event Details");
-
-        eventNameLbl = new Label("Event Name:");
-        eventDateLbl = new Label("Event Date:");
-        eventLocationLbl = new Label("Event Location:");
-        eventDescLbl = new Label("Event Description:");
-
-        eventNameField = new TextField();
-        eventDateField = new TextField();
-        eventLocationField = new TextField();
-        eventDescArea = new TextArea();
-        
-        errorMessage = new Label();
-
-        addVendorBtn = new Button("Add Vendor");
-        addGuestBtn = new Button("Add Guest");
-        saveChangesBtn = new Button("Save Changes");
-    }
-
-    private void createLayout() {
-        detailsGrid.add(eventNameLbl, 0, 0);
-        detailsGrid.add(eventNameField, 1, 0);
-
-        detailsGrid.add(eventDateLbl, 0, 1);
-        detailsGrid.add(eventDateField, 1, 1);
-
-        detailsGrid.add(eventLocationLbl, 0, 2);
-        detailsGrid.add(eventLocationField, 1, 2);
-
-        detailsGrid.add(eventDescLbl, 0, 3);
-        detailsGrid.add(eventDescArea, 1, 3);
-
-        container.getChildren().addAll(pageTitle, detailsGrid, errorMessage);
-
-        HBox buttonBox = new HBox(20, addVendorBtn, addGuestBtn, saveChangesBtn);
-        buttonBox.setAlignment(Pos.CENTER);
-
-        mainLayout.setCenter(container);
-        mainLayout.setBottom(buttonBox);
-    }
-
-    private void styleUI() {
-        mainLayout.setStyle("-fx-background-color: #f5f5f5;");
-
-        container.setAlignment(Pos.CENTER);
-        container.setMaxWidth(500);
-        container.setSpacing(20);
-        container.setPadding(new Insets(20));
-
-        detailsGrid.setAlignment(Pos.CENTER);
-        detailsGrid.setHgap(20);
-        detailsGrid.setVgap(15);
-
-        pageTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
-        errorMessage.setTextFill(Color.RED);
-
-        eventNameField.setMinWidth(250);
-        eventDateField.setMinWidth(250);
-        eventLocationField.setMinWidth(250);
-        eventDescArea.setMinWidth(250);
-        eventDescArea.setMinHeight(100);
-
-        addVendorBtn.setStyle("-fx-background-color: #133E87; -fx-text-fill: white; -fx-font-size: 15;");
-        addGuestBtn.setStyle("-fx-background-color: #133E87; -fx-text-fill: white; -fx-font-size: 15;");
-        saveChangesBtn.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 15;");
-    }
-
-    private void populateEventDetails() {
-        if (selectedEvent != null) {
-            eventNameField.setText(selectedEvent.getEvent_name());
-            eventDateField.setText(selectedEvent.getEvent_date());
-            eventLocationField.setText(selectedEvent.getEvent_location());
-            eventDescArea.setText(selectedEvent.getEvent_description());
-        }
-    }
-
-    public Scene getScene() {
-        return eventDetailsScene;
-    }
-
-    public void show(Stage stage) {
-        stage.setScene(getScene());
-        stage.show();
-    }
-
-    public void setAddVendorHandler(EventHandler<ActionEvent> handler) {
-        addVendorBtn.setOnAction(handler);
-    }
-
-    public void setAddGuestHandler(EventHandler<ActionEvent> handler) {
-        addGuestBtn.setOnAction(handler);
-    }
-
-    public void setSaveChangesHandler(EventHandler<ActionEvent> handler) {
-        saveChangesBtn.setOnAction(handler);
-    }
-
-    public void setErrorMessage(String message) {
-        errorMessage.setText(message);
-    }
-
-    public String getEventName() {
-        return eventNameField.getText();
-    }
-
-    public String getEventDate() {
-        return eventDateField.getText();
-    }
-
-    public String getEventLocation() {
-        return eventLocationField.getText();
-    }
-
-    public String getEventDescription() {
-        return eventDescArea.getText();
-    }
+	}
+	
+	public Scene getScene() {
+		return eventDetailScene;
+	}
+	
+	public void setGuestList(ObservableList<User> users) {
+		guestData.setAll(users);
+	}
+	
+	public void setVendorList(ObservableList<User> users) {
+		vendorData.setAll(users);
+	}
+	
+	public void setUserMenu(EventHandler<ActionEvent> handler) {
+		iUsers.setOnAction(handler);
+	}
+	
+	public void setInvitationMenu(EventHandler<ActionEvent> handler) {
+		iInvitation.setOnAction(handler);
+	}
+	
+	public void setManageVendorMenu(EventHandler<ActionEvent> handler) {
+		iManageVendor.setOnAction(handler);
+	}
+	
+	public void setChangeProfileMenu(EventHandler<ActionEvent> handler) {
+		iUpdateProfile.setOnAction(handler);
+	}
+	
+	public void setEventMenu(EventHandler<ActionEvent> handler) {
+		iEvent.setOnAction(handler);
+	}
+	
+	public void setEventName(String name) {
+		eventName.setText(name);
+	}
+	
+	public void setEventDesc(String desc) {
+		eventDescription.setText(desc);
+	}
+	
+	public void setEventDate(String date) {
+		eventDate.setText(date);
+	}
+	
+	public void setEventLoc(String location) {
+		eventLocation.setText(location);
+	}
 }

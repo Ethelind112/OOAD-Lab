@@ -1,5 +1,8 @@
 package controller;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
@@ -14,6 +17,7 @@ import model.User;
 import model.Vendor;
 import view.Main;
 import view.ViewChangeProfile;
+import view.ViewEventDetails;
 import view.ViewEvents;
 import view.ViewLogin;
 import view.ViewUser;
@@ -23,6 +27,7 @@ public class AdminController {
 	private ViewEvents eventView;
 	private ViewUser userView;
 	private ViewChangeProfile changeProfileView;
+	private ViewEventDetails eventDetView;
 	private String email;
 
 	public AdminController() {
@@ -62,13 +67,8 @@ public class AdminController {
 //				mengambil data dari inputan
 				Event selectedEvent = eventView.getEventTable().getSelectionModel().getSelectedItem();
 				if(selectedEvent != null) {
-					Main.toEventDetailPage(email, selectedEvent.getEvent_id());
-					
-//					Guest guest = new Guest();
-//					guest.getGuestByTransactionId(selectedEvent.getEvent_id());
-//					
-//					Vendor vendor = new Vendor();
-//					vendor.getVendorByTransactionId(selectedEvent.getEvent_id());
+					// INI DIGANTI GAAAAA
+					Main.toEventDetailPageAdmin(email, selectedEvent.getEvent_id());
 				}else {
 					eventView.setErrorMessage("Choose the event above!");
 				}
@@ -158,14 +158,32 @@ public class AdminController {
 		});
 	}
 	
-	public AdminController(ViewChangeProfile changeProfileView, String email) {
-		this.changeProfileView = changeProfileView;
+	public AdminController(ViewEventDetails eventDetView, String email, String eventid) {
+		this.eventDetView = eventDetView;
 		this.email = email;
 		
-		changeProfileView.setAdminMenu();
+		eventDetView.setAdminMenu();
 		
-//		set hal yang dilakukan saat click user menu button
-		changeProfileView.setUserMenu(new EventHandler<ActionEvent>() {
+		loadGuestList(eventid);
+		loadVendorList(eventid);
+		
+		eventDetView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Main.toChangeProfilePage(email);
+			}
+		});
+		
+		eventDetView.setEventMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Main.toEventPageAdmin(email);
+			}
+		});
+		
+		eventDetView.setUserMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent event) {
@@ -173,14 +191,16 @@ public class AdminController {
 				Main.toUserPage(email);
 			}
 		});
-	
-		changeProfileView.setEventMenu(new EventHandler<ActionEvent>() {
-			
-			@Override
-			public void handle(ActionEvent event) {
-				Main.toEventPageAdmin(email);
-			}
-		});
+		
+		Event currEvent = new Event();
+		currEvent = currEvent.viewEventDetails(eventid);
+		
+//		mengeset semua elemen berdasarkan data yang ditemukan
+		eventDetView.setEventName(currEvent.getEvent_name());
+		eventDetView.setEventDesc(currEvent.getEvent_description());
+		eventDetView.setEventDate(currEvent.getEvent_date());
+		eventDetView.setEventLoc(currEvent.getEvent_location());
+		
 	}
 	
 	public void loadEventList() {
@@ -192,7 +212,7 @@ public class AdminController {
 	}
 	
 	public void loadUserList() {
-		ArrayList<User> users = viewUsers();
+		ArrayList<User> users = getAllUsers();
 		
 		ObservableList<User> userData = FXCollections.observableArrayList(users);
 		
@@ -200,13 +220,44 @@ public class AdminController {
 	}
 	
 	public ArrayList<Event> viewAllEvents() {
+		return getAllEvents();
+	}
+	
+	public ArrayList<Event> getAllEvents() {
 		Event events = new Event();
 		return events.viewAllEvents();
 	}
 	
-	public ArrayList<User> viewUsers() {
+	public ArrayList<User> getAllUsers() {
 		User users = new User();
 		return users.viewUsers();
 	}
-
+	
+	public ArrayList<User> getGuestByTransactionId(String event_id) {
+		Guest guest = new Guest();
+		return guest.getGuestByTransactionId(event_id);
+	}
+	
+	public ArrayList<User> getVendorByTransactionId(String event_id) {
+		Vendor vendor = new Vendor();
+		return vendor.getVendorByTransactionId(event_id);
+	}
+	
+	public void loadGuestList(String id) {
+		Guest guest = new Guest();
+		ArrayList<User> users = guest.getGuestByTransactionId(id);
+		
+		ObservableList<User> userData = FXCollections.observableArrayList(users);
+		
+		eventDetView.setGuestList(userData);
+	}
+	
+	public void loadVendorList(String id) {
+		Vendor vendor = new Vendor();
+		ArrayList<User> users = vendor.getVendorByTransactionId(id);
+		
+		ObservableList<User> userData = FXCollections.observableArrayList(users);
+		
+		eventDetView.setVendorList(userData);
+	}
 }

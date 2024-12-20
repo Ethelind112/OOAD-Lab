@@ -54,6 +54,10 @@ public class Admin extends User{
 	}
 	
 	public ArrayList<Event> viewAllEvents(){
+		return getAllEvents();
+	}
+	
+	public ArrayList<Event> getAllEvents(){
 		ArrayList<Event> events = new ArrayList<>();
 			String query = "SELECT * FROM event";
 			
@@ -82,7 +86,7 @@ public class Admin extends User{
 			    return null;
 	}
 	
-	public ArrayList<User> viewUser(){
+	public ArrayList<User> getAllUsers(){
 		ArrayList<User> users = new ArrayList<>();
 		String query = "SELECT * FROM user";
 		
@@ -108,6 +112,66 @@ public class Admin extends User{
 		    
 		    // Jika tidak ada event atau terjadi error, kembalikan null
 		    return null;
+	}
+	
+	public ArrayList<User> getGuestByTransactionId(String event_id) {
+		ArrayList<User> users = new ArrayList<>();
+		String readDateQuery = "SELECT g.* FROM user g JOIN transactions t ON g.user_id = t.guest_id WHERE t.event_id = ?";
+		
+		PreparedStatement ps = connect.prepareStatement(readDateQuery);
+		ResultSet readData = null;
+		
+		try {
+			ps.setString(1, event_id);
+			readData = ps.executeQuery();
+			
+//			bila ditemukan, buat user model baru untuk di return
+			while (readData.next()) {
+	            users.add(new User(
+	            		readData.getString("user_id"), 
+	            		readData.getString("user_email"), 
+	            		readData.getString("user_name"), 
+	            		readData.getString("user_password"), 
+	            		readData.getString("user_role")
+	            ));
+	        }
+			return users;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+//		bila tidak ditemukan maka return null
+		return null;
+	}
+	
+	public ArrayList<User> getVendorByTransactionId(String event_id) {
+		ArrayList<User> users = new ArrayList<>();
+		String readDateQuery = "SELECT g.* FROM user g JOIN transactions t ON g.user_id = t.vendor_id WHERE t.event_id = ?";
+		
+		PreparedStatement ps = connect.prepareStatement(readDateQuery);
+		ResultSet readData = null;
+		
+		try {
+			ps.setString(1, event_id);
+			readData = ps.executeQuery();
+			
+//			bila ditemukan, buat user model baru untuk di return
+			while (readData.next()) {
+	            users.add(new User(
+	            		readData.getString("user_id"), 
+	            		readData.getString("user_email"), 
+	            		readData.getString("user_name"), 
+	            		readData.getString("user_password"), 
+	            		readData.getString("user_role")
+	            ));
+	        }
+			return users;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+//		bila tidak ditemukan maka return null
+		return null;
 	}
 
 }

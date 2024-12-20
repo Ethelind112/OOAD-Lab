@@ -149,7 +149,7 @@ public class ViewChangeProfile {
 		event = new Menu("Events");
 		
 		iUsers = new MenuItem("Users");
-		iEvent = new MenuItem("Accepted Events");
+		iEvent = new MenuItem("Events");
 		
 		users.getItems().addAll(iUsers);
 		event.getItems().addAll(iEvent);

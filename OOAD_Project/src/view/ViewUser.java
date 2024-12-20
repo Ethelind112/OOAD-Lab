@@ -99,7 +99,7 @@ public class ViewUser {
 		userTable.setItems(userData);
 		
 		delVB.getChildren().add(delBtn);
-		userContainer.getChildren().addAll(userTitle, userTable, delVB);
+		userContainer.getChildren().addAll(userTitle, userTable, delVB, errorM);
 	}
 	
 	public void initUserComponent() {

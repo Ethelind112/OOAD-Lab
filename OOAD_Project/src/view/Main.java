@@ -76,6 +76,12 @@ public class Main extends Application {
 		redirect(view.getScene());
 	}
 	
+	public static void toEventDetailPageAdmin(String email, String eventID) {
+		ViewEventDetails view = new ViewEventDetails();
+		AdminController aController = new AdminController(view, email, eventID);
+		redirect(view.getScene());
+	}
+	
 	public static void toRegisterPage() {
 		ViewRegister view = new ViewRegister();
 		UserController uController = new UserController(view);

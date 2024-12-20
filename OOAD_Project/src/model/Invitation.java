@@ -48,7 +48,7 @@ public class Invitation {
 				String id = readData.getString("user_id");
 				
 //				Cari invitation dari user_id diatas
-				String readInvitationQuery = "SELECT event_id FROM invitation WHERE user_id = ? AND invitation_status = 'not accepted'";
+				String readInvitationQuery = "SELECT event_id FROM invitation WHERE user_id = ? AND invitation_status = 'pending'";
 				
 				PreparedStatement ps1 = connect.prepareStatement(readInvitationQuery);
 				
