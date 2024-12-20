@@ -325,7 +325,8 @@ public class ViewEvents {
 	}
 	
 	public void setEventList(ObservableList<Event> events) {
-		eventData.setAll(events);
+	    System.out.println("Setting event list with size: " + events.size());
+	    eventData.setAll(events);
 	}
 	
 	public TableView<Event> getEventTable(){
@@ -335,6 +336,7 @@ public class ViewEvents {
 	public void refreshEventTable() {
 	    EventOrganizerController controller = new EventOrganizerController(this, email);
 	    ArrayList<Event> events = controller.getOrganizedEvents();
+	    System.out.println("Events fetched for table: " + events.size());
 	    ObservableList<Event> eventList = FXCollections.observableArrayList(events);
 	    setEventList(eventList);
 	}
