@@ -1,4 +1,3 @@
-
 package view;
 
 import java.util.ArrayList;
@@ -24,6 +23,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -34,10 +34,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import model.Event;
+import model.Products;
 import model.User;
 
 public class ViewEvents {
@@ -142,12 +145,16 @@ public class ViewEvents {
 //		transactionColumn.setMinWidth(eventContainer.getWidth()/6);
 //		transactionColumn.setVisible(false);
 		
-		eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn);
+	    TableColumn<Event, Void> actionColumn = new TableColumn<>("Actions");
+
 		
-		btnHB.getChildren().addAll(delBtn, transBtn);
-		eventData = FXCollections.observableArrayList();
-		eventTable.setItems(eventData);
+	    eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn, actionColumn);
+
+	    btnHB.getChildren().addAll(delBtn, transBtn);
+	    eventData = FXCollections.observableArrayList();
+	    eventTable.setItems(eventData);
 	}
+	
 	
 	public void initInvitationComponent() {
 	    setTable();
@@ -209,7 +216,6 @@ public class ViewEvents {
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
 		menubar.getMenus().addAll(invitation, event, updateProfile);
-
 	}
 	
 	public void setAdminMenu() {
@@ -247,7 +253,6 @@ public class ViewEvents {
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
 		menubar.getMenus().addAll(invitation, event, manageVendor, updateProfile);
-
 	}
 	
 	public void setEventOrganizerMenu() {
@@ -265,7 +270,6 @@ public class ViewEvents {
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
 		menubar.getMenus().addAll(invitation, event, createEvent, updateProfile);
-
 	}
 	
 	public void setADeleteButton(EventHandler<ActionEvent> handler) {
@@ -283,7 +287,7 @@ public class ViewEvents {
         transBtn.setVisible(true);
         eventPage.setBottom(createEventBtn);
     }
-	
+    
 	public void setCreateEventButton(EventHandler<ActionEvent> handler) {
 		createEventBtn.setOnAction(handler);
 	}
@@ -327,18 +331,24 @@ public class ViewEvents {
 	public void setEventList(ObservableList<Event> events) {
 	    System.out.println("Setting event list with size: " + events.size());
 	    eventData.setAll(events);
+	    eventTable.setItems(eventData); 
 	}
 	
 	public TableView<Event> getEventTable(){
 	    return getEventTable();
 	}
-	
+
 	public void refreshEventTable() {
-	    EventOrganizerController controller = new EventOrganizerController(this, email);
-	    ArrayList<Event> events = controller.getOrganizedEvents();
-	    System.out.println("Events fetched for table: " + events.size());
-	    ObservableList<Event> eventList = FXCollections.observableArrayList(events);
-	    setEventList(eventList);
+	    Event eventModel = new Event();
+	    ArrayList<Event> events = eventModel.fetchEvents(organizerId); 
+
+	    if (events != null && !events.isEmpty()) {
+	        ObservableList<Event> eventList = FXCollections.observableArrayList(events);
+	        eventData.setAll(eventList);
+	        eventTable.setItems(eventData);
+	    } else {
+	        errorM.setText("No events found or failed to load data.");
+	    }
 	}
 	
 	public ViewEvents(String email) {
@@ -354,7 +364,8 @@ public class ViewEvents {
 	    createEventBtn.setStyle("-fx-background-color: #3c763d; -fx-text-fill: #ffffff; -fx-padding: 10px;");
 
 	    createEventBtn.setOnAction(e -> {
-	        ViewCreateEvent viewCreateEvent = new ViewCreateEvent(email);
+	        ViewCreateEvent viewCreateEvent = new ViewCreateEvent();
+	        Stage stage = new Stage();
 
 	        viewCreateEvent.setCreateButton(event -> {
 	            String eventName = viewCreateEvent.getEventName();
@@ -368,19 +379,20 @@ public class ViewEvents {
 	            }
 
 	            EventOrganizerController controller = new EventOrganizerController(null, email);
-	            String result = controller.createEvent(eventName, eventDate, eventLocation, eventDescription);
+	            String result = controller.createEvent(eventName, eventDate, eventLocation, eventDescription, organizerId);
 
 	            if (result.startsWith("Event created")) {
-	                ViewEvents viewEvents = new ViewEvents(email);
-	                Main.redirect(viewEvents.getScene());
+	                refreshEventTable();
+	                stage.close();
 	            } else {
 	                viewCreateEvent.setErrorMessage(result);
 	            }
 	        });
-	        Main.redirect(viewCreateEvent.getScene());
+
+	        stage.setScene(viewCreateEvent.getScene());
+	        stage.show();
 	    });
 	}
-
 	
 	public void setOrganizerId(String organizerId) {
 	    this.organizerId = organizerId;
