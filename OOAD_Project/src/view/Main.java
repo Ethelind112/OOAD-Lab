@@ -2,6 +2,7 @@ package view;
 
 import controller.AdminController;
 import controller.EventController;
+import controller.EventOrganizerController;
 import controller.GuestController;
 import controller.InvitationController;
 import controller.UserController;
@@ -67,6 +68,7 @@ public class Main extends Application {
 		ViewEvents view = new ViewEvents(email);
 		
 //		Tambahin Controller EO
+		EventOrganizerController eoController = new EventOrganizerController(view, email);
 		
 		redirect(view.getScene());
 	}

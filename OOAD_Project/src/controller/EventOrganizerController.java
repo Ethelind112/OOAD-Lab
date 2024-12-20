@@ -4,12 +4,42 @@ import model.Event;
 import model.EventOrganizer;
 import model.Guest;
 import model.Vendor;
+import view.ViewEvents;
 
 import java.util.ArrayList;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 public class EventOrganizerController {
     
     private EventOrganizer eventOrganizer;
+    private String email;
+    private ViewEvents viewEvent;
+    
+//	handle acceptedinvitationview untuk guest
+	public EventOrganizerController(ViewEvents viewEvent, String email) {
+		this.viewEvent = viewEvent;
+		this.email = email;
+		
+//		logic buat load data di tabel
+		
+		viewEvent.setEventOrganizerMenu();
+		viewEvent.eventOrganizerButton();
+		
+//		set button semua menu
+		
+//		set logic create event
+		viewEvent.setCreateEventButton(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				System.out.println("Create Button Clicked");
+				
+			}
+		});
+		
+	}
 
     public EventOrganizerController(EventOrganizer eventOrganizer) {
         this.eventOrganizer = eventOrganizer;

@@ -59,6 +59,8 @@ public class ViewEvents {
 	
 	Button delBtn, transBtn;
 	
+	Button createEventBtn;
+	
 	public void initInvitation() {
 		
 		eventPage = new BorderPane();
@@ -265,6 +267,16 @@ public class ViewEvents {
 	
 	public void setATransactionButton(EventHandler<ActionEvent> handler) {
 		transBtn.setOnAction(handler);
+	}
+	
+	public void eventOrganizerButton() {
+		createEventBtn = new Button("Create Event");
+		
+		eventPage.setBottom(createEventBtn);
+	}
+	
+	public void setCreateEventButton(EventHandler<ActionEvent> handler) {
+		createEventBtn.setOnAction(handler);
 	}
 	
 	public void setMDeleteButton(EventHandler<MouseEvent> handler) {
