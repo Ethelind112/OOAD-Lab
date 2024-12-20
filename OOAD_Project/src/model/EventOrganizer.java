@@ -15,9 +15,10 @@ public class EventOrganizer extends User {
         super();
     }
 
-    public EventOrganizer(String id, String email, String name, String password, String role) {
-        super(id, email, name, password, role);
-    }
+    public EventOrganizer(String id, String email, String name, String password, String role, Connect connect) {
+		super(id, email, name, password, role);
+		this.connect = connect;
+	}
     
     public String createEvent(String eventName, String eventDate, String eventLocation, String eventDescription) {
         String readQuery = "SELECT COUNT(*) as total FROM event";
@@ -32,7 +33,7 @@ public class EventOrganizer extends User {
             }
             DecimalFormat format = new DecimalFormat("00000");
             String eventID = format.format(count + 1);
- 
+
             PreparedStatement ps2 = connect.prepareStatement(insertQuery);
             ps2.setString(1, eventID);
             ps2.setString(2, eventName);
@@ -40,9 +41,15 @@ public class EventOrganizer extends User {
             ps2.setString(4, eventLocation);
             ps2.setString(5, eventDescription);
             ps2.setString(6, this.getUser_id());
-            ps2.executeUpdate();
-            
-            return "Event created successfully with ID: " + eventID;
+            int rowsInserted = ps2.executeUpdate();
+
+            if (rowsInserted > 0) {
+                System.out.println("Event added successfully: " + eventID);
+                return "Event created successfully with ID: " + eventID;
+            } else {
+                System.out.println("Failed to add event.");
+                return "Error: Event could not be added.";
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return "Error: Unable to create event.";
@@ -140,7 +147,10 @@ public class EventOrganizer extends User {
             ps.setString(1, this.getUser_id());
             ResultSet rs = ps.executeQuery();
             
+            System.out.println("Fetching events for organizer: " + this.getUser_id());
+
             while (rs.next()) {
+                System.out.println("Event fetched: " + rs.getString("event_name"));
                 events.add(new Event(
                     rs.getString("event_id"),
                     rs.getString("event_name"),
