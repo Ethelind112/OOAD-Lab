@@ -2,6 +2,7 @@ package view;
 
 import controller.AdminController;
 import controller.EventController;
+import controller.EventOrganizerController;
 import controller.GuestController;
 import controller.InvitationController;
 import controller.UserController;
@@ -66,12 +67,11 @@ public class Main extends Application {
 		
 		ViewEvents view = new ViewEvents(email);
 		EventOrganizerController eoController = new EventOrganizerController(view, email);
-		
 		redirect(view.getScene());
 	}
 	
 	public static void toEventDetailPage(String email, String eventID) {
-		ViewEventDetails view = new ViewEventDetails();
+		ViewEventDetails view = new ViewEventDetails(email);
 		EventController eController = new EventController(view, email, eventID);
 		redirect(view.getScene());
 	}
@@ -96,8 +96,8 @@ public class Main extends Application {
 	}
 	
 	public static void redirect(Scene scene) {
-		stage.setScene(scene);
-		stage.show();
+	    stage.setScene(scene);
+	    stage.show();
 	}
 	
 	@Override
