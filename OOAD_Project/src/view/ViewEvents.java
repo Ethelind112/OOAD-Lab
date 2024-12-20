@@ -272,6 +272,10 @@ public class ViewEvents {
 	public void eventOrganizerButton() {
 		createEventBtn = new Button("Create Event");
 		
+		btnHB.setVisible(true);
+		delBtn.setVisible(true);
+		transBtn.setVisible(true);
+		
 		eventPage.setBottom(createEventBtn);
 	}
 	
