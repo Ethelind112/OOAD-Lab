@@ -65,8 +65,7 @@ public class Main extends Application {
 		UserController uController = new UserController();
 		
 		ViewEvents view = new ViewEvents(email);
-		
-//		Tambahin Controller EO
+		EventOrganizerController eoController = new EventOrganizerController(view, email);
 		
 		redirect(view.getScene());
 	}
