@@ -106,6 +106,33 @@ public class Vendor extends User {
 //		bila tidak ditemukan maka return null
 		return null;
 	}
+	
+	public String checkManageVendorInput(String desc, String name) {
+		if(name.isEmpty()) {
+			return "Please input product's name";
+		}
+		else {
+//			mendapatkan products dengan email dan name yang ada di parameter, digunakan untuk melakukan pengecekan keunikan
+			Products product = new Products().getProductsByName(name);
+		
+//			melakukan pengecekan bila user yang didapatkan dari username sudah terdaftar atau belum	
+			if(product != null) {
+				//Memperbolehkan penambahan barang dengan nama sama tapi beda description
+				if(product.getProducts_name().equalsIgnoreCase(name) && product.getProducts_description().equalsIgnoreCase(desc)) {
+					return "There exist such products already";
+				}
+			}
+			
+//			melakukan pengecekan description
+			if(desc.isEmpty()) {
+				return "Please Fill All The Field";
+			}else if(desc.length() > 200) {
+				return "Description are at most 200 characters long";
+			}
+		}
+//		mengembalikan success message bila berhasil
+		return "success";
+	}
 
 }
 

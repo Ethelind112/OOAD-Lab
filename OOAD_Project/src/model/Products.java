@@ -76,16 +76,7 @@ public class Products {
 
 	//fungsi untuk menambah products ke dalam database
 	public String addProduct(String products_name, String products_desc) {
-		
-//		memanggil function untuk mengecek input kembali (detail penjelasan ada diatas functionnya)
-		String message = ManageVendorInput(products_desc, products_name);
-		
-//		bila gagal mengembalikan error message
-		if(!message.equals("success")) {
-			return message;
-		}
-		
-//		bila berhasil
+
 //		mengambil semua user dari database
 		String readDateQuery = "SELECT * FROM products";
 		ResultSet readData = connect.execute(readDateQuery);

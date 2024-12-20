@@ -23,9 +23,9 @@ public class VendorController {
 	
 	private ViewEvents acceptedInvView;
 	private ViewManageVendor managevendor;
-	private ProductController productCont;
 	private String email;
 	private Products products;
+	private Vendor vendor;
 	
 	public VendorController() {
 		
@@ -34,6 +34,8 @@ public class VendorController {
 	public VendorController(ViewManageVendor managevendor, String email) {
 		this.managevendor = managevendor;
 		this.email = email;
+		this.vendor = new Vendor();
+		this.products = new Products();
 		User user = new User().getUserByEmail(email);
 		
 		refreshTableData();
@@ -164,7 +166,7 @@ public class VendorController {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				Main.toEventPageVendor(email);
+				Main.toManageVendor(email);
 			}
 		});
 	}
@@ -179,10 +181,11 @@ public class VendorController {
 
 	
 	public ArrayList<Products> getProductData(){
-		if (productCont == null) {
-            productCont = new ProductController();
-        }
-		return productCont.getProductData();
+		if(products == null) {
+			products = new Products();
+		}
+		
+		return products.getProductData();
 	}
 //	
 	public void loadEventList() {
@@ -202,32 +205,44 @@ public class VendorController {
 	}
 
 	public String addProducts(String name, String desc) {
-		if (productCont == null) {
-            productCont = new ProductController();
-        }
-		//pemanggilan metode addproduct di product Controller
-		String result = productCont.addProduct(name, desc);
+		
+		String result = checkManageVendorInput(desc, name);
+		
+//		bila gagal mengembalikan error message
+		if(!result.equals("success")) {
+			return result;
+		}
+		result = products.addProduct(name, desc);
+		
+		if(!result.equals("success")) {
+			return "Failed to add product into database";
+		}
 		
 		//validasi hasil fungsi diatas
 		if ("success".equals(result))
         {
             refreshTableData(); // Ensure the table is refreshed after adding a product
         }
+		
 		return result;
 	}
 	
+	public String checkManageVendorInput(String desc, String name) {
+		return vendor.checkManageVendorInput(desc, name);
+	}
+	
 	public String manageVendorInput(String desc, String name) {
-		if (productCont == null) {
-            productCont = new ProductController();
-        }
-		return productCont.ManageVendorInput(desc, name);
+		String message = checkManageVendorInput(desc, name);
+		
+		if(!message.equals("success")) {
+			return message;
+		}
+		
+		return products.ManageVendorInput(desc, name);
 	}
 	
 	public String updateProductDetails(String id, String newName, String newDescription) {
-		if (productCont == null) {
-            productCont = new ProductController();
-        }
-		return productCont.updateProductDetails(id, newName, newDescription);
+		return products.updateProductDetails(id, newName, newDescription);
 	}
 	
 }
