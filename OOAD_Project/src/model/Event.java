@@ -139,7 +139,59 @@ public class Event {
 	public void setOrganizer_id(String organizer_id) {
 		this.organizer_id = organizer_id;
 	}
-	
-	
-	
+
+    public ArrayList<Event> getAllEvents() {
+        ArrayList<Event> events = new ArrayList<>();
+        String query = "SELECT * FROM event";
+
+        try {
+            PreparedStatement ps = connect.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                events.add(new Event(
+                        rs.getString("event_id"),
+                        rs.getString("event_name"),
+                        rs.getString("event_date"),
+                        rs.getString("event_location"),
+                        rs.getString("event_description"),
+                        rs.getString("organizer_id")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return events;
+    }
+
+    public ArrayList<Event> fetchEvents(String organizerId) {
+        ArrayList<Event> events = new ArrayList<>();
+        String query = organizerId == null 
+            ? "SELECT * FROM event" // Fetch all events if no organizerId is specified
+            : "SELECT * FROM event WHERE organizer_id = ?";
+
+        try {
+            PreparedStatement ps = connect.prepareStatement(query);
+            if (organizerId != null) {
+                ps.setString(1, organizerId);
+            }
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                events.add(new Event(
+                    rs.getString("event_id"),
+                    rs.getString("event_name"),
+                    rs.getString("event_date"),
+                    rs.getString("event_location"),
+                    rs.getString("event_description"),
+                    rs.getString("organizer_id")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return events;
+    }
+
 }
