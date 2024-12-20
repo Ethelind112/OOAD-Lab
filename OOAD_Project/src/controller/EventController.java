@@ -1,9 +1,15 @@
 package controller;
 
+import java.util.ArrayList;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.Event;
+import model.Guest;
 import model.User;
+import model.Vendor;
 import view.Main;
 import view.ViewChangeProfile;
 import view.ViewEventDetails;
@@ -42,6 +48,9 @@ public class EventController {
 			});
 		}else if(user.getUser_role().equalsIgnoreCase("admin")) {
 			eventDetView.setAdminMenu();
+			
+			loadGuestList(eventID);
+			loadVendorList(eventID);
 			
 			eventDetView.setUserMenu(new EventHandler<ActionEvent>() {
 				
@@ -114,6 +123,24 @@ public class EventController {
 	
 	public Event viewEventDetails(String eventID) {
 		return event.viewEventDetails(eventID);
+	}
+	
+	public void loadGuestList(String id) {
+		Guest guest = new Guest();
+		ArrayList<User> users = guest.getGuestByTransactionId(id);
+		
+		ObservableList<User> userData = FXCollections.observableArrayList(users);
+		
+		eventDetView.setGuestList(userData);
+	}
+	
+	public void loadVendorList(String id) {
+		Vendor vendor = new Vendor();
+		ArrayList<User> users = vendor.getVendorByTransactionId(id);
+		
+		ObservableList<User> userData = FXCollections.observableArrayList(users);
+		
+		eventDetView.setVendorList(userData);
 	}
 
 }

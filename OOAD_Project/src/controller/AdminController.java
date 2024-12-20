@@ -1,5 +1,8 @@
 package controller;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
@@ -192,7 +195,7 @@ public class AdminController {
 	}
 	
 	public void loadUserList() {
-		ArrayList<User> users = viewUsers();
+		ArrayList<User> users = getAllUsers();
 		
 		ObservableList<User> userData = FXCollections.observableArrayList(users);
 		
@@ -200,13 +203,26 @@ public class AdminController {
 	}
 	
 	public ArrayList<Event> viewAllEvents() {
+		return getAllEvents();
+	}
+	
+	public ArrayList<Event> getAllEvents() {
 		Event events = new Event();
 		return events.viewAllEvents();
 	}
 	
-	public ArrayList<User> viewUsers() {
+	public ArrayList<User> getAllUsers() {
 		User users = new User();
 		return users.viewUsers();
 	}
-
+	
+	public ArrayList<User> getGuestByTransactionId(String event_id) {
+		Guest guest = new Guest();
+		return guest.getGuestByTransactionId(event_id);
+	}
+	
+	public ArrayList<User> getVendorByTransactionId(String event_id) {
+		Vendor vendor = new Vendor();
+		return vendor.getVendorByTransactionId(event_id);
+	}
 }

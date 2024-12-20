@@ -4,6 +4,7 @@ import controller.EventController;
 import controller.GuestController;
 import controller.UserController;
 import controller.VendorController;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,9 +17,11 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -26,13 +29,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import model.Event;
+import model.User;
 
 public class ViewEventDetails {
 	
 	private Scene eventDetailScene;
-	VBox eventDetailContainer;
+	VBox eventDetailContainer, guestC, vendorC;
+	HBox allUserContainer;
 	BorderPane eventDetailPage;
-	Label eventName, eventDescription, eventDate, eventLocation, dateLbl, locationLbl;
+	Label eventName, eventDescription, eventDate, eventLocation, dateLbl, locationLbl, guestLbl, vendorLbl;
 	
 	HBox location, date;
 	
@@ -40,8 +45,15 @@ public class ViewEventDetails {
 	Menu invitation, event, updateProfile, users, manageVendor, createEvent;
 	MenuItem iInvitation, iEvent, iUpdateProfile, iUsers, iManageVendor, iCreateEvent;
 	
+	TableView<User> guestTable, vendorTable;
+	ObservableList<User> guestData, vendorData;
+	
 	public void initEventDetail() {
 		eventDetailContainer = new VBox();
+		guestC = new VBox();
+		vendorC = new VBox();
+		allUserContainer = new HBox(100);
+		
 		eventDetailPage = new BorderPane();
 		eventDetailScene = new Scene(eventDetailPage, 1000, 700);
 		eventName = new Label();
@@ -56,12 +68,25 @@ public class ViewEventDetails {
 		menubar = new MenuBar();
 		updateProfile = new Menu("Update Profile");
 		iUpdateProfile = new MenuItem("Update Profile");
+		
+		guestTable = new TableView<>();
+		vendorTable = new TableView<>();
+		
+		guestLbl = new Label("Guest Attendee List");
+		vendorLbl = new Label("Vendor Attendee List");
+		
+		allUserContainer.setVisible(false);
 	}
 	
 	public void initDetailComponent() {
+		setGuestTable();
+		setVendorTable();
+		
 		location.getChildren().addAll(locationLbl, eventLocation);
 		date.getChildren().addAll(dateLbl, eventDate);
-		eventDetailContainer.getChildren().addAll(eventName, eventDescription, date, location);
+//		eventDetailContainer.getChildren().addAll(eventName, eventDescription, date, location);
+		allUserContainer.getChildren().addAll(guestC, vendorC);
+		eventDetailContainer.getChildren().addAll(eventName, eventDescription, date, location, allUserContainer);
 		eventDetailPage.setTop(menubar);
 		eventDetailPage.setCenter(eventDetailContainer);
 	}
@@ -77,12 +102,60 @@ public class ViewEventDetails {
 		eventDetailContainer.setAlignment(Pos.TOP_CENTER);
 		location.setAlignment(Pos.TOP_CENTER);
 		date.setAlignment(Pos.TOP_CENTER);
+		
+		guestC.setMaxWidth(580);
+		vendorC.setMaxWidth(580);
+		guestC.setMargin(guestLbl, new Insets(20,0,0,0));
+		vendorC.setMargin(vendorLbl, new Insets(20,0,0,0));
+		allUserContainer.setAlignment(Pos.TOP_CENTER);
 	}
 	
 	public ViewEventDetails() {
 		initEventDetail();
 		initDetailComponent();
 		eventDetailStyling();
+	}
+	
+	public void setGuestTable() {
+		
+		TableColumn<User,String> idColumn = new TableColumn<>("Id");
+		idColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_id"));
+		idColumn.setMinWidth(guestC.getWidth()/8);
+		
+		TableColumn<User,String> emailColumn = new TableColumn<>("Email");
+		emailColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_email"));
+		emailColumn.setMinWidth(guestC.getWidth()/6);
+		
+		TableColumn<User,String> nameColumn = new TableColumn<>("Name");
+		nameColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_name"));
+		nameColumn.setMinWidth(guestC.getWidth()/8);
+		
+		guestTable.getColumns().addAll(idColumn, emailColumn, nameColumn);
+		guestData = FXCollections.observableArrayList();
+		guestTable.setItems(guestData);
+		
+		guestC.getChildren().addAll(guestLbl, guestTable);
+	}
+	
+public void setVendorTable() {
+		
+		TableColumn<User,String> idColumn = new TableColumn<>("Id");
+		idColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_id"));
+		idColumn.setMinWidth(vendorC.getWidth()/8);
+		
+		TableColumn<User,String> emailColumn = new TableColumn<>("Email");
+		emailColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_email"));
+		emailColumn.setMinWidth(vendorC.getWidth()/6);
+		
+		TableColumn<User,String> nameColumn = new TableColumn<>("Name");
+		nameColumn.setCellValueFactory(new PropertyValueFactory<User, String>("user_name"));
+		nameColumn.setMinWidth(vendorC.getWidth()/8);
+		
+		vendorTable.getColumns().addAll(idColumn, emailColumn, nameColumn);
+		vendorData = FXCollections.observableArrayList();
+		vendorTable.setItems(vendorData);
+		
+		vendorC.getChildren().addAll(vendorLbl, vendorTable);
 	}
 	
 	public void setGuestMenu() {
@@ -112,7 +185,8 @@ public class ViewEventDetails {
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
 		menubar.getMenus().addAll(event, users, updateProfile);
-
+		
+		allUserContainer.setVisible(true);
 	}
 	
 	public void setVendorMenu() {
@@ -153,6 +227,14 @@ public class ViewEventDetails {
 	
 	public Scene getScene() {
 		return eventDetailScene;
+	}
+	
+	public void setGuestList(ObservableList<User> users) {
+		guestData.setAll(users);
+	}
+	
+	public void setVendorList(ObservableList<User> users) {
+		vendorData.setAll(users);
 	}
 	
 	public void setUserMenu(EventHandler<ActionEvent> handler) {
