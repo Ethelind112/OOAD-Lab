@@ -4,6 +4,7 @@ import model.Event;
 import model.EventOrganizer;
 import model.Guest;
 import model.Vendor;
+import view.ViewEvents;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,11 @@ public class EventOrganizerController {
 
     public EventOrganizerController(EventOrganizer eventOrganizer) {
         this.eventOrganizer = eventOrganizer;
+    }
+
+    public EventOrganizerController(ViewEvents view, String email) {
+        this.eventOrganizer = new EventOrganizer();
+        this.eventOrganizer.setUser_email(email);
     }
 
     public String createEvent(String eventName, String eventDate, String eventLocation, String eventDescription) {
@@ -38,4 +44,8 @@ public class EventOrganizerController {
     public String viewOrganizedTransactionDetails(String eventID) {
         return eventOrganizer.viewOrganizedTransactionDetails(eventID);
     }
+    
+    public ArrayList<Event> getOrganizedEvents() {
+        return eventOrganizer.viewOrganizedEvents();
+    }   
 }
