@@ -68,7 +68,7 @@ public class AdminController {
 				Event selectedEvent = eventView.getEventTable().getSelectionModel().getSelectedItem();
 				if(selectedEvent != null) {
 					// INI DIGANTI GAAAAA
-					Main.toEventDetailPage(email, selectedEvent.getEvent_id());
+					Main.toEventDetailPageAdmin(email, selectedEvent.getEvent_id());
 				}else {
 					eventView.setErrorMessage("Choose the event above!");
 				}
@@ -158,14 +158,32 @@ public class AdminController {
 		});
 	}
 	
-	public AdminController(ViewChangeProfile changeProfileView, String email) {
-		this.changeProfileView = changeProfileView;
+	public AdminController(ViewEventDetails eventDetView, String email, String eventid) {
+		this.eventDetView = eventDetView;
 		this.email = email;
 		
-		changeProfileView.setAdminMenu();
+		eventDetView.setAdminMenu();
 		
-//		set hal yang dilakukan saat click user menu button
-		changeProfileView.setUserMenu(new EventHandler<ActionEvent>() {
+		loadGuestList(eventid);
+		loadVendorList(eventid);
+		
+		eventDetView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Main.toChangeProfilePage(email);
+			}
+		});
+		
+		eventDetView.setEventMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Main.toEventPageAdmin(email);
+			}
+		});
+		
+		eventDetView.setUserMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent event) {
@@ -173,60 +191,17 @@ public class AdminController {
 				Main.toUserPage(email);
 			}
 		});
-	
-		changeProfileView.setEventMenu(new EventHandler<ActionEvent>() {
-			
-			@Override
-			public void handle(ActionEvent event) {
-				Main.toEventPageAdmin(email);
-			}
-		});
+		
+		Event currEvent = new Event();
+		currEvent.viewEventDetails(eventid);
+		
+//		mengeset semua elemen berdasarkan data yang ditemukan
+		eventDetView.setEventName(currEvent.getEvent_name());
+		eventDetView.setEventDesc(currEvent.getEvent_description());
+		eventDetView.setEventDate(currEvent.getEvent_date());
+		eventDetView.setEventLoc(currEvent.getEvent_location());
+		
 	}
-	
-//	public AdminController(ViewEventDetails eventDetView, String email, String eventid) {
-//		this.eventDetView = eventDetView;
-//		this.email = email;
-//		
-//		eventDetView.setAdminMenu();
-//		
-//		loadGuestList(eventid);
-//		loadVendorList(eventid);
-//		
-//		userView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
-//			
-//			@Override
-//			public void handle(ActionEvent event) {
-//				Main.toChangeProfilePage(email);
-//			}
-//		});
-//		
-//		eventDetView.setEventMenu(new EventHandler<ActionEvent>() {
-//			
-//			@Override
-//			public void handle(ActionEvent event) {
-//				Main.toEventPageAdmin(email);
-//			}
-//		});
-//		
-//		eventDetView.setUserMenu(new EventHandler<ActionEvent>() {
-//			
-//			@Override
-//			public void handle(ActionEvent event) {
-////				AdminController adminC = new AdminController(userView, email);
-//				Main.toUserPage(email);
-//			}
-//		});
-//		
-//		Event currEvent = new Event();
-//		currEvent.viewEventDetails(eventid);
-//		
-////		mengeset semua elemen berdasarkan data yang ditemukan
-//		eventDetView.setEventName(currEvent.getEvent_name());
-//		eventDetView.setEventDesc(currEvent.getEvent_description());
-//		eventDetView.setEventDate(currEvent.getEvent_date());
-//		eventDetView.setEventLoc(currEvent.getEvent_location());
-//		
-//	}
 	
 	public void loadEventList() {
 		ArrayList<Event> events = viewAllEvents();

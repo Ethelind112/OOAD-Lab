@@ -67,25 +67,28 @@ public class User {
 		}
 		
 //		bila berhasil
-//		mengambil semua user dari database
-		String readDateQuery = "SELECT * FROM user";
+//		mengambil user paling akhir dari database
+		String readDateQuery = "SELECT * FROM user ORDER BY user_id DESC LIMIT 1";
 		ResultSet readData = connect.execute(readDateQuery);
 		
-//		Generate ID
-		int count = 0;
+//		generate ID
+		int currID = 0;
 		
 		try {
-//			menghitung jumlah user yang sudah ada
-			while(readData.next()) {
-				count++;
+			if(readData.next()) {
+				currID = Integer.parseInt(readData.getString("user_id"));
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (NumberFormatException e1) {
+			return "fail";
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			return "fail";
 		}
+		
 		
 //		membuat format ID
 		DecimalFormat formats = new DecimalFormat("00000");
-		String id = formats.format(count + 1);
+		String id = formats.format(currID + 1);
 		
 //		memasukan data ke database
 		String insertQuery = "INSERT INTO User (user_id, user_email, user_name, user_password, user_role) VALUES (?, ?, ?, ?, ?)";
