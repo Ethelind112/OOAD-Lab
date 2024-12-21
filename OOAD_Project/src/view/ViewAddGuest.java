@@ -14,6 +14,7 @@ public class ViewAddGuest extends Application{
 	private ViewEvents view;
 	private String email;
     private EventOrganizerController eventOrganizerController = new EventOrganizerController(view, email);
+    Scene scene;
 
     @Override
     public void start(Stage primaryStage) {
@@ -59,4 +60,8 @@ public class ViewAddGuest extends Application{
     public static void main(String[] args) {
         launch(args);
     }
+    
+    public Scene getScene() {
+		return scene;
+	}
 }

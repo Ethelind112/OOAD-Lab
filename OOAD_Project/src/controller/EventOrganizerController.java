@@ -7,8 +7,12 @@ import model.User;
 import model.Vendor;
 import util.Connect;
 import view.Main;
+import view.ViewAddGuest;
+import view.ViewAddVendor;
 import view.ViewCreateEvent;
+import view.ViewEventDetails;
 import view.ViewEvents;
+import view.ViewRegister;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +31,11 @@ public class EventOrganizerController {
     private EventOrganizer eventOrganizer;
     private Connect connect = Connect.getInstance();
     private ViewEvents viewEvent;
+    private ViewEventDetails eventDetView;
+    
     ViewCreateEvent viewCreateEvent;
+    ViewAddGuest viewAddGuest;
+    ViewAddVendor viewAddVendor;
 
     public EventOrganizerController(EventOrganizer eventOrganizer) {
         this.eventOrganizer = eventOrganizer;
@@ -41,8 +49,21 @@ public class EventOrganizerController {
         viewCreateEvent = new ViewCreateEvent();
         
         view.setEventOrganizerMenu();
-        view.setupCreateEventButton();
+//        view.setupCreateEventButton();
         loadEventList();
+        
+        view.setEoDetBtn(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				Event selectedEvent = view.getEventTable().getSelectionModel().getSelectedItem();
+				if(selectedEvent != null) {
+					// INI DIGANTI GAAAAA
+					Main.toEventDetailPage(email, selectedEvent.getEvent_id());
+				}
+			}
+		});
         
         view.setCreateEventButton(new EventHandler<ActionEvent>() {
 //        	ViewCreateEvent viewCreateEvent = new ViewCreateEvent();
@@ -90,6 +111,79 @@ public class EventOrganizerController {
 		});
     }
     
+    public EventOrganizerController(ViewEventDetails eventDetView, String email, String eventid) {
+		this.eventDetView = eventDetView;
+		this.eventOrganizer.setUser_email(email);
+		
+		eventDetView.setEventOrganizerMenu();
+		
+		loadGuestList(eventid);
+		loadVendorList(eventid);
+		
+		eventDetView.setChangeProfileMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Main.toChangeProfilePage(email);
+			}
+		});
+		
+		eventDetView.setEventMenu(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Main.toEventPageEO(email);
+			}
+		});
+		
+		eventDetView.setAddGuest(new EventHandler<ActionEvent>() {
+//        	ViewCreateEvent viewCreateEvent = new ViewCreateEvent();
+
+			@Override
+			public void handle(ActionEvent event) {
+	            Stage stage = new Stage();
+	            stage.setScene(viewAddGuest.getScene());
+			}
+		});
+		
+		eventDetView.setAddVendor(new EventHandler<ActionEvent>() {
+//        	ViewCreateEvent viewCreateEvent = new ViewCreateEvent();
+
+			@Override
+			public void handle(ActionEvent event) {
+//				viewAddVendor
+			}
+		});
+		
+		Event currEvent = new Event();
+		currEvent = currEvent.viewEventDetails(eventid);
+		
+//		mengeset semua elemen berdasarkan data yang ditemukan
+		eventDetView.setEventName(currEvent.getEvent_name());
+		eventDetView.setEventDesc(currEvent.getEvent_description());
+		eventDetView.setEventDate(currEvent.getEvent_date());
+		eventDetView.setEventLoc(currEvent.getEvent_location());
+		
+	}
+    
+    public void loadGuestList(String id) {
+		Guest guest = new Guest();
+		ArrayList<User> users = guest.getGuestByTransactionId(id);
+		
+		ObservableList<User> userData = FXCollections.observableArrayList(users);
+		
+		eventDetView.setGuestList(userData);
+	}
+	
+	public void loadVendorList(String id) {
+		Vendor vendor = new Vendor();
+		ArrayList<User> users = vendor.getVendorByTransactionId(id);
+		
+		ObservableList<User> userData = FXCollections.observableArrayList(users);
+		
+		eventDetView.setVendorList(userData);
+	}
+    
     public void loadCreateEventList() {
 		Event eventModel = new Event();
 		ArrayList<Event> events = eventModel.fetchEvents(eventOrganizer.getUser_id()); 
@@ -108,20 +202,35 @@ public class EventOrganizerController {
 	}
 
 	public void loadEventList() {
-		Event eventModel = new Event();
-		ArrayList<Event> events = eventModel.fetchEvents(eventOrganizer.getUser_id()); 
+//		Event eventModel = new Event();
+//		ArrayList<Event> events = eventModel.fetchEvents(eventOrganizer.getUser_id()); 
+//		
+//		ObservableList<Event> eventData = FXCollections.observableArrayList(events);
+//		
+//		if (events != null && !events.isEmpty()) {
+//	        ObservableList<Event> eventList = FXCollections.observableArrayList(events);
+//	        eventData.setAll(eventList);
+//	        viewEvent.getEventTable().setItems(eventData);
+//	    } else {
+//	        viewEvent.setErrorMessage("No events found or failed to load data.");
+//	    }
+//		
+//		viewEvent.setEventList(eventData);
+		
+		ArrayList<Event> events = viewAllEvents();
 		
 		ObservableList<Event> eventData = FXCollections.observableArrayList(events);
 		
-		if (events != null && !events.isEmpty()) {
-	        ObservableList<Event> eventList = FXCollections.observableArrayList(events);
-	        eventData.setAll(eventList);
-	        viewEvent.getEventTable().setItems(eventData);
-	    } else {
-	        viewEvent.setErrorMessage("No events found or failed to load data.");
-	    }
-		
 		viewEvent.setEventList(eventData);
+	}
+	
+	public ArrayList<Event> getAllEvents() {
+		Event events = new Event();
+		return events.viewAllEvents();
+	}
+	
+	public ArrayList<Event> viewAllEvents() {
+		return getAllEvents();
 	}
     
     public String createEvent(String eventName, String eventDate, String eventLocation, String eventDescription, String organizerId) {

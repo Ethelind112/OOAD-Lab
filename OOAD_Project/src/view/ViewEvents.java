@@ -45,7 +45,7 @@ public class ViewEvents {
 	Scene eventScene;
 	BorderPane eventPage;
 	VBox eventContainer;
-	HBox btnHB;
+	HBox btnHB, btnHB2;
 	Label eventTitle, eventDescription, errorM;
 	TableView<Event> eventTable;
 	ObservableList<Event> eventData;
@@ -58,7 +58,7 @@ public class ViewEvents {
 	
 	Button delBtn, transBtn;
 	
-	Button createEventBtn;
+	Button createEventBtn, eoDetBtn;
 	
 	private Stage primaryStage;
 	private String organizerId;
@@ -78,8 +78,6 @@ public class ViewEvents {
 		
 		iUpdateProfile = new MenuItem("Update Profile");
 		
-		createEventBtn = new Button("Create New Event");
-		createEventBtn.setVisible(false);
 		
 		btnHB = new HBox(200);
 		btnHB.setVisible(false);
@@ -87,6 +85,13 @@ public class ViewEvents {
 		delBtn.setVisible(false);
 		transBtn = new Button("Event Detail");
 		transBtn.setVisible(false);
+		
+		btnHB2 = new HBox(200);
+		btnHB2.setVisible(false);
+		createEventBtn = new Button("Create New Event");
+		createEventBtn.setVisible(false);
+		eoDetBtn = new Button("Detail");
+		eoDetBtn.setVisible(false);
 		
 		errorM = new Label();
 		errorM.setVisible(false);
@@ -148,6 +153,7 @@ public class ViewEvents {
 	    eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn, actionColumn);
 
 	    btnHB.getChildren().addAll(delBtn, transBtn);
+	    btnHB2.getChildren().addAll(createEventBtn, eoDetBtn);
 	    eventData = FXCollections.observableArrayList();
 	    eventTable.setItems(eventData);
 	}
@@ -156,9 +162,10 @@ public class ViewEvents {
 	public void initInvitationComponent() {
 	    setTable();
 
-	    eventContainer.getChildren().addAll(eventTitle, eventDescription, eventTable, createEventBtn, btnHB, errorM);
+	    eventContainer.getChildren().addAll(eventTitle, eventDescription, eventTable ,btnHB, btnHB2, errorM);
 	    
-	    VBox.setMargin(createEventBtn, new Insets(20, 0, 0, 0));
+//	    VBox.setMargin(createEventBtn, new Insets(20, 0, 0, 0));
+//	    VBox.setMargin(eoDetBtn, new Insets(20, 0, 0, 0));
 	    
 	    eventPage.setTop(menubar);
 	    eventPage.setCenter(eventContainer);
@@ -179,6 +186,9 @@ public class ViewEvents {
 		btnHB.setAlignment(Pos.CENTER);
 		btnHB.setPadding(new Insets(10, 0, 0, 0));
 		
+		btnHB2.setAlignment(Pos.CENTER);
+		btnHB2.setPadding(new Insets(10, 0, 0, 0));
+		
 		delBtn.setPadding(new Insets(10, 0, 10, 0));
 		delBtn.setMinWidth(150);
 		delBtn.setTextFill(Color.WHITE);
@@ -190,6 +200,18 @@ public class ViewEvents {
 		transBtn.setTextFill(Color.WHITE);
 		transBtn.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
 		transBtn.setFont(Font.font(15));
+		
+		createEventBtn.setPadding(new Insets(10, 0, 10, 0));
+		createEventBtn.setMinWidth(150);
+		createEventBtn.setTextFill(Color.WHITE);
+		createEventBtn.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
+		createEventBtn.setFont(Font.font(15));
+		
+		eoDetBtn.setPadding(new Insets(10, 0, 10, 0));
+		eoDetBtn.setMinWidth(150);
+		eoDetBtn.setTextFill(Color.WHITE);
+		eoDetBtn.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
+		eoDetBtn.setFont(Font.font(15));
 		
 		errorM.setTextFill(Color.RED);
 	}
@@ -259,6 +281,10 @@ public class ViewEvents {
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
 		menubar.getMenus().addAll(event, updateProfile);
+		
+		btnHB2.setVisible(true);
+		createEventBtn.setVisible(true);;
+		eoDetBtn.setVisible(true);
 	}
 	
 	public void setADeleteButton(EventHandler<ActionEvent> handler) {
@@ -271,14 +297,19 @@ public class ViewEvents {
 	
     public void eventOrganizerButton() {
         btnHB.setVisible(true);
-        delBtn.setVisible(true);
-        transBtn.setVisible(true);
+//        delBtn.setVisible(true);
         eventPage.setBottom(createEventBtn);
+        eventPage.setBottom(transBtn);
     }
     
 	public void setCreateEventButton(EventHandler<ActionEvent> handler) {
 		
 		 createEventBtn.setOnAction(handler);
+	}
+	
+	public void setEoDetBtn(EventHandler<ActionEvent> handler) {
+		
+		 eoDetBtn.setOnAction(handler);
 	}
 	
 	public void setMDeleteButton(EventHandler<MouseEvent> handler) {
