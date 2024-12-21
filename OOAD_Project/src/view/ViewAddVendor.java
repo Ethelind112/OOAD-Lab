@@ -10,9 +10,11 @@ import javafx.stage.Stage;
 import model.Vendor;
 
 public class ViewAddVendor extends Application {
-
+	
+	
     private ViewEvents view;
 	private String email;
+	private String eventID;
 	private EventOrganizerController eventOrganizerController = new EventOrganizerController(view, email);
 
     @Override
@@ -59,4 +61,17 @@ public class ViewAddVendor extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public void setEventID(String eventID) {
+        this.eventID = eventID;
+    }
+
+	public Scene getScene() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
