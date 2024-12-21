@@ -18,12 +18,15 @@ public class Invitation {
 
 //	process accept invitation dengan mengubah invitation status menjadi accepted
 //	di class diagram acceptinvitation ada Guest. Namun di sequence diagram proses ada di Invitation
-	public String acceptInvitation(String eventID) {
-		String updateQuery = "UPDATE invitation SET invitation_status = 'accepted' WHERE event_id = ?";
+//	Terdapat penambahan userID agar saat diupdate statusnya, hanya userid yang ada di dalam event yang terupdate
+//	bila hanya eventid yang di passing seperti di class diagram, maka semua invitation yang memiliki eventid tersebut terupdate (untuk semua user yang terdaftar dalam event)
+	public String acceptInvitation(String eventID, String userID) {
+		String updateQuery = "UPDATE invitation SET invitation_status = 'accepted' WHERE event_id = ? AND user_id = ?";
 		PreparedStatement ps = connect.prepareStatement(updateQuery);
 		
 		try {
 			ps.setString(1, eventID);
+			ps.setString(2, userID);
 			ps.executeUpdate();
 			return "success";
 		} catch (SQLException e) {

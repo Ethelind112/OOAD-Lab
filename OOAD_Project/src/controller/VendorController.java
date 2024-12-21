@@ -196,7 +196,8 @@ public class VendorController {
 	
 	public String acceptInvitation(String eventID) {
 		Vendor vendor = new Vendor();
-		return vendor.acceptInvitation(eventID);
+		User user = new User().getUserByEmail(email);
+		return vendor.acceptInvitation(eventID, user.getUser_id());
 	}
 	
 	public ArrayList<Event> viewAcceptedEvents(String email){

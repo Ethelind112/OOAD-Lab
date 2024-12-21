@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import model.Event;
 import model.Guest;
+import model.User;
 import view.Main;
 import view.ViewChangeProfile;
 import view.ViewEventDetails;
@@ -75,8 +76,9 @@ public class GuestController {
 	
 	public String acceptInvitation(String eventID) {
 		Guest guest = new Guest();
+		User user = new User().getUserByEmail(email);
 		
-		return guest.acceptInvitation(eventID);
+		return guest.acceptInvitation(eventID, user.getUser_id());
 	}
 	
 	public ArrayList<Event> viewAcceptedEvents(String email){

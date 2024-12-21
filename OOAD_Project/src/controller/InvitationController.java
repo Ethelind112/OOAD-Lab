@@ -74,7 +74,7 @@ public class InvitationController {
 					String eventID = selectedInvitation.getEvent_id();
 					
 //					proses accept invitation menggunakan invitation class (mengikuti sequence diagram)
-					invitation.acceptInvitation(eventID);
+					invitation.acceptInvitation(eventID, user.getUser_id());
 					
 					invitationView.setTable();
 					
@@ -109,7 +109,7 @@ public class InvitationController {
 	}
 	
 	public void acceptInvitation(String eventID) {
-		invitation.acceptInvitation(eventID);
+		invitation.acceptInvitation(eventID, user.getUser_id());
 	}
 	
 //	untuk mengeload data invitation ke dalam tabel di view
