@@ -144,31 +144,6 @@ public class ViewEvents {
 		organizerColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("organizer_id"));
 		organizerColumn.setMinWidth(eventContainer.getWidth()/6);
 		
-//		transactionColumn.setCellFactory(col -> new TableCell<>() {
-//			@Override
-//	        protected void updateItem(Void item, boolean empty) {
-//	            super.updateItem(item, empty);
-//
-//	            if (getTableRow() != null && getTableRow().getItem() != null) {
-//	                // Mendapatkan data pengguna dari baris terkait
-//	                Event currentUser = (Event) getTableRow().getItem();
-//
-//	                // Gunakan HBox untuk mengatur tombol agar mengisi penuh sel
-//	                HBox hbox = new HBox(transBtn);
-//	                hbox.setAlignment(Pos.CENTER); // Menyusun tombol di tengah
-//	                HBox.setHgrow(transBtn, Priority.ALWAYS); // Tombol mengisi seluruh kolom
-//
-//	                setGraphic(hbox); // Set graphic menjadi HBox yang berisi tombol
-//	            } else {
-//	                setGraphic(null);  // Jika baris kosong atau data pengguna tidak ada
-//	            }
-//	        }
-//	    });
-//		transactionColumn.setMinWidth(eventContainer.getWidth()/6);
-//		transactionColumn.setVisible(false);
-		
-		
-		
 	    TableColumn<Event, Void> actionColumn = new TableColumn<>("Actions");
 	    
         TableColumn<Event, Void> detailsColumn = new TableColumn<>("View Details");

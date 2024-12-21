@@ -195,6 +195,32 @@ public class Event {
         return events;
     }
     
+    public ArrayList<Event> viewOrganizedEvents(String organizerId){
+    	ArrayList<Event> events = new ArrayList<>();
+        String query = "SELECT * FROM event WHERE organizer_id = ?";
+        
+        PreparedStatement ps = connect.prepareStatement(query);
+
+        try {
+            ps.setString(1, organizerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                events.add(new Event(
+                    rs.getString("event_id"),
+                    rs.getString("event_name"),
+                    rs.getString("event_date"),
+                    rs.getString("event_location"),
+                    rs.getString("event_description"),
+                    rs.getString("organizer_id")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return events;
+    }
+    
     public String createEvent(String eventName, String eventDate, String eventLocation, String eventDescription, String organizerId) {
         String readQuery = "SELECT COUNT(*) as total FROM event";
         String insertQuery = "INSERT INTO event (event_id, event_name, event_date, event_location, event_description, organizer_id) VALUES (?, ?, ?, ?, ?, ?)";

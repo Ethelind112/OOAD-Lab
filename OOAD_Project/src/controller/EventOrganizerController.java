@@ -110,7 +110,7 @@ public class EventOrganizerController {
 	    	viewCreateEvent.setErrorMessage("No events found or failed to load data.");
 	    }
 		
-		viewEvent.setEventList(eventData);
+		viewCreateEvent.setEventList(eventData);
 	}
 
 	public void loadEventList() {

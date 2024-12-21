@@ -28,8 +28,6 @@ public class EventController {
 		
 	}
 	
-	
-	
 //	handle view event details untuk semua role
 	public EventController(ViewEventDetails eventDetView, String email, String eventID) {
 		this.eventDetView = eventDetView;
@@ -69,12 +67,12 @@ public class EventController {
 //			System.out.println("Role: " + user.getUser_role());
 					
 //			//hal yang dilakukan saat click manage vendor menu button
-//			eventDetView.setManageVendorMenu(new EventHandler<ActionEvent>() {
-//				@Override
-//				public void handle(ActionEvent event) {
-//					Main.toManageVendor(email);
-//				}
-//			});
+			eventDetView.setManageVendorMenu(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					Main.toManageVendor(email);
+				}
+			});
 			
 			
 //			set hal yang dilakukan saat click invitation menu button
@@ -87,6 +85,9 @@ public class EventController {
 			});
 		}else if(user.getUser_role().equalsIgnoreCase("event organizer")) {
 			eventDetView.setEventOrganizerMenu();
+			
+			
+			
 		}
 		
 //		set hal yang dilakukan saat click change profile menu button
