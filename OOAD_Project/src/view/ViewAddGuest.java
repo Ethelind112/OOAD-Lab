@@ -1,24 +1,20 @@
 package view;
 
 import controller.EventOrganizerController;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import model.Guest;
 
-public class ViewAddGuest extends Application{
+public class ViewAddGuest {
 
-	private ViewEvents view;
-	private String email;
-    private EventOrganizerController eventOrganizerController = new EventOrganizerController(view, email);
+    private Scene scene;
+    private String email;
+    private String eventID;
+    private EventOrganizerController eventOrganizerController;
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Add Guest to Event");
-
+    public ViewAddGuest() {
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(10);
@@ -26,6 +22,8 @@ public class ViewAddGuest extends Application{
 
         Label eventIdLabel = new Label("Event ID:");
         TextField eventIdField = new TextField();
+        eventIdField.setText(eventID); 
+        eventIdField.setEditable(false); 
 
         Label guestIdLabel = new Label("Guest ID:");
         TextField guestIdField = new TextField();
@@ -51,12 +49,19 @@ public class ViewAddGuest extends Application{
             resultLabel.setText(result);
         });
 
-        Scene scene = new Scene(grid, 400, 300);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        this.scene = new Scene(grid, 400, 300);
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+        this.eventOrganizerController = new EventOrganizerController(null, email);
+    }
+
+    public void setEventID(String eventID) {
+        this.eventID = eventID;
     }
 }
