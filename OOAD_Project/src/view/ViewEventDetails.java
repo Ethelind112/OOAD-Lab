@@ -23,10 +23,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -37,7 +41,7 @@ public class ViewEventDetails {
 	
 	private Scene eventDetailScene;
 	VBox eventDetailContainer, guestC, vendorC;
-	HBox allUserContainer;
+	HBox allUserContainer, btnHB;
 	BorderPane eventDetailPage;
 	Label eventName, eventDescription, eventDate, eventLocation, dateLbl, locationLbl, guestLbl, vendorLbl;
 	
@@ -49,6 +53,8 @@ public class ViewEventDetails {
 	
 	TableView<User> guestTable, vendorTable;
 	ObservableList<User> guestData, vendorData;
+	
+	Button addGuest, addVendor;
 	
 	private Label pageTitle;
     private Label eventNameLbl, eventDateLbl, eventLocationLbl, eventDescLbl;
@@ -83,6 +89,12 @@ public class ViewEventDetails {
 		guestLbl = new Label("Guest Attendee List");
 		vendorLbl = new Label("Vendor Attendee List");
 		
+		btnHB = new HBox(200);
+		addGuest = new Button("Add Guest");
+		addGuest.setVisible(false);
+		addVendor = new Button("Add Vendor");
+		addVendor.setVisible(false);
+		
 		allUserContainer.setVisible(false);
 	}
 	
@@ -92,9 +104,12 @@ public class ViewEventDetails {
 		
 		location.getChildren().addAll(locationLbl, eventLocation);
 		date.getChildren().addAll(dateLbl, eventDate);
+		
+		btnHB.getChildren().addAll(addGuest, addVendor);
+		
 //		eventDetailContainer.getChildren().addAll(eventName, eventDescription, date, location);
 		allUserContainer.getChildren().addAll(guestC, vendorC);
-		eventDetailContainer.getChildren().addAll(eventName, eventDescription, date, location, allUserContainer);
+		eventDetailContainer.getChildren().addAll(eventName, eventDescription, date, location, allUserContainer, btnHB);
 		eventDetailPage.setTop(menubar);
 		eventDetailPage.setCenter(eventDetailContainer);
 	}
@@ -110,6 +125,19 @@ public class ViewEventDetails {
 		eventDetailContainer.setAlignment(Pos.TOP_CENTER);
 		location.setAlignment(Pos.TOP_CENTER);
 		date.setAlignment(Pos.TOP_CENTER);
+		
+		btnHB.setAlignment(Pos.CENTER);
+		btnHB.setPadding(new Insets(10, 0, 0, 0));
+		
+		addGuest.setPadding(new Insets(10, 0, 10, 0));
+		addGuest.setMinWidth(150);
+		addGuest.setTextFill(Color.WHITE);
+		addGuest.setBackground(new Background(new BackgroundFill(Color.web("#b20000"), CornerRadii.EMPTY, null)));
+		
+		addVendor.setPadding(new Insets(10, 0, 10, 0));
+		addVendor.setMinWidth(150);
+		addVendor.setTextFill(Color.WHITE);
+		addVendor.setBackground(new Background(new BackgroundFill(Color.web("#b20000"), CornerRadii.EMPTY, null)));
 		
 		guestC.setMaxWidth(580);
 		vendorC.setMaxWidth(580);
@@ -227,7 +255,11 @@ public class ViewEventDetails {
 		updateProfile.getItems().addAll(iUpdateProfile);
 		
 		menubar.getMenus().addAll(invitation, event, updateProfile);
-
+		
+		allUserContainer.setVisible(true);
+		btnHB.setVisible(true);
+		addGuest.setVisible(true);
+		addVendor.setVisible(true);
 	}
 	
 	public Scene getScene() {
@@ -240,6 +272,16 @@ public class ViewEventDetails {
 	
 	public void setVendorList(ObservableList<User> users) {
 		vendorData.setAll(users);
+	}
+	
+	public void setAddGuest(EventHandler<ActionEvent> handler) {
+		
+		 addGuest.setOnAction(handler);
+	}
+	
+	public void setAddVendor(EventHandler<ActionEvent> handler) {
+		
+		 addVendor.setOnAction(handler);
 	}
 	
 	public void setUserMenu(EventHandler<ActionEvent> handler) {
