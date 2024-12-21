@@ -3,6 +3,8 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import util.Connect;
@@ -28,11 +30,60 @@ public class Invitation {
 			ps.setString(1, eventID);
 			ps.setString(2, userID);
 			ps.executeUpdate();
+			
+			insertTransaction(eventID, userID);
+			
 			return "success";
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return "fail";
+	}
+	
+	public void insertTransaction(String eventID, String userID) {
+		
+//		bila berhasil
+//		mengambil user paling akhir dari database
+		String readDateQuery = "SELECT * FROM transactions ORDER BY transaction_id DESC LIMIT 1";
+		ResultSet readData = connect.execute(readDateQuery);
+		
+//		generate ID
+		int currID = 0;
+		
+		try {
+			if(readData.next()) {
+				currID = Integer.parseInt(readData.getString("user_id"));
+			}
+		} catch (NumberFormatException e1) {
+			return;
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			return;
+		}
+		
+		
+//		membuat format ID
+		DecimalFormat formats = new DecimalFormat("00000");
+		String id = formats.format(currID + 1);
+		
+		String insertQuery = "INSERT INTO transactions (transaction_id, amount, transaction_date, event_id, userID) " +
+                "VALUES (?, ?, ?, ?, ?)";
+		
+		 LocalDate currentDate = LocalDate.now();  
+		
+		PreparedStatement ps = connect.prepareStatement(insertQuery);
+		
+		try {
+			ps.setString(1, id);
+			ps.setString(2, "20000");
+			ps.setString(3, currentDate.toString());
+			ps.setString(4, eventID);
+			ps.setString(5, userID);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public ArrayList<Event> getInvitations(String email) {
