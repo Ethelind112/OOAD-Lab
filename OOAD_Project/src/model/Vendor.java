@@ -92,13 +92,14 @@ public class Vendor extends User {
 	
 	public ArrayList<User> getVendorByTransactionId(String event_id) {
 		ArrayList<User> users = new ArrayList<>();
-		String readDateQuery = "SELECT DISTINCT g.* FROM user g JOIN transactions t ON g.user_id = t.vendor_id WHERE t.event_id = ?";
+		String readDateQuery = "SELECT DISTINCT g.* FROM user g JOIN transactions t ON g.user_id = t.userID WHERE t.event_id = ? AND user_role = ?";
 		
 		PreparedStatement ps = connect.prepareStatement(readDateQuery);
 		ResultSet readData = null;
 		
 		try {
 			ps.setString(1, event_id);
+			ps.setString(2, "Vendor");
 			readData = ps.executeQuery();
 			
 //			bila ditemukan, buat user model baru untuk di return

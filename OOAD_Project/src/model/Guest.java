@@ -93,13 +93,14 @@ public class Guest extends User {
 
 	public ArrayList<User> getGuestByTransactionId(String event_id) {
 		ArrayList<User> users = new ArrayList<>();
-		String readDateQuery = "SELECT g.* FROM user g JOIN transactions t ON g.user_id = t.guest_id WHERE t.event_id = ?";
+		String readDateQuery = "SELECT g.* FROM user g JOIN transactions t ON g.user_id = t.userID WHERE t.event_id = ? AND user_role = ?";
 		
 		PreparedStatement ps = connect.prepareStatement(readDateQuery);
 		ResultSet readData = null;
 		
 		try {
 			ps.setString(1, event_id);
+			ps.setString(2, "Guest");
 			readData = ps.executeQuery();
 			
 //			bila ditemukan, buat user model baru untuk di return
