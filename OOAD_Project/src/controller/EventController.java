@@ -7,11 +7,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.Event;
-import model.EventOrganizer;
 import model.Guest;
 import model.User;
 import model.Vendor;
 import view.Main;
+import view.ViewAddGuest;
+import view.ViewAddVendor;
 import view.ViewChangeProfile;
 import view.ViewEventDetails;
 import view.ViewEvents;
@@ -26,6 +27,8 @@ public class EventController {
 	public EventController() {
 		
 	}
+	
+	
 	
 //	handle view event details untuk semua role
 	public EventController(ViewEventDetails eventDetView, String email, String eventID) {
@@ -120,8 +123,51 @@ public class EventController {
 		eventDetView.setEventDesc(currEvent.getEvent_description());
 		eventDetView.setEventDate(currEvent.getEvent_date());
 		eventDetView.setEventLoc(currEvent.getEvent_location());
+	
+		eventDetView.setAddGuestBtnHandler(new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent e) {
+		        Main.toAddGuestPage(email, eventID);
+		    }
+		});
+
+		eventDetView.setAddVendorBtnHandler(new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent e) {
+		        Main.toAddVendorPage(email, eventID);
+		    }
+		});
+
 	}
 	
+	public void initAddGuest(ViewAddGuest view, String email, String eventID) {
+	    // Initialize the add guest view with necessary data
+	    view.setEmail(email);
+	    view.setEventID(eventID);
+	    
+	    // Set up any necessary event handlers
+	    setupAddGuestHandlers(view);
+	}
+
+	private void setupAddGuestHandlers(ViewAddGuest view) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void initAddVendor(ViewAddVendor view, String email, String eventID) {
+	    // Initialize the add vendor view with necessary data
+	    view.setEmail(email);
+	    view.setEventID(eventID);
+	    
+	    // Set up any necessary event handlers
+	    setupAddVendorHandlers(view);
+	}
+	
+	private void setupAddVendorHandlers(ViewAddVendor view) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public Event viewEventDetails(String eventID) {
 		return event.viewEventDetails(eventID);
 	}
@@ -142,10 +188,6 @@ public class EventController {
 		ObservableList<User> userData = FXCollections.observableArrayList(users);
 		
 		eventDetView.setVendorList(userData);
-	}
-	
-	public String createEvent(String eventName, String eventDate, String eventLocation, String eventDescription, String organizerId) {
-		return event.createEvent(eventName, eventDate, eventLocation, eventDescription, organizerId);
 	}
 
 }
