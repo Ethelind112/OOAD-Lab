@@ -92,6 +92,8 @@ public class Main extends Application {
 		Main.redirect(view.getScene());
 	}
 	
+	
+	
 	public static void toUserPage(String email) {
 		ViewUser view = new ViewUser();
 //		UserController uController = new UserController(view);
@@ -111,6 +113,23 @@ public class Main extends Application {
 		ViewRegister view = new ViewRegister();
 		UserController uController = new UserController(view);
 		redirect(view.getScene());
+	}
+
+	public static void toAddGuestPage(String email, String eventID) {
+	    ViewAddGuest view = new ViewAddGuest();
+	    EventController eController = new EventController();
+	    eController.initAddGuest(view, email, eventID);
+
+	    redirect(view.getScene());
+	}
+
+
+	public static void toAddVendorPage(String email, String eventID) {
+	    ViewAddVendor view = new ViewAddVendor();
+	    EventController eController = new EventController();
+	    eController.initAddVendor(view, email, eventID);
+
+	    redirect(view.getScene());
 	}
 
 }
