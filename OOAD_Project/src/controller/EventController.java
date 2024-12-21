@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.Event;
+import model.EventOrganizer;
 import model.Guest;
 import model.User;
 import model.Vendor;
@@ -141,6 +142,10 @@ public class EventController {
 		ObservableList<User> userData = FXCollections.observableArrayList(users);
 		
 		eventDetView.setVendorList(userData);
+	}
+	
+	public String createEvent(String eventName, String eventDate, String eventLocation, String eventDescription, String organizerId) {
+		return event.createEvent(eventName, eventDate, eventLocation, eventDescription, organizerId);
 	}
 
 }

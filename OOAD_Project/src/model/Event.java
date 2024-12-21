@@ -3,6 +3,7 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import util.Connect;
@@ -192,6 +193,43 @@ public class Event {
             e.printStackTrace();
         }
         return events;
+    }
+    
+    public String createEvent(String eventName, String eventDate, String eventLocation, String eventDescription, String organizerId) {
+        String readQuery = "SELECT COUNT(*) as total FROM event";
+        String insertQuery = "INSERT INTO event (event_id, event_name, event_date, event_location, event_description, organizer_id) VALUES (?, ?, ?, ?, ?, ?)";
+        
+        try {
+            PreparedStatement ps1 = connect.prepareStatement(readQuery);
+            ResultSet rs = ps1.executeQuery();
+            int count = 0;
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+            DecimalFormat format = new DecimalFormat("00000");
+            String eventID = format.format(count + 1);
+
+            PreparedStatement ps2 = connect.prepareStatement(insertQuery);
+            ps2.setString(1, eventID);
+            ps2.setString(2, eventName);
+            ps2.setString(3, eventDate);
+            ps2.setString(4, eventLocation);
+            ps2.setString(5, eventDescription);
+            ps2.setString(6, organizerId);
+            System.out.println("Insert Query: " + ps2.toString()); 
+            int rowsInserted = ps2.executeUpdate();
+
+            if (rowsInserted > 0) {
+                System.out.println("Event added successfully: " + eventID + " by organizer: " + organizerId);
+                return "Event created successfully with ID: " + eventID;
+            } else {
+                System.out.println("Failed to add event.");
+                return "Error: Event could not be added.";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Error: Unable to create event.";
+        }
     }
 
 }
