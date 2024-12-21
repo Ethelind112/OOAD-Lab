@@ -56,7 +56,7 @@ public class ViewEvents {
 	
 	TableRow<Event> row;
 	
-	Button delBtn, transBtn;
+	Button delBtn, transBtn, detailsBtn;
 	
 	Button createEventBtn;
 	
@@ -87,10 +87,35 @@ public class ViewEvents {
 		delBtn.setVisible(false);
 		transBtn = new Button("Event Detail");
 		transBtn.setVisible(false);
+        detailsBtn = new Button("View Details");
+        detailsBtn.setVisible(false);
 		
-		errorM = new Label();
-		errorM.setVisible(false);
-	}
+        eventTable = new TableView<>();
+        eventTable.setRowFactory(tv -> {
+            TableRow<Event> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    Event rowData = row.getItem();
+                    ViewEventDetails eventDetailsView = new ViewEventDetails();
+                    eventDetailsView.initEventDetail();
+                    eventDetailsView.initDetailComponent();
+                    eventDetailsView.eventDetailStyling();
+
+                    eventDetailsView.setEventName(rowData.getEvent_name());
+                    eventDetailsView.setEventDesc(rowData.getEvent_description());
+                    eventDetailsView.setEventDate(rowData.getEvent_date());
+                    eventDetailsView.setEventLoc(rowData.getEvent_location());
+
+                    Stage stage = (Stage) eventTable.getScene().getWindow();
+                    stage.setScene(eventDetailsView.getScene());
+                }
+            });
+            return row;
+        });
+        
+        errorM = new Label();
+        errorM.setVisible(false);
+    }
 	
 	public void setTable() {
 		
@@ -142,14 +167,53 @@ public class ViewEvents {
 //		transactionColumn.setMinWidth(eventContainer.getWidth()/6);
 //		transactionColumn.setVisible(false);
 		
+		
+		
 	    TableColumn<Event, Void> actionColumn = new TableColumn<>("Actions");
+	    
+        TableColumn<Event, Void> detailsColumn = new TableColumn<>("View Details");
+        detailsColumn.setMinWidth(eventContainer.getWidth()/8);
+        
+        detailsColumn.setCellFactory(col -> new TableCell<Event, Void>() {
+            private final Button viewButton = new Button("View Details");
+            
+            {
+                viewButton.setOnAction(event -> {
+                    Event rowData = getTableView().getItems().get(getIndex());
+                    ViewEventDetails eventDetailsView = new ViewEventDetails();
+                    eventDetailsView.initEventDetail();
+                    eventDetailsView.initDetailComponent();
+                    eventDetailsView.eventDetailStyling();
+
+                    eventDetailsView.setEventName(rowData.getEvent_name());
+                    eventDetailsView.setEventDesc(rowData.getEvent_description());
+                    eventDetailsView.setEventDate(rowData.getEvent_date());
+                    eventDetailsView.setEventLoc(rowData.getEvent_location());
+ 
+                    Stage stage = (Stage) getScene().getWindow();
+                    stage.setScene(eventDetailsView.getScene());
+                });
+      
+                viewButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+            }
+            
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(viewButton);
+                }
+            }
+        });
 
 		
-	    eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn, actionColumn);
-
-	    btnHB.getChildren().addAll(delBtn, transBtn);
-	    eventData = FXCollections.observableArrayList();
-	    eventTable.setItems(eventData);
+        eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn, detailsColumn);
+            
+            btnHB.getChildren().addAll(delBtn, transBtn, detailsBtn);
+            eventData = FXCollections.observableArrayList();
+            eventTable.setItems(eventData);
 	}
 	
 	
