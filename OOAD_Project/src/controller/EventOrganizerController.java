@@ -8,6 +8,7 @@ import model.Vendor;
 import util.Connect;
 import view.Main;
 import view.ViewCreateEvent;
+import view.ViewEventDetails;
 import view.ViewEvents;
 
 import java.sql.PreparedStatement;
@@ -43,6 +44,7 @@ public class EventOrganizerController {
         view.setEventOrganizerMenu();
         view.setupCreateEventButton();
         loadEventList();
+       
         
         view.setCreateEventButton(new EventHandler<ActionEvent>() {
 //        	ViewCreateEvent viewCreateEvent = new ViewCreateEvent();
@@ -81,6 +83,7 @@ public class EventOrganizerController {
 			}
 		});
         
+        
         view.setChangeProfileMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -88,7 +91,10 @@ public class EventOrganizerController {
 				Main.toChangeProfilePage(email);
 			}
 		});
+      
     }
+    
+    
     
     public void loadCreateEventList() {
 		Event eventModel = new Event();
