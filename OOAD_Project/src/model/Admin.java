@@ -146,7 +146,7 @@ public class Admin extends User{
 	
 	public ArrayList<User> getVendorByTransactionId(String event_id) {
 		ArrayList<User> users = new ArrayList<>();
-		String readDateQuery = "SELECT g.* FROM user g JOIN transactions t ON g.user_id = t.vendor_id WHERE t.event_id = ?";
+		String readDateQuery = "SELECT DISTINCT g.* FROM user g JOIN transactions t ON g.user_id = t.vendor_id WHERE t.event_id = ?";
 		
 		PreparedStatement ps = connect.prepareStatement(readDateQuery);
 		ResultSet readData = null;
