@@ -62,6 +62,7 @@ public class ViewEvents {
 	
 	private Stage primaryStage;
 	private String organizerId;
+	private Button editBtn;
 	
 	public void initInvitation() {
 		
@@ -87,6 +88,9 @@ public class ViewEvents {
 		delBtn.setVisible(false);
 		transBtn = new Button("Event Detail");
 		transBtn.setVisible(false);
+		
+		editBtn = new Button("Edit Button");
+		editBtn.setVisible(false);
 		
 		errorM = new Label();
 		errorM.setVisible(false);
@@ -147,7 +151,7 @@ public class ViewEvents {
 		
 	    eventTable.getColumns().addAll(idColumn, nameColumn, dateColumn, locationColumn, descriptionColumn, organizerColumn, actionColumn);
 
-	    btnHB.getChildren().addAll(delBtn, transBtn);
+	    btnHB.getChildren().addAll(delBtn, transBtn, editBtn);
 	    eventData = FXCollections.observableArrayList();
 	    eventTable.setItems(eventData);
 	}
@@ -190,6 +194,12 @@ public class ViewEvents {
 		transBtn.setTextFill(Color.WHITE);
 		transBtn.setBackground(new Background(new BackgroundFill(Color.web("#133E87"), CornerRadii.EMPTY, null)));
 		transBtn.setFont(Font.font(15));
+		
+		editBtn.setPadding(new Insets(10, 0, 10, 0));
+		editBtn.setMinWidth(150);
+		editBtn.setTextFill(Color.WHITE);
+		editBtn.setBackground(new Background(new BackgroundFill(Color.web("#b20000"), CornerRadii.EMPTY, null)));
+		editBtn.setFont(Font.font(15));
 		
 		errorM.setTextFill(Color.RED);
 	}
@@ -334,10 +344,17 @@ public class ViewEvents {
 	}
 	
 	public void setupCreateEventButton() {
+		
+		editBtn.setVisible(true);
+		btnHB.setVisible(true);
 		createEventBtn.setVisible(true);
 	    createEventBtn.setText("Create a New Event");
 	    createEventBtn.setStyle("-fx-background-color: #3c763d; -fx-text-fill: #ffffff; -fx-padding: 10px;");
 
+	}
+	
+	public void setEditEventButton(EventHandler<ActionEvent> handler) {
+		editBtn.setOnAction(handler);
 	}
 	
 	public void setOrganizerId(String organizerId) {

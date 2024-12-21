@@ -118,6 +118,21 @@ public class EventOrganizer extends User {
             return "Error: Unable to add guest.";
         }
     }
+    
+	public String editEvent(String name, String eventID) {
+		String query = "UPDATE event SET event_name = ? WHERE event_id = ?";
+		PreparedStatement ps = connect.prepareStatement(query);
+		
+		try {
+			ps.setString(1, name);
+			ps.setString(2, eventID);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			return "fail";
+		}
+		
+		return "success";
+	}
 
     public String editEventName(String eventID, String newEventName) {
         String updateQuery = "UPDATE event SET event_name = ? WHERE event_id = ?";

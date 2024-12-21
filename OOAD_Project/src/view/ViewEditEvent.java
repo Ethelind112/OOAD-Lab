@@ -1,5 +1,8 @@
 package view;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -8,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,34 +20,24 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Event;
 
-import java.util.ArrayList;
-import java.util.Random;
+public class ViewEditEvent {
 
-public class ViewCreateEvent {
-
-    private TextField eventNameField = new TextField();
-    private TextField eventDateField = new TextField();
-    private TextField eventLocationField = new TextField();
-    private TextField eventDescriptionField = new TextField();
+	private TextField eventNameField = new TextField();
     private Label errorLabel = new Label();
 
     private Scene scene;
     private TableView<Event> eventTable = new TableView<>();
     private ObservableList<Event> eventData = FXCollections.observableArrayList();
+    
+    TableRow<Event> row;
 
-    public ViewCreateEvent() {
+    public ViewEditEvent() {
         VBox layout = new VBox(10);
 
         eventNameField.setPromptText("Enter Event Name");
-        eventDateField.setPromptText("Enter Event Date");
-        eventLocationField.setPromptText("Enter Event Location");
-        eventDescriptionField.setPromptText("Enter Event Description");
 
         layout.getChildren().addAll(
                 eventNameField,
-                eventDateField,
-                eventLocationField,
-                eventDescriptionField,
                 errorLabel,
                 eventTable
         );
@@ -54,7 +48,7 @@ public class ViewCreateEvent {
     }
 
     public void setCreateButton(EventHandler<ActionEvent> handler) {
-        Button createButton = new Button("Create Event");
+        Button createButton = new Button("Edit Event");
         createButton.setOnAction(handler);
 
         ((VBox) scene.getRoot()).getChildren().add(createButton); 
@@ -103,18 +97,6 @@ public class ViewCreateEvent {
         return eventNameField.getText();
     }
 
-    public String getEventDate() {
-        return eventDateField.getText();
-    }
-
-    public String getEventLocation() {
-        return eventLocationField.getText();
-    }
-
-    public String getEventDescription() {
-        return eventDescriptionField.getText();
-    }
-    
     public String getOrganizerId() {
         return generateRandomOrganizerId(); 
     }
@@ -122,6 +104,18 @@ public class ViewCreateEvent {
     public void setErrorMessage(String message) {
         errorLabel.setText(message);
     }
+    
+    public void setEventName(String name) {
+    	eventNameField.setText(name);
+    }
+    
+    public void setEventDetailButton(EventHandler<MouseEvent> handler) {
+		eventTable.setRowFactory((TableView<Event> e) -> {
+			row = new TableRow<>();
+			row.setOnMouseClicked(handler);
+			return row;
+		});
+	}
 
     public Scene getScene() {
         return scene;
@@ -134,6 +128,10 @@ public class ViewCreateEvent {
         stage.show();
     }
     
+    public String getName() {
+    	return eventNameField.getText();
+    }
+    
     public TableView<Event> getEventTable(){
     	return eventTable;
     }
@@ -142,4 +140,5 @@ public class ViewCreateEvent {
 	    eventData.setAll(events);
 	    eventTable.setItems(eventData); 
 	}
+
 }

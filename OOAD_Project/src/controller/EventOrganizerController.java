@@ -8,6 +8,7 @@ import model.Vendor;
 import util.Connect;
 import view.Main;
 import view.ViewCreateEvent;
+import view.ViewEditEvent;
 import view.ViewEvents;
 
 import java.sql.PreparedStatement;
@@ -20,6 +21,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class EventOrganizerController {
@@ -27,7 +29,8 @@ public class EventOrganizerController {
     private EventOrganizer eventOrganizer;
     private Connect connect = Connect.getInstance();
     private ViewEvents viewEvent;
-    ViewCreateEvent viewCreateEvent;
+    private ViewCreateEvent viewCreateEvent;
+    private ViewEditEvent viewEditEvent;
 
     public EventOrganizerController(EventOrganizer eventOrganizer) {
         this.eventOrganizer = eventOrganizer;
@@ -39,6 +42,7 @@ public class EventOrganizerController {
         this.eventOrganizer.setUser_email(email);
         this.viewEvent = view;
         viewCreateEvent = new ViewCreateEvent();
+        viewEditEvent = new ViewEditEvent();
         
         view.setEventOrganizerMenu();
         view.setupCreateEventButton();
@@ -81,6 +85,46 @@ public class EventOrganizerController {
 			}
 		});
         
+        view.setEditEventButton(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				Stage stage = new Stage();
+	            loadEditEventList();
+	            
+	            viewEditEvent.setEventDetailButton(new EventHandler<MouseEvent>() {
+
+					@Override
+					public void handle(MouseEvent event) {
+						Event selectedEvent = viewEditEvent.getEventTable().getSelectionModel().getSelectedItem();
+						viewEditEvent.setEventName(selectedEvent.getEvent_name());
+					}
+	            	
+				});
+	            
+	            viewEditEvent.setCreateButton(new EventHandler<ActionEvent>() {
+					
+					@Override
+					public void handle(ActionEvent event) {
+						System.out.println("its in");
+						if(!checkEditInput(viewEditEvent.getName()).equals("success")) {
+							viewEditEvent.setErrorMessage(checkEditInput(viewEditEvent.getName()));
+						}else {
+							System.out.println("2");
+							Event selectedEvent = viewEditEvent.getEventTable().getSelectionModel().getSelectedItem();
+							String message = editEvent(viewEditEvent.getName(), selectedEvent.getEvent_id());
+							loadEventList();
+							loadEditEventList();
+							stage.close();
+						}
+					}
+				});
+	            
+	            stage.setScene(viewEditEvent.getScene());
+		        stage.show();
+			}
+		});
+        
         view.setChangeProfileMenu(new EventHandler<ActionEvent>() {
 			
 			@Override
@@ -88,6 +132,35 @@ public class EventOrganizerController {
 				Main.toChangeProfilePage(email);
 			}
 		});
+    }
+    
+    public String editEvent(String name, String eventID) {
+    	return eventOrganizer.editEvent(name, eventID);
+    }
+    
+    public String checkEditInput(String name) {
+    	if(name.length() == 0) {
+    		return "Please fill in the fields";
+    	}
+    	
+    	return "success";
+    }
+    
+    public void loadEditEventList() {
+    	Event eventModel = new Event();
+		ArrayList<Event> events = eventModel.fetchEvents(eventOrganizer.getUser_id()); 
+		
+		ObservableList<Event> eventData = FXCollections.observableArrayList(events);
+		
+		if (events != null && !events.isEmpty()) {
+	        ObservableList<Event> eventList = FXCollections.observableArrayList(events);
+	        eventData.setAll(eventList);
+	        viewEditEvent.getEventTable().setItems(eventData);
+	    } else {
+	    	viewEditEvent.setErrorMessage("No events found or failed to load data.");
+	    }
+		
+		viewEditEvent.setEventList(eventData);
     }
     
     public void loadCreateEventList() {
