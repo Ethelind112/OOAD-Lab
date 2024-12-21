@@ -137,4 +137,9 @@ public class ViewCreateEvent {
     public TableView<Event> getEventTable(){
     	return eventTable;
     }
+    
+    public void setEventList(ObservableList<Event> events) {
+	    eventData.setAll(events);
+	    eventTable.setItems(eventData); 
+	}
 }
